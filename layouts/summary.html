@@ -1,0 +1,60 @@
+{{- $params := .Params | merge .Site.Params.page -}}
+
+<article class="single summary">
+    {{- /* Featured image */ -}}
+    {{- $image := "" -}}
+    {{- if ($.Site.Params.home.posts.imagePreview | default true) -}}
+        {{- $image = $params.featuredImagePreview | default $params.featuredImage -}}
+    {{- end -}}
+    {{- with $image -}}
+        <div class="featured-image-preview">
+            <a href="{{ $.RelPermalink }}" aria-label={{ $.Title }}>
+                {{ $optim := slice 
+                    (dict "Process" "fill 800x240 Center webp q75" "descriptor" "800w")
+                    (dict "Process" "fill 1200x360 Center webp q75" "descriptor" "1200w")
+                    (dict "Process" "fill 1600x480 Center webp q75" "descriptor" "1600w") 
+                }}
+                {{- dict "Src" . "Title" $.Title "Resources" $.Resources "Loading" "eager" "Width" "800" "Height" "240" "Sizes" "(max-width: 680px) 100vw, (max-width: 1000px) 80vw, (max-width: 1440px) 56vw, 800px" "OptimConfig" $optim "Alt" (printf "Featured image for %v" $.Title) | partial "plugin/image.html" -}}
+            </a>
+        </div>
+    {{- end -}}
+
+    {{- /* Title */ -}}
+    <h1 class="single-title">
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </h1>
+
+    {{- /* Meta */ -}}
+    <div class="post-meta">
+        {{- with .Site.Params.dateFormat | default "2006-01-02" | .PublishDate.Format -}}
+            <span class="post-publish">
+                <time datetime="{{ . }}">{{ . }}</time>
+            </span>
+        {{- end -}}
+
+        {{- with .ReadingTime -}}
+            <span class="post-reading-time">&nbsp;·&nbsp;{{ . }}{{ T "minuteRead" }}</span>
+        {{- end -}}
+
+        {{- $categories := slice -}}
+        {{- range .Params.categories -}}
+            {{- $categories = $categories | append . -}}
+        {{- end -}}
+        {{- with delimit $categories "&nbsp;" -}}
+            <span class="post-category">&nbsp;·&nbsp;{{ . }}</span>
+        {{- end -}}
+    </div>
+
+    {{- /* Footer */ -}}
+    <div class="post-footer">
+        <a class="read-more" href="{{ .RelPermalink }}">{{ T "readMore" }}</a>
+        {{- with .Params.tags -}}
+            <div class="post-tags">
+                {{- range $index, $value := . -}}
+                    {{- $tag := partialCached "function/path.html" $value $value | printf "/tags/%v" | $.Site.GetPage -}}
+                    <a href="{{ $tag.RelPermalink }}">{{ $tag.Title }}</a>
+                {{- end -}}
+            </div>
+        {{- end -}}
+    </div>
+</article>

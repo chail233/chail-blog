@@ -1,0 +1,462 @@
+/* ==============================
+   chail's Blog — Custom Color Scheme
+   温暖质感配色方案
+   主色：陶土珊瑚 #d4695e
+   辅色：鼠尾草绿 #5a9e8a
+   ============================== */
+
+/* 浅色模式 — 温暖纸张质感 */
+:root {
+  --global-background-color: #fcf8f3 !important;
+  --global-font-color: #2c2822 !important;
+  --global-font-secondary-color: #8a7f74 !important;
+  --global-link-color: #2c2822 !important;
+  --global-link-hover-color: #d4695e !important;
+  --global-border-color: #e8e0d6 !important;
+
+  --selection-color: rgba(212, 105, 94, 0.18) !important;
+
+  --header-background-color: rgba(252, 248, 243, 0.75) !important;
+  --header-hover-color: #d4695e !important;
+  --header-delimiter: #d9cfc4 !important;
+  --search-background-color: #f2ece4 !important;
+  --search-empty-font-color: #a89b8e !important;
+
+  --single-h-font-weight: 600 !important;
+  --single-content-strong-color: #2c2822 !important;
+  --single-link-color: #d4695e !important;
+  --single-link-hover-color: #b8554b !important;
+
+  --table-background-color: #ffffff !important;
+  --table-thead-color: #f2ece4 !important;
+  --table-border-color: #e8e0d6 !important;
+
+  --blockquote-color: #5a9e8a !important;
+  --blockquote-bg-color: rgba(90, 158, 138, 0.12) !important;
+
+  --pagination-link-color: #2c2822 !important;
+  --pagination-link-hover-color: #d4695e !important;
+
+  --friend-link-background-color: #f2ece4 !important;
+  --friend-link-color: #d4695e !important;
+  --friend-link-hover-color: #b8554b !important;
+
+  --code-color: #c2564b !important;
+  --code-background-color: #f3ede5 !important;
+  --inline-code-background-color: #f3ede5 !important;
+  --code-header-color: #f3ede5 !important;
+  --code-background-color-darken-5: #ece4da !important;
+  --code-background-color-darken-6: #e6ddd2 !important;
+  --code-background-color-code-header: #e6ddd2 !important;
+  --code-background-color-code-hl: #ece4da !important;
+  --code-info-color: #a89b8e !important;
+
+  --related-background-color: #f2ece4 !important;
+  --related-color: #2c2822 !important;
+  --related-hover-color: #d4695e !important;
+
+  --showcase-background-color: #f2ece4 !important;
+  --showcase-color: #2c2822 !important;
+  --showcase-hover-color: #d4695e !important;
+
+  --bgColor-default: #ffffff !important;
+  --bgColor-secondary: #f2ece4 !important;
+  --bgColor-accent-emphasis: #d4695e !important;
+  --bgColor-accent-muted: rgba(212, 105, 94, 0.12) !important;
+  --bgColor-neutral-muted: rgba(138, 127, 116, 0.12) !important;
+  --borderColor-default: #e8e0d6 !important;
+  --selection-bgColor: rgba(212, 105, 94, 0.2) !important;
+  --button-default-bgColor-rest: #f2ece4 !important;
+  --button-default-bgColor-hover: #e8e0d6 !important;
+}
+
+/* 深色模式 — 暖调深邃夜空 */
+html.dark {
+  --global-background-color: #1c1917 !important;
+  --global-font-color: #e2dbd0 !important;
+  --global-font-secondary-color: #9e9386 !important;
+  --global-link-color: #e2dbd0 !important;
+  --global-link-hover-color: #e8a88a !important;
+  --global-border-color: #2e2924 !important;
+
+  --selection-color: rgba(212, 105, 94, 0.25) !important;
+
+  --header-background-color: rgba(28, 25, 23, 0.75) !important;
+  --header-hover-color: #e8a88a !important;
+  --header-delimiter: #403a33 !important;
+  --search-background-color: #2e2924 !important;
+  --search-empty-font-color: #73685c !important;
+
+  --single-h-font-weight: 600 !important;
+  --single-content-strong-color: #e2dbd0 !important;
+  --single-link-color: #e8a88a !important;
+  --single-link-hover-color: #d9876a !important;
+
+  --table-background-color: #1c1917 !important;
+  --table-thead-color: #2e2924 !important;
+  --table-border-color: #2e2924 !important;
+
+  --blockquote-color: #6aae99 !important;
+  --blockquote-bg-color: rgba(106, 174, 153, 0.12) !important;
+
+  --pagination-link-color: #e2dbd0 !important;
+  --pagination-link-hover-color: #e8a88a !important;
+
+  --friend-link-background-color: #2e2924 !important;
+  --friend-link-color: #e8a88a !important;
+  --friend-link-hover-color: #d9876a !important;
+
+  --code-color: #e8a88a !important;
+  --code-background-color: #2e2924 !important;
+  --inline-code-background-color: #2e2924 !important;
+  --code-header-color: #2e2924 !important;
+  --code-background-color-darken-5: #28231e !important;
+  --code-background-color-darken-6: #241f1b !important;
+  --code-background-color-code-header: #241f1b !important;
+  --code-background-color-code-hl: #28231e !important;
+  --code-info-color: #73685c !important;
+
+  --related-background-color: #2e2924 !important;
+  --related-color: #e2dbd0 !important;
+  --related-hover-color: #e8a88a !important;
+
+  --showcase-background-color: #2e2924 !important;
+  --showcase-color: #e2dbd0 !important;
+  --showcase-hover-color: #e8a88a !important;
+
+  --bgColor-default: #1c1917 !important;
+  --bgColor-secondary: #2e2924 !important;
+  --bgColor-accent-emphasis: #d4695e !important;
+  --bgColor-accent-muted: rgba(212, 105, 94, 0.12) !important;
+  --bgColor-neutral-muted: rgba(158, 147, 134, 0.1) !important;
+  --borderColor-default: #2e2924 !important;
+  --selection-bgColor: rgba(212, 105, 94, 0.25) !important;
+  --button-default-bgColor-rest: #2e2924 !important;
+  --button-default-bgColor-hover: #403a33 !important;
+}
+
+/* ===== 直接用 !important 确保 html/body 背景 ===== */
+html, body {
+  background-color: #fcf8f3 !important;
+}
+
+html.dark, html.dark body {
+  background-color: #1c1917 !important;
+}
+
+/* ===== 布局美化样式 ===== */
+
+/* 文章卡片毛玻璃 & 卡片样式 */
+.summary {
+  border-radius: 14px !important;
+  padding: 1.5rem 1.8rem !important;
+  margin: 1.2rem 0;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border-bottom: none !important;
+  background: var(--card-bg, var(--global-background-color)) !important;
+  box-shadow: 0 1px 4px rgba(44, 40, 34, 0.05), 0 1px 2px rgba(44, 40, 34, 0.04) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.summary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #d4695e, #5a9e8a) !important;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.summary:hover {
+  box-shadow: 0 12px 28px rgba(44, 40, 34, 0.08), 0 4px 12px rgba(44, 40, 34, 0.04) !important;
+  transform: translateY(-3px);
+}
+
+.summary:hover::before {
+  opacity: 1;
+}
+
+.summary .single-title {
+  font-size: 1.4rem !important;
+  line-height: 1.5;
+  margin: 0 0 0.4rem 0 !important;
+}
+
+.summary .single-title a {
+  color: var(--global-font-color) !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease;
+}
+
+.summary .single-title a:hover {
+  color: var(--single-link-color) !important;
+}
+
+.summary .post-meta {
+  font-size: 0.85rem;
+  color: var(--global-font-secondary-color);
+  margin-bottom: 0.8rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.summary .post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.8rem !important;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--global-border-color);
+  font-size: 0.85rem;
+}
+
+.summary .post-footer .read-more {
+  display: inline-flex;
+  align-items: center;
+  color: var(--single-link-color) !important;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.summary .post-footer .read-more::after {
+  content: ' →';
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+.summary .post-footer .read-more:hover {
+  color: var(--single-link-hover-color) !important;
+}
+
+.summary .post-footer .read-more:hover::after {
+  transform: translateX(3px);
+}
+
+.summary .post-footer .post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.summary .post-footer .post-tags a {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  background: var(--code-background-color);
+  color: var(--global-font-secondary-color) !important;
+  transition: all 0.2s ease;
+  text-decoration: none !important;
+}
+
+.summary .post-footer .post-tags a:hover {
+  background: var(--single-link-color);
+  color: #fff !important;
+}
+
+/* 导航栏毛玻璃 */
+header {
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-bottom: 1px solid var(--global-border-color) !important;
+}
+
+/* 首页个人资料 */
+.home-profile {
+  padding: 2.5rem 0 1.5rem !important;
+}
+
+.home-profile .home-title {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  margin-top: 0.5rem !important;
+  letter-spacing: -0.02em;
+}
+
+.home-profile .home-subtitle {
+  font-size: 1.1rem !important;
+  font-weight: 300 !important;
+  letter-spacing: 0.05em;
+  margin-top: 0.25rem !important;
+}
+
+/* 文章页面 */
+.single {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.single .content {
+  line-height: 1.8;
+}
+
+.single .content h1 {
+  font-size: 1.9rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em;
+}
+
+.single .content h2 {
+  font-size: 1.5rem !important;
+  margin-top: 2.5rem !important;
+  margin-bottom: 0.75rem !important;
+  padding-bottom: 0.4rem !important;
+  border-bottom: 1px solid var(--global-border-color);
+}
+
+.single .content h3 {
+  font-size: 1.25rem !important;
+  margin-top: 2rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.single .content a {
+  color: var(--single-link-color);
+  transition: color 0.2s ease;
+  text-underline-offset: 2px;
+}
+
+.single .content a:hover {
+  color: var(--single-link-hover-color);
+}
+
+.single .content img {
+  border-radius: 10px !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.single .content blockquote {
+  border-radius: 6px !important;
+  padding: 0.75rem 1.25rem !important;
+  margin: 1.5rem 0;
+  border-left: 3px solid var(--blockquote-color) !important;
+}
+
+.single .content table {
+  border-radius: 10px !important;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.single .content code:not([class]) {
+  padding: 0.2rem 0.45rem !important;
+  border-radius: 5px !important;
+  font-size: 0.85em !important;
+  background: var(--code-background-color);
+  color: var(--code-color);
+}
+
+/* 代码块 */
+.highlight {
+  border-radius: 10px !important;
+  overflow: hidden;
+  margin: 1.5rem 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06) !important;
+}
+
+.highlight pre {
+  padding: 1rem 1.2rem !important;
+}
+
+/* 分页器 */
+.pagination {
+  margin: 2.5rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.pagination .page-item a,
+.pagination .page-item span {
+  border-radius: 8px !important;
+  padding: 0.4rem 0.9rem !important;
+  transition: all 0.2s ease;
+  border: none !important;
+  font-size: 0.9rem;
+}
+
+.pagination .page-item.active span {
+  background: var(--single-link-color) !important;
+  color: #fff !important;
+}
+
+/* 目录 */
+#TableOfContents ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+#TableOfContents ul li {
+  margin: 0.35rem 0;
+}
+
+#TableOfContents ul li a {
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  display: block;
+  text-decoration: none !important;
+}
+
+#TableOfContents ul li a:hover {
+  background: var(--code-background-color);
+}
+
+#TableOfContents ul li a.active {
+  background: var(--single-link-color) !important;
+  color: #fff !important;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--global-border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--global-font-secondary-color);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .summary {
+    padding: 1.2rem !important;
+    margin: 0.8rem 0;
+    border-radius: 10px !important;
+  }
+  .summary .single-title {
+    font-size: 1.2rem !important;
+  }
+  .single {
+    padding: 0 1rem;
+  }
+  .single .content h1 {
+    font-size: 1.5rem !important;
+  }
+  .single .content h2 {
+    font-size: 1.3rem !important;
+  }
+  .single .content h3 {
+    font-size: 1.15rem !important;
+  }
+  .home-profile .home-title {
+    font-size: 1.6rem !important;
+  }
+}
