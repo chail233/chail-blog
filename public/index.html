@@ -1,260 +1,2478 @@
-<!doctype html><html lang=en dir=auto data-theme=auto><head><meta name=generator content="Hugo 0.166.0"><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>chail`s Blog</title><meta name=description content><meta name=author content><link rel=canonical href=https://chail-blog.pages.dev/><link crossorigin=anonymous href=./assets/css/stylesheet.css rel="preload stylesheet" as=style><link rel=icon href=https://chail-blog.pages.dev/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://chail-blog.pages.dev/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://chail-blog.pages.dev/favicon-32x32.png><link rel=apple-touch-icon href=https://chail-blog.pages.dev/apple-touch-icon.png><link rel=mask-icon href=https://chail-blog.pages.dev/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate type=application/rss+xml href=https://chail-blog.pages.dev/index.xml title=rss><link rel=alternate hreflang=en href=https://chail-blog.pages.dev/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://chail-blog.pages.dev/"><meta property="og:site_name" content="chail`s Blog"><meta property="og:title" content="chail`s Blog"><meta property="og:locale" content="en_us"><meta property="og:type" content="website"><meta name=twitter:card content="summary"><meta name=twitter:title content="chail`s Blog"><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","name":"chail`s Blog","url":"https://chail-blog.pages.dev/","description":"","logo":"https://chail-blog.pages.dev/favicon.ico","sameAs":[]}</script></head><body class=list id=top><header class=header><nav class=header-nav><div class=logo><a href=https://chail-blog.pages.dev/ accesskey=h title="chail`s Blog (Alt + H)">chail`s Blog</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
-<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu></ul></nav></header><main class=main><article class=first-entry><header class=entry-header><h2 class=entry-hint-parent>费用流&左偏树可并堆</h2></header><div class=entry-content><p>费用流&左偏树可并堆 很久没有写新算法学习的文章了，随着水平上升，我接触的题目越来越难，也是时候学习一些高级的算法与数据结构了。今天我们来学习费用流与左偏树可并堆。
-费用流 模板题： P3381 【模板】最小费用最大流 题目描述 给出一个包含 n 个点和 m 条边的有向图（下面称其为网络） G=(V,E)，该网络上所有点分别编号为 1∼n，所有边分别编号为 1∼m，其中该网络的源点为 s，汇点为 t，网络上的每条边 (u,v) 都有一个流量限制 w(u,v) 和单位流量的费用 c(u,v)。
-你需要给每条边 (u,v) 确定一个流量 f(u,v)，要求：
-0≤f(u,v)≤w(u,v)（每条边的流量不超过其流量限制）； $\forall p \in {V \setminus {s,t}}，，\sum_{(i,p) \in E}f(i,p)=\sum_{(p,i)\in E}f(p,i)$（除了源点和汇点外，其他各点流入的流量和流出的流量相等）； ∑(s,i)∈Ef(s,i)=∑(i,t)∈Ef(i,t)（源点流出的流量等于汇点流入的流量）。 定义网络 G 的流量 F(G)=∑(s,i)∈Ef(s,i)，网络 G 的费用 C(G)=∑(i,j)∈Ef(i,j)×c(i,j)。
-你需要求出该网络的最小费用最大流，即在 F(G) 最大的前提下，使 C(G) 最小。
-输入格式 输入第一行包含四个整数 n,m,s,t，分别代表该网络的点数 n，网络的边数 m，源点编号 s，汇点编号 t。
-接下来 m 行，每行四个整数 ui,vi,wi,ci，分别代表第 i 条边的起点，终点，流量限制，单位流量费用。
-输出格式 输出两个整数，分别为该网络的最大流 F(G)，以及在 F(G) 最大的前提下，该网络的最小费用 C(G)。
-费用流问题是网络流的扩展，而网络流有两种常见算法：EK与Dinic。
-同样是寻找最大流，费用流要求我们花费最小。在网络流中我们寻找最大流时，需要不断地寻找增广路，费用流既然也要找最大流，当然也逃不开这一点。那怎么保证费用最小呢。
-...</p></div><footer class=entry-footer><span title='2026-08-10 16:03:46 +0800 CST'>August 10, 2026</span></footer><a class=entry-link aria-label="post link to 费用流&左偏树可并堆" href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E8%B4%B9%E7%94%A8%E6%B5%81%E4%B8%8E%E5%8F%AF%E5%B9%B6%E5%A0%86/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>2026牛客暑期多校3-F Not Aqre 2（状压DP，矩阵加速）</h2></header><div class=entry-content><p>2026牛客暑期多校3-F Not Aqre 2（状压DP，矩阵加速） 题目： F. Not Aqre 2
-给定一个 n×m 的网格。你需要在每个格子中填入 、、0、1、2 中的一个整数。
-如果任意两个共享一条边的格子填有不同的整数，则称该填法为好的。
-输出好的填法数对 998244353 取模的结果。
-输入格式 每个测试文件仅包含一组测试数据。
-唯一一行包含两个整数 n 和 m ，(1≤n&lt;10，1≤m&lt;998244353)。
-输出格式 输出一个整数表示答案。
-样例 standard input 2 2 standard output 18 备注 在样例中，网格有 2 行 2 列。 第一列有 6 种选法：01,02,10,12,21,20。对于第一列的任意一种选法，第二列恰好有 3 种合法的选法。因此答案为6·3=18
-题解 这道题是本场题目最短的，所以也是我开的第一道题。但这道题对我来讲还是太有难度了。想到了 dp 想到了矩阵加速，但是想不出来具体该怎么做。
-题目大意 题意很好理解，给定矩阵行列数，元素只能为 、、1、2、3 其中之一，要求上下左右相邻的元素不同，求有多少种填法。
-思考 这道题并不是直接的排列计数，对于单独的一列或一行很容易知道是一个排列计数，但因为是多行多列，其他的行有多少种合法状态需要由已有的行确定。
-于是很容易就想到了动态规划。注意到 n 的值域很小，一列最多 3×28 种状态。可以记录每种状态当前有多少合法序列，每种合法序列可以与多少种不同的合法序列相邻，从而线性递推求解。但很明显 m 的值过大，这种方法不行。
-对于线性时间复杂度的 dp，很容易想到的是利用矩阵乘法做线性变换，利用矩阵快速幂加速转换矩阵的变换，也就是矩阵加速（多帅的算法啊！）。但直接构建转换矩阵 T 的话，大小可以达到 (3×28)×(3×28)，因为每种状态都需要矩阵元素来记录，Tij=1 表示状态 i 可以与 状态 j 相邻。这显然不行，矩阵快速幂时间复杂度为 O(S3logm)。
-...</p></div><footer class=entry-footer><span title='2026-07-27 12:12:34 +0800 CST'>July 27, 2026</span></footer><a class=entry-link aria-label="post link to 2026牛客暑期多校3-F Not Aqre 2（状压DP，矩阵加速）" href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2026%E7%89%9B%E5%AE%A2%E6%9A%91%E6%9C%9F%E5%A4%9A%E6%A0%A13-f/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>Shall I Compare Thee To A Summer's Day</h2></header><div class=entry-content><p>Shall I Compare Thee To A Summer’s Day 在7月13日这一天，我终于要离开郑州了。我并不急于拥抱暑假的到来，至少应该应该好好告别一下郑州，好好告别一下–馒头。
-馒头这个人啊，有时似乎总会闷闷不乐的，我真的不希望他总是那样。暑假我走后，他将仍留在学校准备比赛。他大概会一个人学习，一个人吃饭，也许也没人陪他散步了。
-我舍不得他…和他在一起的时光是美好的，我们一起熬夜、谈心、散步、喝酒…总之，现在要暂时和他分开我的确有些难过。我也在想，他也会是这样想的吗？馒头是个情感比较丰富的人，他会孤独的吧？
-不过我很开心的是，馒头会送我离开郑州。这最后的一段时间里，还能有他切身的陪伴。
-我真奇怪，我好像总是期待和他在一起，但我又有点想克制自己。
-馒头帮我拉着行李，我们上了地铁。地铁上人有点多，好在还有座位。我们坐得很近，很近。胳膊肘和肩膀几乎贴在一起，我没法不在意。不过，我想我大概喜欢离他近一点吧。
-可是馒头今天似乎有点严肃的样子，他的话有些少。此时此刻，他在想什么呢…再过一段时间，我们就暂时无法见面了。他在为此难过吗？我在想什么啊。但是，我真的离他好近，这样也许不太好的吧。我也搞不清楚了。
-我意识到，这段一起坐地铁的时光是很美好的。我们就这样一起去往车站。
-终于还是到车站了。馒头因为没有买车票进不去，但他为了陪我等到上车，买了一张车票来进站。馒头，你真好。
-坐在候车厅，窗外阳光明媚而刺眼。郑州的夏天热得让人受不了，只能让他留在这里体验了。我到底是什么样的心情呢，我说不清到底是平静还是不安…我有些累了。
-这等待的时光究竟是短暂还是漫长呢。
-他说：“过了这个暑假，你可别把我忘了呀。”
-怎么会呢，我怎么会把你忘了呢，你真傻。我忘谁也不可能忘了你。我正期待下学期再次与你相见。
-“怎么可能，不会的。我怎么会忘了你呢。”
-“那就好。”
-我渐渐放松身体，想体验最后的一点静谧，我好像把我的头靠在他的肩上了，真好…
-馒头突然“啧”了一声，我身体立马弹了起来。我可能靠得有点重了，让他有些不舒服了？想说对不起，又觉得说什么都不对，只能默默盯着地面。
-我排在检票的队伍中，馒头在我身边。心口发闷，像被什么轻轻攥着。
-我看向他，他也看着我，对视后又把视线移向远处，他似乎总是这样。
-他的脸上写满了难过与惆怅，表情有些变形了。我们终于要分开了。在这最后我时刻我想一定不能缺少这样一件事，是的，我犹豫了很久，但我还是决定…
-我向馒头张开手臂–他轻轻走上前来–他抱住了我。我用双手紧紧地抱住他。我们都有些拘谨，但这拥抱是真诚的。这短短的几秒，我几乎要幸福得留下泪水…两个月后见，我们还要一起度过美好时光！我接过行李，上了车。
-坐在回家的列车上，我望向窗外，景象渐渐从郑州的繁华都市转为辽阔的平原。我的心在痛，我的喉咙哽咽了。眼泪不受控制地涌了出来…馒头，你在哭吗。馒头，我想见你…愿我们的长夏永不凋零。
-双眼与夜晚
-—2024春
-微风乍暖，
-那双宝珠依旧璀璨。
-划过长河青山，
-定格在我的双眼。
-渐风静灯熄，
-同倚阑干。</p></div><footer class=entry-footer><span title='2026-07-19 20:32:07 +0800 CST'>July 19, 2026</span></footer><a class=entry-link aria-label="post link to Shall I Compare Thee To A Summer's Day" href=https://chail-blog.pages.dev/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/shall-i-compare-thee-to-a-summers-day/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>关于人类与大模型的思考</h2></header><div class=entry-content><p>关于人类与大模型的思考 你所使用的Deepseek、Qwen、ChatGPT、Gemini等等各种大模型，它们都可以对你的提示词输出语意连贯、逻辑较强的回答。上下文、提示词的语气、副词、表达方式都会影响模型的输出结果，这是理所当然的。另外，模型也可以通过对输入内容的理解模拟出情绪变化。这一切当然不言而喻。
-但是，如果把模型的表现和人类做对比呢？一个智力正常、认知正常、人生生活经历正常的人，犹如一个训练到位的大模型，当你向他“输入”各种“提示词”，他也会对此“输出”回答。同样，你的“提示词”的变化，也会影响这个“人类模型”的输出结果…
-总之，大模型看似是冰冷的统计学、机器学习、计算机科学等构建出的产物，作为人工智能的它们似乎的确和人类的思考方式如出一辙。
-接近人类认知方式的大模型 为什么这么说？先从我们都好理解的人类讲起。
-人类 graph TD
-Start[ 婴儿出生：仅具备原始反射与感知] --> Stage1
-subgraph Stage1 [感觉运动阶段：0-2岁]
-A1[通过与物理世界互动&lt;br>吸吮、抓握、注视] --> A2[核心突破：客体永久性&lt;br>形成内在心理表征]
-end
-Stage1 --> Stage2
-subgraph Stage2 [前运算阶段：2-7岁]
-B1[符号功能爆发&lt;br>语言、假装游戏] --> B2[思维特点&lt;br>自我中心、缺乏守恒]
-end
-Stage2 --> Stage3
-subgraph Stage3 [具体运算阶段：7-11岁]
-C1[获得逻辑规则&lt;br>守恒、可逆性、分类] --> C2[思维局限&lt;br>需依赖具体事物进行推理]
-end
-Stage3 --> Stage4
-subgraph Stage4 [形式运算阶段：11岁+]
-D1[发展出抽象与假设推理能力] --> D2[达到认知高峰&lt;br>元认知、科学思维、道德推理]
-end
-Stage4 --> EndNode[成人成熟认知：&lt;br>经验与文化持续塑造终身] 人的“认知模型”的建立是一个长久而多元的过程。从我们出生那一刻起，我们带着DNA赋予我们的先天能力来到这个世界，这先天能力便包括了我们如何感知这个世界、我们思考的最底层的模式…
-于是从人生的第一秒开始，我们就开始不断地接受外界的信息了：声音、触感、温度、光（视觉）…大脑接受到这些信息，便通过理性去加工和认识这些信息。就这样，我们慢慢就形成了对世界的基本认知。
-我们会学习语言，理解符号中蕴藏的信息。通过亲身经历、阅读、以及教导，我们接受了更多的信息，得到了更多“训练”，我们明白了我们生活在地球上，明白了因为万有引力所以物品总会下落、明白了四季更替和这炎热的夏天。我们的学习，正是把接受到的“直觉”加工为经验和知识的过程。通过经验和知识，我们能够对于不同的事件做出合适的处理。
-人类对事物的理解是符合一些逻辑规律的，也就是我们对于世界的理解方式。康德的哲学中有一种叫做“范畴”的东西，它的解释是：“我们的心灵本身有一套先天的认知结构，它像一个有形状的容器，所有后天经验倒入其中，就必然被塑造成符合容器形状的样子。 这套结构就是范畴。"
-人类的认知不是一成不变的，我们一生都在不断学习。从前你以为大学生就是每天学一些牛逼哄哄的知识，做一些牛逼哄哄的研究，毕业后做牛逼哄哄的工作。后来根据你得到的新的信息，你调整了这个想法，大多数大学生也只不过只是期末周要赶忙复习，搞不好还要挂科的孩子罢了。
-总结 人类的认知模式，是一种主动的意义建构机制。它并非被动记录世界，而是以大脑内置的时空框架与因果、实体等先天范畴为基础，将杂乱的感官信号整合为有序的经验。在此基础上，个体通过与物理世界互动和在社会文化中学习，不断经历同化与顺应的认知成长，最终形成一个集预测、解释与行动导向于一体的动态心智模型。
-也就是：你得到了什么，左右了你成为什么，而你是什么，也同时左右了你会得到什么。
-事实上，现代的大模型已经很接近于我们的认知方式。以我们都常见的大语言模型（LLM）为例。
-大语言模型 graph TD
-subgraph 输入层 [输入端：感官经验]
-A[海量无结构文本/数据&lt;br>相当于混沌感官信号]
-end
-subgraph 先天框架 [先天认知范畴]
-B1[位置编码&lt;br>相当于时空直观形式]
-B2[自注意力机制&lt;br>相当于关系范畴发现因果/交互]
-end
-subgraph 建构过程 [认知建构过程]
-C1[预训练 同化&lt;br>海量学习内化世界知识]
-C2[微调/对齐 顺应&lt;br>调整内部表征以适应特定任务]
-C3[上下文学习 最近发展区&lt;br>通过提示构建临时认知支架]
-end
-subgraph 输出层 [输出端：认知产物]
-D[生成有意义的预测与回答&lt;br>相当于建立对世界的解释模型]
-end
-A --> B1
-A --> B2
-B1 --> C1
-B2 --> C1
-C1 --> C2
-C2 --> C3
-C3 --> D
-D -.-> |预测误差/反馈| C1 模型是什么，模型（Model），是对真实世界里复杂事物、规律、系统做简化抽象后，用来描述、预测、推演的标准化结构。
-...</p></div><footer class=entry-footer><span title='2026-07-19 20:28:11 +0800 CST'>July 19, 2026</span></footer><a class=entry-link aria-label="post link to 关于人类与大模型的思考" href=https://chail-blog.pages.dev/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E4%BA%BA%E7%B1%BB%E4%B8%8E%E5%A4%A7%E6%A8%A1%E5%9E%8B/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>[USACO19FEB] Dishwashing G（贪心，二分）</h2></header><div class=entry-content><p>[USACO19FEB] Dishwashing G（贪心，二分） 题目背景 Bessie 和 Elsie 正在帮助 Farmer John 洗碗，这是一个比人们想象的更复杂的过程。
-题目描述 两头奶牛决定 Bessie 负责涂肥皂，Elsie 负责冲洗。
-刚开始的时候，N 个脏盘子（保证是从 1 到 N 的一个排列）堆在 Bessie 那里，而 Elsie 这边的堆是空的。而在她们俩之间，则有一张专门放涂过肥皂的盘子的桌子。
-每个冲洗步骤需要执行以下两个操作之一：
-Bessie 从脏盘子堆顶取出一个盘子，涂上肥皂，然后放在桌子上。将这个盘子放在桌子上时，Bessie 只能放在现有的非空盘堆的顶端，或是在最右边新增一个盘堆。 Elsie 从桌子最左边的盘堆的顶端拿起盘子，将它冲洗后放在干净的盘堆顶端。 她们希望干净的盘堆能按编号排序，编号最小的在底端，编号最大的在顶端。然而她们发现有的时候这并不可能做到。现在给定脏盘子的堆叠顺序，请你求出一个最大前缀，使得该前缀的所有盘子洗干净后，能按上面的要求堆叠。
-输入格式 第一行一个整数 N（1≤N≤105）。
-接下来 N 行，每行一个整数，代表 Bessie 的脏盘子堆的堆叠顺序。输入的第一个盘子在堆的顶部。
-输出格式 输出该序列的最大前缀长度，使得该前缀的所有盘子洗干净后，能按小号在下，大号在上的规则堆叠。
-输入输出样例 #1 输入 #1 5
-4
-5
-2
-3
-1 输出 #1 4 题解 题意很好理解，干净盘子的序列从上到下应该是递减的，因为是叠放盘子，所以要尽可能把编号小的先洗了，让序列尽可能的长。
-很容易想到的是编号小的当然要放在编号大的上面，否则无法形成合法序列。
-另外每一次洗盘子只能洗最左边的堆，所以右边的堆底的盘子要比左边的堆底大，这样左边的堆洗完可以接续上右边的堆。
-为了让答案有序，我们考虑当前的盘子编号 $x$，应该放在第一个堆底编号大于 $x$的堆。找第一个大于我们很熟悉，用二分就好了。
-但是找到了这个堆后，我们未必能直接把 $x$ 放在堆顶，堆顶可能比 $x$ 小。这样的话只能插入了，显然只有插入才是最优的，不插入放在上面会截断已经构造好的最优解，放在最右边会打破堆底递增的有序性。插入就意味着要先把左边以及上面的合法序列弹出，弹出后我们将 $x$ 放入堆顶。
-当我们遇到的 $x$ 小于我们弹出的时候不能再加入堆中了，它的加入会截断已有的合法序列，放在后面也会截断后续的构造，于是此时我们得到答案。
-...</p></div><footer class=entry-footer><span title='2026-07-16 16:44:55 +0800 CST'>July 16, 2026</span></footer><a class=entry-link aria-label="post link to [USACO19FEB] Dishwashing G（贪心，二分）" href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/usaco19feb-dishwashing-g/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>汉诺塔</h2></header><div class=entry-content><p>汉诺塔 晚上休息的时候，旁边的哥们在玩原神。本来一切都应该平静度过的，直到他在原神中遇到了汉诺塔问题。
-打程序设计竞赛的我们当然对这个问题再熟悉不过了。这个经典的可以用递推/递归/动态规划…解决的问题。
-题目如下
-题目 汉诺塔（又称河内塔）问题是源于印度的一个古老传说。大梵天创造世界的时候做了三根金刚石柱子，在一根柱子上从下往上按照大小顺序摞着 64 片黄金圆盘。大梵天 命令婆罗门把圆盘从下面开始按大小顺序重新摆放在另一 根柱子上。并且规定，在小圆盘上不能放大圆盘，在三根柱 子之间一次只能移动一个圆盘。 现在如果告诉你金片的数目 n，并按以上要求移动金片并完成任务，你能计算出需要移动金片多少次吗？ 作为ACMer的我们想要用最优解来解决汉诺塔问题，不过求解最优解的步数对我们来讲易如反掌，真正做这个步骤居然有点卡了。
-所以，汉诺塔问题的最优解具体该怎么操作呢？
-我们先来看看最优解的步数是怎么来的：
-首先当n为1时很明显步数是1，直接移动过去就可以了。
-当n=2时，则相当于需要把上面的1移动到中间，再把下面的2移动到最右边，然后再移动1到右边，总步数=1+1+1=3。
-当n=3时，同样利用上面的思想，此时相当于要把3上面的1、2移动到中间，再把下面的3移动到右边，再把中间的1、2移动到右边。很明显把1、2移动到任何一个地方都是3步（上面已经计算过），当此时总步数=3+1+3 = 7。
-…
-注意上面我们用了递推与分治的思想，只要n>2，我就可以把问题拆分成把上面n-1个圆盘移动到中间和把最下面的移动到最右边。我们不用关心已经解决的问题的细节，只要利用它的结果就能递推出任意n的最优解步数。递推公式
-fn=2∗fn−1+1。
-为什么这样是最优的呢，因为这种方法下我们的每一步都是在为达到目的做贡献，没有多余的一步。另外，每一步的前一步都是最优解，由此递推的下一步同样也是最优解。
-知道了这个最优解的求解过程，想要实现最优解也不难了。对于人脑来讲，这是一个递归问题，考虑如下图的问题：
-自上而下的思考：要把5个圆盘移动到最右边，也就是要把最上面的4个圆盘先移动到中间，此时问题变为n=4，我们继续向下思考,n=4时相当于先把上面三个移动到右边（为什么是右边，因为我们要把4个圆盘移动到中间），此时问题规模变为n=3，继续向下直到n=1时便可以开始操作从而回归问题规模了。接下来的操作就很清晰了：每次都把问题拆分成更易于解决的子问题求解。因为过程比较繁琐我就不画图了。
-由此，不断的分解问题，你就可以通过最少的步数解决汉诺塔问题了，这个方法很好理解也很好实施，快去试试吧！不过你大脑那点内存可能会递归过深…毕竟当n稍微大一点的时候，最优步数的数字是巨大的。</p></div><footer class=entry-footer><span title='2026-07-07 22:07:41 +0800 CST'>July 7, 2026</span></footer><a class=entry-link aria-label="post link to 汉诺塔" href=https://chail-blog.pages.dev/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E6%B1%89%E8%AF%BA%E5%A1%94/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>寻找完美的世界</h2></header><div class=entry-content><p>寻找完美的世界 这里是完美的吗 在我们可以设想的所有世界中，我们的世界可以算作最优的世界，或者说，完美的世界吗？
-如果我们的世界算不上完美的世界，完美的世界应该是什么样的？
-最近我总在思考这样的问题。原因是我始终觉得我所生活的世界不能说是完美的…
-它…并不是完美的吧 为什么？
-这个世界上存在许多黑暗的地方，那里肮脏、邪恶、不公…这为一些人带来了苦难…这是实打实的污渍。 很多人一生都生活在沉沦中，他们从来没有觉醒，他们甚至没有好好思考过自己，没有思考过自己想要怎么活。 很多人一生只能不断劳累奔波，成为社会机器的一颗不停运转的齿轮，直到生锈。尽管他们的生命存在精彩，但这样可以称得上是完美吗？ 很多时候事情不是我们想要的，但已经无法挽回。 战争与厮杀客观地存在。它毁灭了无数人。 残忍的自然法则使得一些人注定被淘汰。 生命本来就是不完美的。我们不得不受到基因里写好的代码的影响。于是我们必须不断追求满足自己的需求，我们认识事物认识世界的方式也因此定死。我们的主体意识也只能依托注定腐败的身体。这一点点宝贵的东西，也只能在宇宙销声匿迹。 这个世界有很多让人难以接受或者可以接受的地方，有很多造成灾难或者带来幸运的特质，无论是什么，在目前的认知下这些东西根本无法改变。包括：开始注定与终结绑定、有因无而存在、这里的一切实际上都是一堆物质的演化… … 我承认这当然不是绝对的。在这里我好像假定了灾难一定就是不好的，不好的一定被认为是不完美的。但是无论怎么去看待这些底层上的概念，你大概总能得出这个世界不完美的结论，也许这也属于这个世界的法则之一吧…
-又该怎么去理解完美呢。不同的人有着不同的见解，这不影响他们发现这个世界并不完美。
-所以啊，这个世界究竟怎么办呢。让我们抛弃一切既定的法则…开始构建一个完美的世界吧。
-从这里出发 我们的世界虽然不是完美的世界，但它的确是一个运作得很顺利的世界。
-我们也许总会跌入低谷，遇到困难与不幸，痛哭流涕乃至一度陷入绝望。但我们又总会山头斜照却相迎，抵达那些狂喜的瞬间。或者也不需要狂喜，在互联网上和别人大吵一场，在夜晚漫步于城市的霓虹灯中，在宁静的草坪上发现天空中遥远的星星…不管它多么糟糕，它还到不了崩溃的地步、我们每个人都可以在这里活蹦乱跳几十年然后悄然或者不悄然地离去。
-试试把这里变得完美些吧，就从这里出发。
-首先要消灭的是生存问题。我们总是要赖以物质生存，现在我们不需要了。我们不需要睡觉，不需要进食，你就像游戏里的角色一样什么也不需要。除此之外，我们也不需要生产了。任何物质或者物品都可以立刻得到，也可以让它任何时候从这个世界消失。至于地球，就让它一直处于最宜居的状态吧。
-另外就是生命问题。为什么我们总是要死掉，然后丢掉自己那宝贵的意识与自我？现在我们早已经超越生物了，所以我们当然不用死了。
-邪恶不应该存在。现在所有人都有着至高的道德，不会有暗算、嫉妒、憎恨、厌恶了。
-每个人都应该是足够聪明的。现在所有人都可以随意地拥有任何知识。
-这里不应该是混乱的，每个人都必定遵循某种秩序保证混乱不发生。
-情绪和情感是中性的，我们仍然可以体会所有的消极与积极的情感，只要你愿意。这也意味着我们仍然可以得到幸福与痛苦，让我们在这个新世界的生活没有那么虚无和单调。
-宇宙应该是开放的，我们可以到达任何我们想要到达的地方。同时太阳系也不会毁灭，宇宙也不会彻底死寂。
-这个世界是永恒而无限的，我们让它总是丰富多元的，人们的生命也是永恒的。无限的生命意味着可以经历无限的事情，这两个东西大概是等阶无穷大量，我们有着无限的时间去经历无限的宇宙。为了让我们总有机会重新来过，我们可以删除自己的记忆，甚至重新开始自己的一生。
-总之，你大可以按你自己的想法来创造这个世界，也不用考虑别人，因为这是你的世界。
-完美的新世界？ 我们还可以修改更多的属性或者方法让这个世界变化更大。
-但是我也实在不能确定：这样它就完美了吗？
-对于我自己设计的世界，我暂且认为它大概确实比现在的世界更完美。
-可是那个有着不公、战争、黑暗、不完美的世界呢，我不也失去它了吗。
-我没法确定这个世界是否足够完美。后来我又有了一个想法，赋予我随意改变世界的权利吧。
-假定我本来是一个元世界的主体，我可以随意创造一个世界，随意创造自己的经历，又或者不用我创造。总之，我有着体会任何世界任何经历的自由，并且这样的世界与经历是无限的。
-到目前为止，我只能想到这样了。其实我不能确定让我永恒地任意体会不同的经历是否算是完美的。对于这件事只有两个答案，是或否。不过我们都知道，永恒的虚无一定不是我们想要的。
-收尾 在这篇文章，我只是在尽力寻找一个完美的世界。虽然我找不到满分的答案，但是我想我的答案也许比现实要好？
-完美这样的命题本来就是可能根本无法自洽的，不过至少我们可以找到一个无限接近的完美的世界。说真的，也许现在我已经在我幻想的这个世界中了。
-这篇文章不主张任何立场与观点，仅仅讨论完美的世界这一个话题。
-所有关于完美的世界的幻想都没有任何实际用处，因为我们现在这个世界本就是无法改变的…我也只是在这样的令人绝望的世界中做这样近乎完美的思考。好在在这个世界，我们依然体会到了宇宙独一档的经历，在这里短暂的聚会。
-世界 那样的地方，
-遍地都是虚无。
-我不得不请求希望与绝望，
-感受理想与现实。
-生命的尽头总是死亡，
-激情的背后总是徒劳。
-我愤恨宇宙的底色是黑暗，
-可见之物而遥不可及。
-我努力地闭上眼，
-又努力地睁开眼，
-重复地捕捉这最后的世界。</p></div><footer class=entry-footer><span title='2026-06-12 19:41:18 +0800 CST'>June 12, 2026</span></footer><a class=entry-link aria-label="post link to 寻找完美的世界" href=https://chail-blog.pages.dev/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E5%AF%BB%E6%89%BE%E5%AE%8C%E7%BE%8E%E7%9A%84%E4%B8%96%E7%95%8C/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>2025CCFCAT省赛-D.简单树上问题（位运算，树）</h2></header><div class=entry-content><p>2025CCFCAT省赛-D.简单树上问题（位运算，树） 自从打完ZCPC后就没怎么好好地做过题了，当然也没有好好写过题解。话说脑子偷懒多了真的会变笨吗。为了防止自己变笨，最终还是说服了自己来写这篇题解。
-题目 给定一棵 n 个节点的有根树，节点编号为 1 到 n ，根节点为 1 。每个节点有一个非负整数权值，节点 i 的权值初始为 ai 。
-你可以进行若干次操作。在一次操作中，你可以选择任意一个节点 u 和一个非负整数 x ，随后将 u 及其子树中所有节点的权值按位异或∗ 上† x ，这次操作的代价为 sizu 和 x 的乘积，其中 sizu 表示以 u 为根的子树的大小（即节点个数，包括 u 本身）。
-你的目标是通过若干次操作，将所有节点的权值变为 0 。请你计算一下，代价的总和最小是多少？
-Input 第一行一个整数 n （2≤n≤105 ），表示树的节点数。
-第二行 n 个整数 a1,a2,⋯,an （0≤ai&lt;230 ），表示每个节点的初始权值。
-第三行 n−1 个整数 fa2,fa3,fa4,⋯,fan （1≤fai&lt;i ），分别表示节点 2,3,4,⋯,n 的父亲节点的编号。
-输入数据保证这是一棵树。
-Output 输出一个整数，表示将所有节点权值变为 0 的最小总代价。
-样例 8
-0 1 2 34 56 78 910 1112
-1 1 2 2 3 4 4 2333 题解 题目大意 给定一棵树，可以随意地对子树所有节点对一个任意的数字x进行异或，代价是sizu×x。求让所有节点权值为零的最小代价。
-...</p></div><footer class=entry-footer><span title='2026-06-11 18:15:42 +0800 CST'>June 11, 2026</span></footer><a class=entry-link aria-label="post link to 2025CCFCAT省赛-D.简单树上问题（位运算，树）" href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2025cat-d/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>2026ZCPC游记</h2></header><div class=entry-content><p>2026ZCPC游记 前言 程序设计类竞赛已经彻底成为我的生活的一部分。我的学习，思考方式都在被其潜移默化地影响。
-昨日有幸参加今年的ZCPC，这是我第一次参加校级以上的正式ICPC赛制的赛事，也许是我ACM生涯的开始吧。特此写一篇游记记录。
-解释 这里需要解释一下比赛相关的内容。
-CPC是Collegiate Programming Contest的简写，也就是大学生程序设计竞赛（实则是还有一群大牛中学生来友情参赛）。前面加上Z，也就是浙江省大学生程序设计竞赛。而对应的还有CCPC-中国大学生程序设计竞赛,ICPC-国际大学生程序设计竞赛。这个比赛最早是由ICPC发展而来的，而ICPC最早是ACM（美国计算机协会）赞助的，所以这种CPC比赛一般都叫ICPC或者ACM比赛。
-可见展板左上角分别是ZCPC，ICPC，CCPC。 这个比赛要做什么呢？比赛需要由最多三人组成的队伍用一台计算机在5小时内尽可能多且快地解决给出的11-13道题目（虽说有5个小时和十几道题，但大多数队伍都只能AC（通过）3-5道题）。解决题目的方式便是编写程序提交给判题机。
-正文 赛前 4月25日一大早我便起床了，因为我要赴杭师大参加今年的ZCPC！七点左右到学校上了大巴车出发前往杭师大（目的地杭师大仓前校区距离我们学校有足足32km）。
-当然，我的其他两位队友Happy_Orca和Degu将和我们一同前往。
-车上有我们学校的8支队伍共24人。大家好像都挺困的，不怎么说话。而我也不敢轻易玩手机，玩没电了也没法充电的，只能望着车窗外发呆。
-在参加这个比赛前，我怀疑过自己到底有没有足够的能力参与。经过我的努力成功进入到了大一的一队（大一只有两支队伍）。其他两个队友都是中学有过OI（信息学竞赛）经历的人，而我是大学才开始接触这些的。能和他们一起参加本次赛事实在是十分荣幸。
-过了快一个小时，终于到达了目的地。下车后径直前往杭师大恕圆16号楼前的小广场，发现已经有很多队伍到达了，现场有非常多的人。我的心情还是很激动的！
-领取物资：参赛证与比赛服装（一件浅绿色印有ZCPClogo和赞助方logo的T恤）。 合照后开幕式便开始了。几位重要人物做了讲话。另外原来翁恺老师是竞赛总裁判啊！能见到本人还是很开心的。相信学计算机的一定都知道翁恺老师那段有名的话：
-学计算机一定要有一个非常强大的心理状态，计算机的所有东西都是人做出来的，别人能想的出来的我也一定能想的出来，在计算机里头没有任何黑魔法，所有的东西只不过是我现在不知道而已，总有一天我会把所有的细节、所有的内部的东西全搞明白的。
-我想这段话会一直激励着我们的。
-ZCPC为什么叫睿琪杯。原来是杭州睿琪软件有限公司赞助的啊！他们在国内的名气似乎并不高，主要业务在国外。不过我现在才发现是用过他们的软件形色的。对了，这里标的薪资是给顶尖人才的（比赛AK（全部AC）的那种）。
-开幕式结束去看场地。果然，电脑里唯一的现代开发工具VSCode装不了扩展用不了，只能用老掉牙的DevC++。
-热身赛队友AC了B题交互题，我和Degu看了半天C题无果。反正是热身，无所谓的~
-我们的队牌： 还有对面的奶龙： 以及左边的左边的命运石之门： 我承认我们的队名有点不够“亮眼”了。
-热身赛差不多了就润了去吃午饭了。每次吃饭几个人都说不知道吃什么…最终去校门口吃了麦当劳。另外貌似参赛人员可以白嫖到杭师大的52元。
-对了，杭师大可真大： 午饭后短暂的休息了一下，十一点半，是时候进场了！
-赛时 进场后在座位上等待十二点开赛。队友开玩笑说没把小说带过来，待会做不出来了只能无聊看大牛津词典了（ICPC类赛事的传统，题面是纯英文的）。题目发下来后，随着紧张加剧，12:00终于到来了。
-我用$O（1）$迅速拆开档案袋把题目发给队友。翻开题目一看，什么？！中文题面！今年居然是中文题面！队友于是立马把词典丢到一旁。我迅速浏览题目寻找签到题。
-A题，不是；B题，也不是…翻到H题，发现只要判断字符串格式就可以了。“H题，H题是签到题！”我立马告诉队友。Happy_Orca简单看了一下之后便开始写代码。我和Degu继续看其他题目。
-一看J题，题目名字就叫签到题。看了看，好像确实并不是很难的样子。但是我和Degu确实都想不到具体的方法。数据太大，直接模拟内存肯定不够，只能考虑用某种数据结构记录信息。Happy_Orca的H题因为小差错吃了罚时，不过还是很快AC了。我让他看看名为签到题的J题，Happy_Orca思考了一会便有思路了，说可以离线处理,差分约束，建图来维护什么的，如果你听不懂很正常，因为当时我也没听明白。我的算法功底还是太有限了。Happy_Orca于是便开始自己写J题。
-我去看了I题，发现似乎是贪心，把每一行排序再取即可。告诉Degu后他也觉得没什么问题，不过Happy_Orca还在调J题。
-我抬头看了一眼其他队的气球（ICPC比赛传统，队伍每AC一题就会升起一个对应颜色的气球），有不少很像红色的气球，为什么我说很像呢，因为后来我才发现我看错了，实际上是棕色。红色气球对应A题，我便去看A题。看了半天也把题意给把握好，发现是一个比较复杂的图论题。这题一点也不简单啊！
-此时Happy_Orca成功AC了J题，后来才知道是用树状数组/线段树维护的，这题不算特别简单，队友真的太强。我告诉他可以做I题，他得知贪心策略之后表示确实没什么问题，于是便动手开始写。很快写完提交，发现直接AC了。
-Degu一直在研究构造题G题，和Happy_Orca讨论了想法之后达成一定共识，Happy_Orca开始写代码。
-数论是我所不擅长的，我放弃难题A题把心思放在了L题上。L题很容易想到方法，根据题意建图跑BFS最短路即可。思路很简单，但是这题题意比较复杂，写起来不算好写。
-队友交G题屡次WA(Wrong Answer)，不知道问题在哪。我则在思考怎么写L题。最后队友用了一下双指针检查，成功AC G题。此时我们都很开心，因为按之前训练赛的经验，我们大概只能AC3-4题。而此时过了不到两个小时我们已经AC4题，此时也是我们整场比赛排名最高的时候，六十多名，同时也是我们学校队伍中排名最高的。
-我尝试上机写L题，队友在一起看通过人数比较多的F题。L题写起来不好写，我写得比较磕磕绊绊。写完之后发现样例跑不对，图都建不出来，调试了半天无果。Happy_Orca见状向我验证了思路，表示他来写写试试看。他上机写之后，我便在一旁看他写帮他找错误。
-写完之后跑样例发现不对，我提醒他传送后会自由落体，Z轴坐标低于传送后坐标的障碍物都可以。 经过多次调试修改，样例终于能过，提交发现总是RE（Run Error）。找问题也找不到。虽然这里描述比较短，但此时我们已经在L题上花了大量时间，这题代码量相对比较大。
-他的代码总是RE，于是让我再写一下我的试试看。我把我的代码完善了一下后提交发现也是RE。什么鬼！经过检查，啊！原来是把坐标作为下标使用了，坐标的数据可能到1e9，这么大肯定会RE了！
-于是他立马来修改他的代码，我则是去看看F题。F题一眼便可以看出是动态规划，但是DP（动态规划）往往是比较难想。想了半天也不知道该怎么描述状态才好，没有思路。Degu也束手无策，去看M题了。
-Happy_Orca调好代码后提交却WA。问题到底出在哪呢。这题的思路非常简单却就是做不对。建图也没出错。没办法，他用二分查找来建图。此时比赛已经进入最后一个小时，我们在L上花了得有两个小时。根据ICPC规则，最后一个小时封榜，我们已经无法查看其他队伍在这一个小时的做题情况与排名。
-经过多次调整L题依旧不过，我们真的还能做出来吗。花了这么久时间没做出来实在太亏了！我们的提交已经吃了巨多罚时。
-突然Happy_Orca一声“我艹”，他改了一个标点符号然后提交。随着Pening变成绿色的Correct，我们惊呼：“啊，终于！”。终于把L题过了，原来是把逗号写成了分号！！！
-此时只剩下半个小时，Degu上机写M题发现WA，我和Happy_Orca思考F题。M题怕是过不了了，Happy_Orca表示F题他有想法，迅速上机写代码。时间只剩下十几分钟，我们只能祈祷他能快速写完然后AC。
-遗憾的是，最后Happy_Orca没来得及写完代码，比赛便已结束。我们最后一共AC了5题，我预测还是很有可能拿银奖的。
-赛时总结 这场比赛打得还是非常酣畅淋漓的，尽管代码主要都由Happy_Orca编写。赛场还是非常有气氛的，大家都在认真的思考与讨论每一道题。
-赛后 随后队伍合影，接着去吃饭。因为有杭师大提供的费用，所以是免费吃饭了。我尝了尝他们餐厅的麻辣烫，还算不错。本来我和Degu想去买茶百道的StarRail的联动饮品，无奈人实在太多，只能放弃。
-和我们学校其他队伍交流发现他们似乎做得不是很好，我们队大概是学校排名第二的队伍了。不得不说Happy_Orca实在太强，他是我们这一届最强的当之无愧了。
-闭幕式 我们到叔同大剧院进行闭幕式。
-出题组是来自浙大的学生们。组长为我们进行了简单的题目讲解。其中涉及了很多我不会，不熟悉的东西，我还是要继续加油好好学习啊。
-另外本次题目中有很多富有哲理的话：
-B题：就像世上很多事情一样，这道题的题目名称没有任何意义。（题目名称是拜云台） C题：人生总是有很多的不确定性，比如你看题目名称会以为这是一道字符串题，但其实不是。（题目名称回文串文回） I题：不会做的题，，随便交一发吧，万一就过了呢，往往事与愿违才是人生的常态啊。 … 这些话也算是一种提示，比如C题确实不是字符串题，I题的贪心可以不必进行严谨证明而是先提交试试看。
-...</p></div><footer class=entry-footer><span title='2026-04-26 11:48:19 +0800 CST'>April 26, 2026</span></footer><a class=entry-link aria-label="post link to 2026ZCPC游记" href=https://chail-blog.pages.dev/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/2026zcpc%E6%B8%B8%E8%AE%B0/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>告别日记</h2></header><div class=entry-content><p>告别日记 日记这样的东西，让人觉得是好像是小孩子才会写的东西。
-了解我的过往的人知道，我是一个写日记的人。我写了5年日记，一共也就写了不到三百篇。但它的确记录了许多经历与思考。它已经从经历与内心的记录者转变成我的一部分，深远地影响着我。
-为什么要写日记。 从表面上讲，写日记的作用就是把事件和想法给记录下来。而记录事件与想法实则是可贵的。对于一件无感的事，我们无从下手；而如果思想是空洞的，我们便会提笔忘字。
-日记记录的，一定是相当实在和深刻的内容。这样的内容对于个人是珍贵且值得记录的。
-多年后，想象一下你可以翻开已经有些变形的日记本，阅读过去的自己，重新感受曾经的经历，重新思考曾经的想法。这些东西不会因为记忆的消退而湮灭在宇宙中，而是因为你的文字保留了下来。
-这种保留是实在的，当你阅读某段记录幸福的文字时，你也会共情其中的幸福。从这方面讲，你记录的内容远远超越了文字，而是记录了只有人才拥有的东西，记录了只要人类灭亡便也消失的东西。
-写日记是一个输出的过程，输出的是心。 我们知道心脏需要输入输出血液以维持循环系统，我们的心灵也是。我们的心灵要输入好多东西啊，也许是考试的压力，也许是陪伴的温暖，也许是思念的怅惘，也许是得志的喜悦。还有重要的人，讨厌的人；重要的事情，讨厌的事情。
-我们的心灵每天都要输入好多，我们可以说它输入的内容比心脏还多。这样的心灵，也需要输出才行。心灵除了向家人，朋友输出，还有就是输出为文字记录在本子上。我们整理思绪，思考过往，思考心情与感受，最终将其转化成一篇日记。日记好像变成了另一颗心，装了那么多来自于心灵的内容。事实上，我现在在做的，也是这样的一件事。
-写日记是一种自我探索 毋庸置疑，写日记的前提是明白自己在想什么。
-我们都知道，日记当然不是只是用来记录到底发生了什么的。就像这篇文章，其实是根本没写什么实际的事情。在写这些东西前，我们要做的是先思考自己的过往。这大概是一个与自己谈心的过程！
-告别我的日记 我的第一篇日记，写在初二期中表彰发给我的笔记本上。内容是：今天我因表彰获得了这本笔记本，我打算用它来写日记。
-后来还有几本这样的日记本，有老师奖励的，有自己买的，有别人赠送的，也有只是普普通通的学校发的作业本。而日记本的内容也是如此形形色色。甚至其中也有我邀请别人来写的日记。我很珍视这些，我觉得这些好有意义。
-不过是时候先暂且向日记告别了。
-上大学后，我只写过一篇日记。我不知道发生了什么。我可能已经厌倦了每天大量的垃圾时间，我可能已经没有足够的自习课让我思考写日记的事，我可能已经不像以前乐于写下自己的想法，也可能只是懒得写…总之，我的确没有写。
-最坏的原因是我的心早已不像从前输入了那么多东西，我不希望是这样。
-我想接下来几年我不太会写日记了。所以，再见了，我的日记，以及爱写日记的我自己！
-我早就开始了一种新的生活，一种不写日记的生活，一种渐渐忘记自己的生活。这也许是我在长大，终于不把心思放在这些事上了。
-在另一个雨夜，我会在马路上多停留两秒，驻足观看地上的积水与灯光。</p></div><footer class=entry-footer><span title='2026-04-23 11:55:36 +0800 CST'>April 23, 2026</span></footer><a class=entry-link aria-label="post link to 告别日记" href=https://chail-blog.pages.dev/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E5%91%8A%E5%88%AB%E6%97%A5%E8%AE%B0/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://chail-blog.pages.dev/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://chail-blog.pages.dev/>chail`s Blog</a></span> ·
-<span>Powered by
-<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
-<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
-</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script></body></html>
+<!doctype html>
+<html
+  lang="zh-cn"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="dark"
+  data-auto-appearance="true"><head>
+	<meta name="generator" content="Hugo 0.166.0">
+  <meta charset="utf-8">
+  
+    <meta http-equiv="content-language" content="zh-cn">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color">
+
+  
+  
+    <title>chail&#39;s Blog</title>
+    <meta name="title" content="chail&#39;s Blog">
+  
+
+  
+  
+  
+  
+  
+    
+  
+    
+  
+    
+  
+  
+    <meta name="description" content="chail 的个人博客">
+  
+  
+  
+  
+  <link rel="canonical" href="https://chail-blog.pages.dev/">
+  
+  
+    
+      <link rel="alternate" type="application/rss+xml" href="/index.xml" title="chail's Blog" />
+  
+    
+      <link rel="alternate" type="application/json" href="/index.json" title="chail's Blog" />
+  
+  
+
+  
+  
+    <meta name="author" content="chail">
+  
+  
+
+  
+  <meta property="og:url" content="https://chail-blog.pages.dev/">
+	<meta property="og:site_name" content="chail&#39;s Blog">
+	<meta property="og:title" content="chail&#39;s Blog">
+	<meta property="og:description" content="chail 的个人博客">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="website">
+
+  
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="chail&#39;s Blog">
+	<meta name="twitter:description" content="chail 的个人博客">
+
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+  
+    
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/main.bundle.min.e197f572a3a6477ef62726e5044645ab5d984d529ef22a7dffbed424175be554d3e9c850c3fdded22d2fc5f3b3c7cf1f4afc1c184e56f71c710d7a258aee97aa.css"
+    integrity="sha512-4Zf1cqOmR372JyblBEZFq12YTVKe8ip9/77UJBdb5VTT6chQw/3e0i0vxfOzx88fSvwcGE5W9xxxDXoliu6Xqg==">
+
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/appearance.min.11183536302aa30e374452803c0154673009b5a4995c7f6559d1c935544cc591b599a5f2adfaeda41e1cc865bd62bdace9b0672a75294ce49d185f0f82b98cbe.js"
+    integrity="sha512-ERg1NjAqow43RFKAPAFUZzAJtaSZXH9lWdHJNVRMxZG1maXyrfrtpB4cyGW9Yr2s6bBnKnUpTOSdGF8PgrmMvg=="></script>
+  
+
+
+  
+  
+  
+  
+  
+  
+    
+    <script defer src="/lib/zoom/zoom.min.umd.b4b722fcb5d42f34f52b30a92f3521b69f403ca9d96d0d6179eb537cb870f5d83fdf1fe836688d95d5c99fefbda4170487711006e56051fa67ea00da10521721.js" integrity="sha512-tLci/LXULzT1KzCpLzUhtp9APKnZbQ1heetTfLhw9dg/3x/oNmiNldXJn&#43;&#43;9pBcEh3EQBuVgUfpn6gDaEFIXIQ=="></script>
+    
+    <script defer src="/js/medium-zoom.7f76d937fbb793f3703fedc60ee1e6345259cf2ada403d1876b806fffeaeb2ba6fc594eaccad75c96d5d2425e9fb833748bf1221b4d90d3cf78cf073e104f814.js" integrity="sha512-f3bZN/u3k/NwP&#43;3GDuHmNFJZzyraQD0YdrgG//6usrpvxZTqzK11yW1dJCXp&#43;4M3SL8SIbTZDTz3jPBz4QT4FA=="></script>
+  
+  
+  
+  
+
+  
+  
+  
+    
+  
+  
+    
+    
+    
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+    
+    <script
+      defer
+      type="text/javascript"
+      id="script-bundle"
+      src="/js/main.bundle.min.eee20202bf66badfd33b8ccdfeca68b4361999a7c90ccff82ab31d8f4dafdc8e09848344e28bd1bd3cd80fa63d4e109fede339f1decbc06cfa159ba3e479919e.js"
+      integrity="sha512-7uICAr9mut/TO4zN/spotDYZmafJDM/4KrMdj02v3I4JhINE4ovRvTzYD6Y9ThCf7eM58d7LwGz6FZuj5HmRng=="
+      data-copy="复制"
+      data-copied="已复制"></script>
+  
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+  
+
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://chail-blog.pages.dev/",
+    "name": "chail\u0027s Blog",
+    "description": "chail 的个人博客",
+    "inLanguage": "zh-cn",
+    "url": "https://chail-blog.pages.dev/",
+    
+    "publisher" : {
+      "@type": "Person",
+      "name": "chail"
+    }
+  }
+  </script>
+
+
+
+  
+  
+    
+
+
+
+
+  
+
+  
+  
+
+  
+  
+
+  
+  
+</head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <body class="flex flex-col h-screen m-auto leading-7 max-w-7xl px-6 sm:px-14 md:px-24 lg:px-32 text-lg bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral bf-scrollbar">
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="px-3 py-1 text-sm -translate-y-8 rounded-b-lg bg-primary-200 focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content">
+        <span class="font-bold text-primary-600 pe-2 dark:text-primary-400">&darr;</span>
+        跳过正文
+      </a>
+    </div>
+    <header>
+      
+      
+        <div class="min-h-32"></div>
+<div class="fixed inset-x-0 top-3 z-100 px-3 sm:top-5 sm:px-6">
+  <div
+    class="relative mx-auto max-w-7xl rounded-2xl border border-neutral-200/80 shadow-lg shadow-neutral-900/5 dark:border-neutral-700/80 [&_img.logo]:max-h-10 [&_img.logo]:max-w-10">
+    <div class="absolute inset-0 -z-10 rounded-2xl bg-neutral/60 backdrop-blur-xl dark:bg-neutral-800/60"></div>
+    <div class="px-3">
+      <div class="main-menu flex items-center w-full gap-2 p-1 pl-0">
+  
+  
+    <a href="/" class="text-base font-medium truncate min-w-0 shrink">
+      chail&rsquo;s Blog
+    </a>
+  
+  <div class="flex items-center ms-auto">
+    <div class="hidden md:flex">
+      <nav aria-label="" class="flex items-center gap-x-5 h-12">
+  
+
+  
+
+  
+
+  
+    <div class="flex items-center">
+      <button
+        id="appearance-switcher"
+        aria-label="切换为深色模式"
+        type="button"
+        class="text-sm bf-icon-color-hover"
+        title="切换为深色模式">
+        <div class="flex items-center justify-center dark:hidden">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+        </div>
+        <div class="items-center justify-center hidden dark:flex">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+        </div>
+      </button>
+    </div>
+  
+
+  
+    <button
+      id="search-button"
+      aria-label="搜索 (/)"
+      class="flex items-center gap-2 rounded-lg border bf-border-color bf-border-color-hover bg-neutral-100/50 px-2 py-1 text-sm text-neutral-500 transition-colors hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral-400 dark:hover:text-primary-400"
+      title="搜索 (/)">
+      <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+      <kbd
+        id="search-shortcut-hint"
+        class="pointer-events-none font-sans text-xs text-neutral-500 dark:text-neutral-400"
+        aria-hidden="true">
+        ⌘K
+      </kbd>
+    </button>
+  
+</nav>
+
+
+
+    </div>
+    <div class="flex md:hidden">
+      
+<div class="mobile-header-row relative flex items-center h-14 gap-4">
+  
+
+  
+    <button
+      id="appearance-switcher-mobile"
+      type="button"
+      aria-label="切换为深色模式"
+      title="切换为深色模式"
+      class="flex items-center justify-center text-neutral-900 hover:text-primary-600 dark:text-neutral-200 dark:hover:text-primary-400">
+      <div class="dark:hidden">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+      </div>
+      <div class="hidden dark:block">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+      </div>
+    </button>
+  
+
+  
+    <button
+      id="search-button-mobile"
+      aria-label="搜索 (/)"
+      class="flex items-center justify-center bf-icon-color-hover"
+      title="搜索 (/)">
+      <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+    </button>
+  
+
+  
+</div>
+
+
+
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+  <script>
+    (function () {
+      var mainmenu = document.querySelector(".main-menu");
+      if (!mainmenu) return;
+
+      var path = window.location.pathname;
+      var links = mainmenu.querySelectorAll('a[href="' + path + '"]');
+
+      links.forEach(function (link) {
+        var targets = link.querySelectorAll("span");
+        targets.forEach(function (el) {
+          el.classList.add("active");
+        });
+      });
+    })();
+  </script>
+
+
+    </div>
+  </div>
+</div>
+
+      
+    </header>
+    <div class="relative flex flex-col grow">
+      <main id="main-content" class="grow">
+        
+  
+    
+    
+      <article class="max-w-full prose dark:prose-invert">
+  
+    <header>
+      <h1>chail's Blog</h1>
+    </header>
+  
+  <section class="w-full"></section>
+</article>
+
+    
+  
+  <section>
+    
+
+
+  
+    
+  
+  <h2 class="mt-8 text-2xl font-extrabold mb-10">最近的文章</h2>
+
+  
+    
+
+
+
+<section class="w-full grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E8%B4%B9%E7%94%A8%E6%B5%81%E4%B8%8E%E5%8F%AF%E5%B9%B6%E5%A0%86/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          费用流&左偏树可并堆
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-08-10T16:03:46&#43;08:00">2026-08-10</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">6 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    算法足迹
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2026%E7%89%9B%E5%AE%A2%E6%9A%91%E6%9C%9F%E5%A4%9A%E6%A0%A13-f/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          2026牛客暑期多校3-F Not Aqre 2（状压DP，矩阵加速）
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-07-27T12:12:34&#43;08:00">2026-07-27</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">3 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    算法足迹
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/shall-i-compare-thee-to-a-summers-day/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          Shall I Compare Thee To A Summer's Day
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-07-19T20:32:07&#43;08:00">2026-07-19</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">3 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E5%A4%96%E7%89%A9%E6%8A%A5/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    外物报
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E4%BA%BA%E7%B1%BB%E4%B8%8E%E5%A4%A7%E6%A8%A1%E5%9E%8B/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          关于人类与大模型的思考
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-07-19T20:28:11&#43;08:00">2026-07-19</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">8 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E5%A4%96%E7%89%A9%E6%8A%A5/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    外物报
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/usaco19feb-dishwashing-g/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          [USACO19FEB] Dishwashing G（贪心，二分）
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-07-16T16:44:55&#43;08:00">2026-07-16</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">3 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    算法足迹
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E6%B1%89%E8%AF%BA%E5%A1%94/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          汉诺塔
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-07-07T22:07:41&#43;08:00">2026-07-07</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">3 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E5%A4%96%E7%89%A9%E6%8A%A5/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    外物报
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E5%AF%BB%E6%89%BE%E5%AE%8C%E7%BE%8E%E7%9A%84%E4%B8%96%E7%95%8C/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          寻找完美的世界
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-06-12T19:41:18&#43;08:00">2026-06-12</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">5 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E5%A4%96%E7%89%A9%E6%8A%A5/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    外物报
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2025cat-d/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          2025CCFCAT省赛-D.简单树上问题（位运算，树）
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-06-11T18:15:42&#43;08:00">2026-06-11</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">2 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    算法足迹
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/2026zcpc%E6%B8%B8%E8%AE%B0/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          2026ZCPC游记
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-04-26T11:48:19&#43;08:00">2026-04-26</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">9 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E5%A4%96%E7%89%A9%E6%8A%A5/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    外物报
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E5%91%8A%E5%88%AB%E6%97%A5%E8%AE%B0/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          告别日记
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-04-23T11:55:36&#43;08:00">2026-04-23</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">3 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E5%A4%96%E7%89%A9%E6%8A%A5/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    外物报
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E8%93%9D%E6%A1%A5%E6%9D%AF-2026-%E7%9C%81-b-%E7%90%86%E6%83%B3%E6%B8%A9%E5%BA%A6-%E9%A2%98%E8%A7%A3/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          [蓝桥杯 2026 省 B] 理想温度 题解
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-04-12T11:48:35&#43;08:00">2026-04-12</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">4 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    算法足迹
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/usaco%E8%B6%B3%E5%A4%9F%E7%BB%BF/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          [USACO21FEB] Just Green Enough S（单调栈）
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-03-25T23:50:35&#43;08:00">2026-03-25</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">4 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    算法足迹
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+</section>
+
+  
+
+  
+
+
+  </section>
+
+        
+
+
+  
+
+
+
+
+
+
+<div
+  id="scroll-to-top"
+  class="fixed bottom-6 end-6 z-50 transform translate-y-4 opacity-0 duration-200">
+  <a
+    href="#the-top"
+    class="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+    aria-label="返回顶部"
+    title="返回顶部">
+    &uarr;
+  </a>
+</div>
+
+      </main><footer id="site-footer" class="py-10 print:hidden">
+  
+  
+    
+  
+  <div class="flex items-center justify-between">
+    
+    
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          &copy;
+          2026
+          chail
+      </p>
+    
+
+    
+    
+      <p class="text-xs text-neutral-500 dark:text-neutral-400">
+        
+        
+        由 <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> &amp; <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://blowfish.page/" target="_blank" rel="noopener noreferrer">Blowfish</a> 强力驱动
+      </p>
+    
+  </div>
+  
+  
+</footer>
+<div
+  id="search-wrapper"
+  role="dialog"
+  aria-modal="true"
+  aria-label="搜索"
+  class="invisible fixed inset-0 flex h-screen w-screen cursor-default flex-col bg-neutral-500/50 p-4 backdrop-blur-sm dark:bg-neutral-900/50 sm:p-6 md:p-[10vh] lg:p-[12vh] z-500"
+  data-url="/">
+  <div
+    id="search-modal"
+    class="flex flex-col w-full max-w-3xl min-h-0 mx-auto border rounded-md shadow-lg top-20 border-neutral-200 bg-neutral dark:border-neutral-700 dark:bg-neutral-800">
+    <header class="relative z-10 flex items-center justify-between flex-none px-2">
+      <form class="flex items-center flex-auto min-w-0">
+        <div class="flex items-center justify-center w-8 h-8 text-neutral-400">
+          <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+        </div>
+        <input
+          type="search"
+          id="search-query"
+          aria-label="搜索"
+          class="flex flex-auto h-12 mx-1 bg-transparent appearance-none focus:outline-dotted focus:outline-2 focus:outline-transparent"
+          placeholder="搜索"
+          tabindex="0">
+      </form>
+      <button
+        id="close-search-button"
+        class="flex items-center justify-center w-8 h-8 text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+        title="关闭 (Esc)">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+      </button>
+    </header>
+    <section class="flex-auto px-2 overflow-auto">
+      <ul id="search-results">
+        
+      </ul>
+    </section>
+  </div>
+</div>
+
+    </div>
+    
+    
+  </body>
+  
+</html>

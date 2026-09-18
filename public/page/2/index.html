@@ -1,178 +1,1206 @@
-<!doctype html><html lang=en dir=auto data-theme=auto><head><meta name=generator content="Hugo 0.166.0"><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>chail`s Blog</title><meta name=description content><meta name=author content><link rel=canonical href=https://chail-blog.pages.dev/><link crossorigin=anonymous href=../../assets/css/stylesheet.css rel="preload stylesheet" as=style><link rel=icon href=https://chail-blog.pages.dev/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://chail-blog.pages.dev/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://chail-blog.pages.dev/favicon-32x32.png><link rel=apple-touch-icon href=https://chail-blog.pages.dev/apple-touch-icon.png><link rel=mask-icon href=https://chail-blog.pages.dev/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate type=application/rss+xml href=https://chail-blog.pages.dev/index.xml title=rss><link rel=alternate hreflang=en href=https://chail-blog.pages.dev/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://chail-blog.pages.dev/"><meta property="og:site_name" content="chail`s Blog"><meta property="og:title" content="chail`s Blog"><meta property="og:locale" content="en_us"><meta property="og:type" content="website"><meta name=twitter:card content="summary"><meta name=twitter:title content="chail`s Blog"><script type=application/ld+json>{"@context":"https://schema.org","@type":"Organization","name":"chail`s Blog","url":"https://chail-blog.pages.dev/","description":"","logo":"https://chail-blog.pages.dev/favicon.ico","sameAs":[]}</script></head><body class=list id=top><header class=header><nav class=header-nav><div class=logo><a href=https://chail-blog.pages.dev/ accesskey=h title="chail`s Blog (Alt + H)">chail`s Blog</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
-<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu></ul></nav></header><main class=main><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>[蓝桥杯 2026 省 B] 理想温度 题解</h2></header><div class=entry-content><p>[蓝桥杯 2026 省 B] 理想温度 题解 前言 本人昨天刚刚参加今年的蓝桥杯，是第一次参加校级以上的算法赛事了。
-到达浙理工，我发现这里室内好暗好封闭，尤其是他们的机房，让我有一种不舒服的感觉。
-比赛即将开始，发现环境还要自己配置，包括安装监考系统，连接考试服务器等。他们把服务器地址写在前面白板上，我们这帮天天坐在电脑前敲代码的人怎么可能看得清！无奈只能多次下位前去查看。总之挺闹心的。
-赛时发挥还行，至少早早放弃了不会的第二题…不过很坑爹的一点是PDF题面，当你复制它的样例时就能发现会吞掉几个空格！害得我在第四题多花了不少时间。
-这道题是倒数第二题，赛时头脑风暴想到了哈希表记录差值，前缀和记录0数量的O(n)解法，但是没有处理好中间有很多0的情况！大概是顶多拿一半分了。于是便来写题解弥补遗憾。
-题目 P16238 [蓝桥杯 2026 省 B] 理想温度 题目描述 一条工业流水线上排列着 n 个温度传感器。当前各个传感器测得的温度记录在数组 A 中，而各传感器对应的理想标准温度记录在数组 B 中（即 Ai 为第 i 个传感器的当前温度，Bi 为第 i 个传感器的理想温度）。
-为了让尽可能多的传感器达到理想温度，你可以进行一次区域温度补偿操作：
-在流水线上划定一段连续的传感器区间 $[l, r]（即第（即第l个到第个到第r$ 个传感器）。 输入一个温度补偿值 k（k 为任意整数），使得该区间内所有传感器的当前温度都加上 k。 请问在执行完这一次校准操作后，最多能使多少个传感器的温度恰好等于其对应的理想标准温度？
-输入格式 第一行包含一个整数 n，表示传感器的数量。
-第二行包含 n 个整数 A1,A2,…,An，表示各传感器的当前温度。
-第三行包含 n 个整数 B1,B2,…,Bn，表示各传感器对应的理想标准温度。
-输出格式 输出一行，包含一个整数，表示补偿操作后处于理想温度的传感器最大数量。
-输入输出样例 #1 输入 #1 5
-1 2 3 4 5
-2 3 2 3 2 输出 #1 2 说明/提示 【评测用例规模与约定】 对于 $30%$ 的评测用例，保证 $1 \le n \le 2000$；
-...</p></div><footer class=entry-footer><span title='2026-04-12 11:48:35 +0800 CST'>April 12, 2026</span></footer><a class=entry-link aria-label="post link to [蓝桥杯 2026 省 B] 理想温度 题解" href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E8%93%9D%E6%A1%A5%E6%9D%AF-2026-%E7%9C%81-b-%E7%90%86%E6%83%B3%E6%B8%A9%E5%BA%A6-%E9%A2%98%E8%A7%A3/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>[USACO21FEB] Just Green Enough S（单调栈）</h2></header><div class=entry-content><p>[USACO21FEB] Just Green Enough S（单调栈） 正值春季，各省程序设计竞赛即将开始。本人尽管学识浅薄，能力平平，还是希望能够参加省赛。于是便参加了学校的选拔赛，喜提只AC1题并吃了8发罚时。今天的这道题便是选拔赛的第二题，我承认我还是太弱。我今年还有机会参加省赛吗？
-题目 P7410 [USACO21FEB] Just Green Enough S 题目描述 Farmer John 的草地可以被看作是一个由 $N \times N$ 个正方形方格（$1 \leq N \leq 500$）组成的方阵（想象一个巨大的棋盘）。由于土壤变异性，某些方格中的草可能更绿。每个方格 $(i,j)$ 可以用一个整数绿度值 $G(i,j)$ 来描述，范围为 $1 \ldots 200$。
-Farmer John 想要给他的草地的一个子矩阵拍摄一张照片。他希望确保这一子矩阵看上去足够绿，但又不绿得过分，所以他决定拍摄一个 $G$ 的最小值恰好等于 100 的子矩阵。请帮助他求出他可以拍摄多少不同的照片。子矩阵最大可以为整个草地，最小可以仅为一个方格（共有 $N^2(N+1)^2/4$ 个不同的子矩阵——注意该数可能无法用 $32$ 位整数型存储，所以你可能需要使用 $64$ 位整数类型，例如 C++ 中的 long long）。
-输入格式 输入的第一行包含 $N$。以下 $N$ 行每行包含 $N$ 个整数，表示 $N \times N$ 草地的 $G(i,j)$ 值。
-输出格式 输出 Farmer John 可以拍摄的不同的照片数量——也就是说，最小绿度值等于 $100$ 的子矩阵数量。
-注意这个问题涉及到的整数大小可能需要使用 $64$ 位整数型存储（例如，C/C++ 中的 long long）。
-...</p></div><footer class=entry-footer><span title='2026-03-25 23:50:35 +0800 CST'>March 25, 2026</span></footer><a class=entry-link aria-label="post link to [USACO21FEB] Just Green Enough S（单调栈）" href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/usaco%E8%B6%B3%E5%A4%9F%E7%BB%BF/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>2026杭电春季赛热身赛-1007最大三段和（kadane算法）</h2></header><div class=entry-content><p>2026杭电春季赛热身赛-1007最大三段和（kadane算法） 春天来了，我们可以在各处看到盛开的花朵，多么美丽！而各个程序设计竞赛也将如这些花一样接踵而至。为了进一步提升程序设计能力，就让我来记录一下杭电赛的学习吧！今天的这道题主要记录kadane算法的学习，这道题便是前两天新鲜出炉的热身赛题目！
-题目 Problem Description 木木同学最近做了一道最大子段和，感觉很有意思，然后想了一下如果取两段呢？他很快就会了。那如果取三段呢？木木同学学艺不精没想出来，于是便来请教你了。
-给出一个长度为 n 的序列 a，要求从中选出三个子段，使得这三个子段的所有数字和最大。每个子段的长度至少为1，并且 两个子段之间至少间隔一个数，同时要求第二个子段长度为1。
-Input Output&amp;Sample 题解 思考 对于单一的最大子段和问题，很好去解决，只要找到差值最大的前缀和就可以了。而最大三段和似乎就有些棘手了。这道题有一个条件：第二个子段的长度为1。这样的特殊的条件自然会让我们很在意。
-其他两段或许没那么好确定，但这个长度为1的第二段就很好考虑了。它一定不能在数组的端点和端点相邻的位置，因为子段需要至少隔一个数字。而当它的位置确定后，我们要做的就是在它的左边和右边分别选一个和最大的子段。等等，这样我们不就把问题解决了？对于每一个可能的中间点，找到最大的左子段和右子段。
-最大左子段和最大右子段怎么找。由于枚举中点已经有了O(n)，找这两段就必须是O(1)或者O(logn)。想一下，我们可以预处理每个位置下最大的左子段和最大的右子段。而kadane算法可以以O(n)的时间复杂度完成。
-kadane算法 Kadane算法是一种用于解决最大子数组和问题的动态规划算法。它的核心思想是在遍历数组的过程中，维护一个局部最优解，并最终得到全局最优解。
-Kadane算法的核心思想是：
-对于每个位置i，计算以该位置结尾的最大子数组和
-状态转移：dp[i] = max(nums[i], dp[i-1] + nums[i])
-最终答案：max(dp[0], dp[1], …, dp[n-1])
-那么我们就可以用kadane分别预处理左右最大子段
-for(int i=1;i&lt;=n;++i){ if(i == 1) ldp[i] = a[i]; else ldp[i] = max(a[i], ldp[i-1] + a[i]); if(i == 1) lm[i] = ldp[i]; else lm[i] = max(lm[i-1], ldp[i]); } for(int i=n;i>=1;--i){ if(i == n) rdp[i] = a[i]; else rdp[i] = max(a[i], rdp[i+1] + a[i]); if(i == n) rm[i] = rdp[i]; else rm[i] = max(rm[i+1], rdp[i]); } 这样我们只需要枚举中间子段，就可以得到每一个中间子段对应的最大结果，从而找出最终的答案。
-...</p></div><footer class=entry-footer><span title='2026-03-15 10:15:12 +0800 CST'>March 15, 2026</span></footer><a class=entry-link aria-label="post link to 2026杭电春季赛热身赛-1007最大三段和（kadane算法）" href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2026%E6%9D%AD%E7%94%B5%E6%98%A5%E5%AD%A3%E8%B5%9B-%E6%9C%80%E5%A4%A7%E4%B8%89%E6%AE%B5%E5%92%8C/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>[NOIP 2018 提高组] 货币系统（数学，dp）</h2></header><div class=entry-content><p>[NOIP 2018 提高组] 货币系统（数学，dp） 新的学期开始了，是时候好好学习了。每天早上早早起来算法题，何尝不是一件美逝事。
-今天看一道很简单的题！一道和数学有关的题，此类题往往需要某种数学证明，一旦数学上没问题，就只是代码实现的问题了。来看题吧：
-题目背景 NOIP2018 提高组 D1T2
-题目描述 在网友的国度中共有 n 种不同面额的货币，第 i 种货币的面额为 $a[i]，你可以假设每一种货币都有无穷多张。为了方便，我们把货币种数为，你可以假设每一种货币都有无穷多张。为了方便，我们把货币种数为n、面额数组为、面额数组为a[1..n]的货币系统记作的货币系统记作(n,a)$。
-在一个完善的货币系统中，每一个非负整数的金额 x 都应该可以被表示出，即对每一个非负整数 x，都存在 n 个非负整数 $t[i]满足满足a[i] \times t[i]的和为的和为x。然而，在网友的国度中，货币系统可能是不完善的，即可能存在金额。然而，在网友的国度中，货币系统可能是不完善的，即可能存在金额x不能被该货币系统表示出。例如在货币系统不能被该货币系统表示出。例如在货币系统n=3,a=[2,5,9]中，金额中，金额1,3$ 就无法被表示出来。
-两个货币系统 (n,a) 和 (m,b) 是等价的，当且仅当对于任意非负整数 x，它要么均可以被两个货币系统表出，要么不能被其中任何一个表出。
-现在网友们打算简化一下货币系统。他们希望找到一个货币系统 (m,b)，满足 (m,b) 与原来的货币系统 (n,a) 等价，且 m 尽可能的小。他们希望你来协助完成这个艰巨的任务：找到最小的 m。
-输入格式 输入文件的第一行包含一个整数 T，表示数据的组数。
-接下来按照如下格式分别给出 T 组数据。 每组数据的第一行包含一个正整数 n。接下来一行包含 n 个由空格隔开的正整数 $a[i]$。
-输出格式 输出文件共有 T 行，对于每组数据，输出一行一个正整数，表示所有与 (n,a) 等价的货币系统 (m,b) 中，最小的 m。
-输入输出样例 #1 输入 #1 2
-4
-3 19 10 6
-5
-11 29 13 19 17 输出 #1 2
-5 说明/提示 在第一组数据中，货币系统 $(2, [3,10])和给出的货币系统和给出的货币系统(n, a)等价，并可以验证不存在等价，并可以验证不存在m &lt; 2的等价的货币系统，因此答案为的等价的货币系统，因此答案为2。在第二组数据中，可以验证不存在。在第二组数据中，可以验证不存在m &lt; n的等价的货币系统，因此答案为的等价的货币系统，因此答案为5$。
-...</p></div><footer class=entry-footer><span title='2026-03-02 09:35:01 +0800 CST'>March 2, 2026</span></footer><a class=entry-link aria-label="post link to [NOIP 2018 提高组] 货币系统（数学，dp）" href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/noip-2018-%E6%8F%90%E9%AB%98%E7%BB%84-%E8%B4%A7%E5%B8%81%E7%B3%BB%E7%BB%9F/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>···雨夜···</h2></header><div class=entry-content><p>···雨夜··· 下雨了 周期的雨总是
-出现在心情的周期
-它的使者宣告：下雨了
-雨坐在叶子上
-然后空气开始松弛
-紧绷的胸口得到抚慰
-消失的乌云藏在肺里
-雨坐在叶子上
-最好的是漫步在雨夜里
-一个人或者两个人
-无声或者话语
-雨坐在叶子上
-它不会重重地摔下
-而是
-借太阳
-飞往天空
-我爱雨；我爱夜晚；我爱：雨夜 雨夜总是美妙的，雨夜总是浪漫的，我希望我能不错过每一个雨夜。
-雨夜的马路，是破碎的镜子。你站在路旁，看着这面碎掉的镜子。你看到了夜晚的灯火阑珊，你看到了车水马龙，你看到了另一个自己，你看到了这个世界。
-躲在雨夜里吧 请拿出所有的多愁善感，请拿出所有的感伤，然后无论打伞与否，躲在雨夜的角落中。于是我看到了雨的静默与陪伴，冷静与温婉，力量与热情…
-轻轻地告别雨夜 每一个雨守护的夜晚，都格外令人安心。雨夜会静悄悄地走，而我们很安心。雨夜会如此再静悄悄地归来…</p></div><footer class=entry-footer><span title='2026-02-28 21:29:53 +0800 CST'>February 28, 2026</span></footer><a class=entry-link aria-label="post link to ···雨夜···" href=https://chail-blog.pages.dev/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E9%9B%A8%E5%A4%9C/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>洛谷 P1714 切蛋糕[单调队列，前缀和]</h2></header><div class=entry-content><p>洛谷 P1714 切蛋糕[单调队列，前缀和] 前言 大家新年好呀！虽然新年已经过去了…各位今年过得还开心吗？反正我是好好休息了几天，再次回来做题感觉脑子已经生锈了，所以来做一些不那么难的题复健。
-题目 来看看我们今天的题目吧！是一道需要注意一点细节的单调队列题！
-题目描述 今天是小 Z 的生日，同学们为他带来了一块蛋糕。这块蛋糕是一个长方体，被用不同色彩分成了 n 个相同的小块，每小块都有对应的幸运值。
-小 Z 作为寿星，自然希望吃到的蛋糕的幸运值总和最大，但小 Z 最多又只能吃 m(m≤n) 小块的蛋糕。
-请你帮他从这 n 小块中找出连续的 k(1≤k≤m) 块蛋糕，使得其上的总幸运值最大。
-形式化地，在数列 ${p_n}中，找出一个子段中，找出一个子段[l,r](r-l+1\le m)，最大化，最大化\sum\limits_{i=l}^rp_i$。
-输入格式 第一行两个整数 n,m。分别代表共有 n 小块蛋糕，小 Z 最多只能吃 m 小块。
-第二行 n 个整数，第 i 个整数 pi 代表第 i 小块蛋糕的幸运值。
-输出格式 仅一行一个整数，即小 Z 能够得到的最大幸运值。
-输入输出样例 #1 输入 #1 5 2
-1 2 3 4 5 输出 #1 9 输入输出样例 #2 输入 #2 6 3
-1 -2 3 -4 5 -6 输出 #2 5 说明/提示 数据规模与约定 对于 $20%$ 的数据，有 $1\le n\le100$。 对于 $100%$ 的数据，有 $1\le n\le5\times 10^5$，$|p_i|≤500$。 保证答案的绝对值在 $[0,2^{31}-1]$ 之内。
-...</p></div><footer class=entry-footer><span title='2026-02-22 10:00:49 +0800 CST'>February 22, 2026</span></footer><a class=entry-link aria-label="post link to 洛谷 P1714 切蛋糕[单调队列，前缀和]" href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E6%B4%9B%E8%B0%B7-p1714-%E5%88%87%E8%9B%8B%E7%B3%95%E5%8D%95%E8%B0%83%E9%98%9F%E5%88%97/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>[2025 杭电春季赛 1]船长（模拟，数论）</h2></header><div class=entry-content><p>[2025 杭电春季赛 1]船长（模拟，数论） 感觉这是一道有点难度的模拟题！杭电春季赛的题似乎都比较好，这道题很适合用来锻炼思维与码力。
-题目 题目描述 大嘤帝国的东格玛男人，染染，终于成为了一名水手！
-正如隔壁某位将军的那句“不想做将军的士兵不是好士兵”，不想做船长的水手不是好水手。作为一名好水手，染染自然也报名参与了船长的竞选。
-报名那天，经过广泛的交流，染染得知，包括他自己在内，总共有 $n$ 名水手参与竞选。这 $n$ 名水手都被赋予了一个编号，可以认为第 $i$ 名参与竞选的水手的编号即为 $i$。特别的，染染的编号为 $p0$。
-这 $n$ 名参与竞选的水手当然也不是谁都有竞争力的。根据染染的情报，只有 $k$ 名水手会对染染造成威胁，其中第 $j$ 名水手的编号为 $pj$，而染染当然不想在竞选时碰上这些对手。
-竞选会持续若干轮，每轮会在仍在竞选的水手中大致筛选掉其中的一半，直至仍在竞选的水手只剩下一名，这一名水手就是最后的船长。在每一轮竞选中，假设仍在竞选的水手剩下 $m$ 名，编号从小到大依次为 $q1,q2,⋯,qm$，则水手 $q1$和水手 $q2$ 进行一次较量，水手 $q3$和水手 $q4$进行一次较量，依此类推总共进行 $⌊m/2⌋$（$m/2$，下取整）次较量，并剩下 $⌈m/2⌉$($m/2$ ， 上取正）名水手进入下一轮竞选。注意，如果 $m$ 为奇数，则水手 $qm$在本次竞选中不用参与任何一次较量，直接进入下一轮竞选。
-现在，染染想要知道，如果他和其它水手的较量一定赢，而其他水手之间的较量双方赢的概率相等（即都是 $1/2$），则染染不会碰上会对染染造成威胁的 $k$ 名水手的概率对 $998244353$ 取模后的结果。
-输入格式 本题单个测试点内包含多组测试数据。
-输入第一行一个正整数 $T (1≤T≤20)$，表示数据组数。
-每组数据第一行两个非负整数 $n (1≤n≤10^9)$和 $k (0≤k&lt;min⁡{n,10^5})$，分别表示参与竞选的水手数量和会对染染造成威胁的水手数量。
-第二行$k+1$ 个两两不同的正整数 $p0,p1,p2,⋯,pk (1≤pj≤n)$，表示染染的编号和会对染染造成威胁的水手的编号。
-保证单个测试点内每组数据中 $k+1$ 的和不超过 $10^6$。
-输出格式 对于每组数据输出一行一个非负整数，表示答案概率对 $998244353$ 取模后的结果。
-输入样例 3
-10 0
-1
-8 2
-1 3 5
-4 2
-1 3 4 输出样例 1
-623902721
-0 数据范围与提示 对于第一组样例，没有水手能对染染造成威胁，答案即为 $1$。
-...</p></div><footer class=entry-footer><span title='2026-02-15 22:29:09 +0800 CST'>February 15, 2026</span></footer><a class=entry-link aria-label="post link to [2025 杭电春季赛 1]船长（模拟，数论）" href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2025-%E6%9D%AD%E7%94%B5%E6%98%A5%E5%AD%A3%E8%B5%9B-1%E8%88%B9%E9%95%BF%E6%A8%A1%E6%8B%9F%E6%95%B0%E8%AE%BA/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>再累也不能倒下--登华山游记</h2></header><div class=entry-content><p>再累也不能倒下–登华山游记 前言 去年暑假，一款叫做《PEAK》的多人合作登山游戏爆火。后来我也和小伙伴们去体验了这款游戏，实在是趣味无穷，体会到了一起爬山的快乐。然后我们4个人（我，菇菇韩韩伯爵（下称韩韩），馒头爱好者（下称馒头），栗姆康封臣（下称康康））便计划着要在现实中也一起爬山。终于在昨天（2.7），爬了华山。我决定在此写下游记记录此次爬山经历。
-爬山前的故事 2月6日，我们离开三门峡前往渭南华阴–登华山的起点。我们准备了手帽和《PEAK》同款的飞行员帽与宾邦玩偶。
-华阴是一个不大的县城，加上我们的酒店在山脚不远处，略显偏僻，导致我们第一天到这里无所事事，无处可去（此时是下午）。华山有五座峰：北峰，中峰，东峰，西峰，南峰。由于第二天晚上就要离开并且还要尽可能一次全游历一遍，我们计划第二天早上四点半就起床开始爬山，那晚上当然要早点睡了（大概吧）。
-棍棍面 终于该晚上了，我们出去找地方吃饭，发现附近好像没什么我们中意的饭店。走着走着我们莫名走进了一条巷道，这里民风淳朴，很接地气，甚至深处就是菜市场。一店家见我们似乎在寻地吃饭，便招待我们来尝尝他们的棍棍面。我们第一次听到这个名字，那大叔解释说，这里是平常本地人才来吃的，不像外面那些招待游客的饭店，是真正的当地美食，我们能找到这里来是很不寻常的事…我想大叔确实是说服我们了，而且这个小面馆确实很淳朴，只提供两种面。
-棍棍面到底怎么样呢。十分我愿意给九分（还有一分是因为我挑食），价格不贵，12元，份量十足且味道也很棒。更值得一提的是，大娘还为我们盛了下面汤。这太对了，作为一个经常吃面的三门峡人，我明白，这是真正的饮食习俗！温暖的下面汤带着醇正的香气，喝了令人舒适无比。我想我们的确是找对地方了。记住这个棍棍面馆。
-夜晚的休闲时光 吃完饭带着零食回到酒店，我们开始了惬意的时光。四个人躺在两张床上吃着零食看着电影《康斯坦丁》（是一部不错的电影）。看完电影我们便早早熄灯睡觉，为第二天的早起做准备。
-不过我想大家都明白，这种时候往往是聊天的最佳时机。我们聊得很嗨，该聊的话题都聊了一遍，聊了几个小时，最终十一点才结束…
-爬山：再累也不能倒下 第二天早上，我们还是准时起来了，做了简单的准备后，我们来到了徒步登山的起点： 此时五点四十三分
-黎明之路 此时距离第一个目标北峰还很远，我们尚且只能在这黎明徐徐前进。
-我不得不提一位我们的队员：韩韩。韩韩与其他三位队员不同，他的体型较胖，因此登山对他而言会更需要克服身体上的苦痛。
-还没到真正有强度的地方，我们已经热得不行了，而韩韩已经开始难受了。在这段黎明之路上，韩韩多次不得不停下坐火（即坐下休息，原话即如此，引用自《PEAK》在山顶的篝火处休息以及《黑暗之魂》在篝火回复状态）。虽然这段开始之路略显不妙：充满黑暗与未知的恐惧，我们至少遇到了很多咪咪（即猫，原话如此）：
-登山之路咪咪众多，咪咪居然爬上了这么高的地方！
-上北峰之路：无尽的阶梯无尽的陡路 随着天色渐亮，我们也走出了第一阶段，开始了真正的高强度爬升的路。这里已经很容易累了，韩韩很难跟上馒头和康康了，我跟在韩韩后面，看到他上台阶的姿态已经把他的吃力暴露无遗了。这倒也没什么，韩韩会使出便携式火炉（即不管是否有休息处原地坐火休息，原话如此，该物品出自《PEAK》）。当然，我们仨看着累得不行的韩韩也有些无奈而想笑。每当坐火的时候，韩韩总想喝点水（此时水都已经很凉了），另外，韩韩还会使用一分钟（即当馒头提出继续前进的时候，韩韩提出就再休息一分钟>o&lt;）。
-经过了很多次坐火与一分钟后，我们已经爬到了一个不低的地方：
-不过接下来的路更加陡峭：
-这样的路令人精神紧张，神情专注，因为它两侧的保护措施并不算好，稍有不慎便有可能不幸坠入山谷，之前便有游客因此遇难。无论如何，还是安全第一啊！韩韩该坐火还是要坐火的。
-到这里，气温已经下降不少了，刚开始还觉得热，现在觉得有些冷了，韩韩也因为喝凉水身体不适，路也渐渐变得越来越难走…作为PEAK高玩的我们怎么会因此退缩呢？我们踏过一层又一层阶梯，走过一座又一座石桥。同样也来到了一个坡度极大的地方：此地必须牢牢抓好铁链，否则无法立足。
-此地还有前人题字： 乃光绪年之作也，此字虽为刻字，字形甚正。
-经历了多道险坡，穿过犁沟门（有句方言怎么说来着…）终于到达了距北峰不远的地方了：
-对了，不要回头哦：
-最终我们于十点左右到达北峰，高度一千六百多米，并为宾邦拍了照（背后是中峰）：
-经过了奇险的登山之路，终于登上了第一座峰，可以是最难的地方已经度过了，可喜可贺！接下来我们的目标是中峰，还要再爬升四百米左右，依旧是一段相当长且艰难的路了！
-乘中峰之路 彼时所有人都很疲惫了。韩韩的姿态十分不堪，依旧多次坐火，一分钟。这段路需要两个小时，和上北峰之路一样有许多斜率很高的阶梯…这里可以看到不少雪，冷得不行，我也不再拿出手机拍照了。
-不知何时，抵达中峰。到这里，其他峰的距离都不算太远了，做了休息之后我们继续向东峰进发。
-阳光充足的东峰 东峰在阳面，阳光充足，比较宜人： 做了休息之后我们便前往最高峰：南峰
-顶峰！PEAK！南峰 再次经过一段路程，我们终于到达了华山最高点，也就是顶峰：南峰！在这里，便可以一览众山小了。
-另外，我们还把宾邦带了上来此时下午三点
-至此，此次旅程已经到达了终点，是时候返程了。当然，我们的返程途经西峰，再经中峰到达北峰乘索道下山。
-最后一峰，西峰，可以看到远处的大平原：
-下山，以最后的力气离开 经过了五峰的洗礼，我们都已经身心俱疲，想要快点回去休息。好在下山不会像上山那么累，尽管途中韩韩还是以迅雷不及掩耳之势坐了火…我们以最快的速度到达了北峰索道并下山。此时我已经觉得生无可恋了，已经没力气了！
-尾声：PEAK之旅结束了 经过了一天的爬山，我们已经筋疲力尽，而且现在还饥饿至极！
-以棍棍面开始，以棍棍面结束 下山的第一件事就是赶紧填饱肚子！吃什么呢？棍棍面吧！此时如果能吃上一顿棍棍面，实在是一件幸福的事！
-我们再次赶到第一次吃棍棍面的地方，直接要了3份棍棍面（康康吃零食去了）。大娘善解人意，见我们疲劳不已，便先端上来了四碗下面汤，太懂我们了！我不禁感慨，这家棍棍面真是个好地方！我们以棍棍面开始，以棍棍面结束…以幸福的心情吃完棍棍面，我们去往车站坐上了返程的列车…
-我问起下次还来不来的时候，韩韩和康康表示不来了，再也不来了！是啊，真正的登山是对勇气和毅力的考验与磨练，不是像游戏里那样轻松的。我想我们度过了一段充实而有意义的爬山之旅。不过，下次就不好说了~
-最后，我一定要点名表扬韩韩。韩韩的爬山难度是我们当中最高的，但是他最终坚持了下来！尽管有无数次的坐火与一分钟，我在韩韩后面看到的更多是他努力的背影。韩韩，你做得很棒！
-走在回家的路上，我想，无论是什么样的艰难险阻，我都应该坚持去克服。就像这次爬山，那上山路望不到头，可正是我低下头一步一步迈上一级一级台阶，让我最终到达了顶峰。我们都应该年轻一次，都应该以那股年轻劲，少年气做这样的挑战。人生短短几个秋，行乐直须年少！</p></div><footer class=entry-footer><span title='2026-02-08 19:12:51 +0800 CST'>February 8, 2026</span></footer><a class=entry-link aria-label="post link to 再累也不能倒下--登华山游记" href=https://chail-blog.pages.dev/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E5%86%8D%E7%B4%AF%E4%B9%9F%E4%B8%8D%E8%83%BD%E5%80%92%E4%B8%8B--%E7%99%BB%E5%8D%8E%E5%B1%B1%E6%B8%B8%E8%AE%B0/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>通信线路（[USACO08JAN] Telephone Lines S）（二分，01最短路）</h2></header><div class=entry-content><p>通信线路（[USACO08JAN] Telephone Lines S）（二分，01最短路） 今天练习最短路题目时遇到了一道比较有意思的题：通信线路（[USACO08JAN] Telephone Lines S的简化版）。我们来看看吧：
-题目描述 在郊区有 $N$ 座通信基站，$P$ 条 双向 电缆，第 $i$ 条电缆连接基站 $Ai$ 和 $Bi$。
-特别地，$1$ 号基站是通信公司的总站，$N$ 号基站位于一座农场中。
-现在，农场主希望对通信线路进行升级，其中升级第 $i$ 条电缆需要花费 $Li$。
-电话公司正在举行优惠活动。
-农产主可以指定一条从 $1$ 号基站到 $N$ 号基站的路径，并指定路径上不超过 $K$ 条电缆，由电话公司免费提供升级服务。
-农场主只需要支付在该路径上剩余的电缆中，升级价格最贵的那条电缆的花费即可。 求至少用多少钱可以完成升级。
-输入格式 第 $1$ 行：三个整数 $N，P，K$。
-第$2..P+1$ 行：第 $i+1$ 行包含三个整数$Ai,Bi,Li$。
-输出格式 包含一个整数表示最少花费。
-若 $1$ 号基站与 $N$ 号基站之间不存在路径，则输出 $−1$。
-数据范围 $0≤K&lt;N≤1000, 1≤P≤10000, 1≤Li≤1000000$
-输入样例 5 7 1
-1 2 5
-3 1 4
-2 4 8
-3 2 3
-5 2 9
-3 4 7
-4 5 6 输出样例 4 题意 给了一张边权无向图，要寻找从$1$到$N$的最短路，最短路上可以不计$K$条边的权重，只计剩下边的最大权重，找出这个最大权重的最小值。
-...</p></div><footer class=entry-footer><span title='2026-02-05 13:03:34 +0800 CST'>February 5, 2026</span></footer><a class=entry-link aria-label="post link to 通信线路（[USACO08JAN] Telephone Lines S）（二分，01最短路）" href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E9%80%9A%E4%BF%A1%E7%BA%BF%E8%B7%AF/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>[蓝桥杯 2013 国 A] 约数倍数选卡片（数论，dfs，图）</h2></header><div class=entry-content><p>[蓝桥杯 2013 国 A] 约数倍数选卡片（数论，dfs，图） 哎，牛客赛做不下去了qwq，所以决定摸鱼来记录一篇题解。
-那么废话不多说，看题目：
-题目大意 两个人从一堆数字中选数，选择的只能是上个人选的数的约数或倍数，如果没得选就输了。
-思考 将数字关系转换为图 刚开始看这道题的时候，有些束手无策，因为想不到一个好的办法去描述这些数字的关系。总不能每次都遍历一遍寻找选什么数吧？不过我突然灵机一动，刚好最近一直在练习图相关的题目，数字这种约数倍数的关系能不能转换成图呢？答案是可以的！而且适配的非常完美：如图，可以选的数字在图上恰恰是直接连接的。那么我们就把这道题转换成了一道无向图的题。我们要在给定的起点中找到必胜的最小的起点。只要这个点走到头没法走了，那这个点的状态就是输了。
-不过这道题存在可以重复选的数字，所以我们还需要一个数组 cnt 来记录可以选择的次数。
-dfs求解 对于图的问题，往往需要遍历图来求解。本题也不例外。可以想到当一个节点必输的时候它的上一个节点不一定胜，当一个节点的所有下一个节点存在必胜时这个节点必输。这启发我们通过 dfs 来递归搜索每个节点的胜负情况，需要注意的是这种博弈论题的博弈思想：
-如果当前节点的所有下一个节点中存在必胜，那么这个节点必输。 否则这个节点必胜，也就是当前节点所有下一个节点都必输。 就这样，我们把这道数论加博弈的题转换为了图的 dfs。
-Code 读入数据 这道题的数据需要我们自己想办法按行读，有两种办法：
-1. 按行读入为字符串，处理字符串。 2. 按行读入为字符串流，处理字符串流。
-这里给出第二种办法：
-string line; getline(cin, line); stringstream ss(line); int a; while (ss >> a) { arr.push_back(a);//所有数字 cnt[a]++; } getline(cin, line); stringstream ss2(line); while (ss2 >> a) { can.push_back(a);//先手可选的数字 } 初始化 建图并对可选数字排序，因为我们要找出最小的答案：
-for(int i=1;i&lt;=100;++i){ if(cnt[i]==0) continue; cnt[i]--; for(int j=1;j&lt;=100;++j){ if(cnt[j]>0 && (i%j==0 || j%i==0)) e[i].push_back(j);//邻接表e }//这里让数字可以与自己连接，因为自己也是自己的约数和倍数 cnt[i]++; } sort(can.begin(), can.end()); dfs 最关键的部分：
-...</p></div><footer class=entry-footer><span title='2026-02-03 17:08:17 +0800 CST'>February 3, 2026</span></footer><a class=entry-link aria-label="post link to [蓝桥杯 2013 国 A] 约数倍数选卡片（数论，dfs，图）" href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E8%93%9D%E6%A1%A5%E6%9D%AF-2013-%E5%9B%BD-a-%E7%BA%A6%E6%95%B0%E5%80%8D%E6%95%B0%E9%80%89%E5%8D%A1%E7%89%87/></a></article><footer class=page-footer><nav class=pagination><a class=prev href=https://chail-blog.pages.dev/>«&nbsp;Prev&nbsp;
-</a><a class=next href=https://chail-blog.pages.dev/page/3/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://chail-blog.pages.dev/>chail`s Blog</a></span> ·
-<span>Powered by
-<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
-<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
-</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script></body></html>
+<!doctype html>
+<html
+  lang="zh-cn"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="dark"
+  data-auto-appearance="true"><head>
+	<meta name="generator" content="Hugo 0.166.0">
+  <meta charset="utf-8">
+  
+    <meta http-equiv="content-language" content="zh-cn">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color">
+
+  
+  
+    <title>chail&#39;s Blog</title>
+    <meta name="title" content="chail&#39;s Blog">
+  
+
+  
+  
+  
+  
+  
+    
+  
+    
+  
+    
+  
+  
+    <meta name="description" content="chail 的个人博客">
+  
+  
+  
+  
+  <link rel="canonical" href="https://chail-blog.pages.dev/">
+  
+  
+    
+      <link rel="alternate" type="application/rss+xml" href="/index.xml" title="chail's Blog" />
+  
+    
+      <link rel="alternate" type="application/json" href="/index.json" title="chail's Blog" />
+  
+  
+
+  
+  
+    <meta name="author" content="chail">
+  
+  
+
+  
+  <meta property="og:url" content="https://chail-blog.pages.dev/">
+	<meta property="og:site_name" content="chail&#39;s Blog">
+	<meta property="og:title" content="chail&#39;s Blog">
+	<meta property="og:description" content="chail 的个人博客">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="website">
+
+  
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="chail&#39;s Blog">
+	<meta name="twitter:description" content="chail 的个人博客">
+
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+  
+    
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/main.bundle.min.e197f572a3a6477ef62726e5044645ab5d984d529ef22a7dffbed424175be554d3e9c850c3fdded22d2fc5f3b3c7cf1f4afc1c184e56f71c710d7a258aee97aa.css"
+    integrity="sha512-4Zf1cqOmR372JyblBEZFq12YTVKe8ip9/77UJBdb5VTT6chQw/3e0i0vxfOzx88fSvwcGE5W9xxxDXoliu6Xqg==">
+
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/appearance.min.11183536302aa30e374452803c0154673009b5a4995c7f6559d1c935544cc591b599a5f2adfaeda41e1cc865bd62bdace9b0672a75294ce49d185f0f82b98cbe.js"
+    integrity="sha512-ERg1NjAqow43RFKAPAFUZzAJtaSZXH9lWdHJNVRMxZG1maXyrfrtpB4cyGW9Yr2s6bBnKnUpTOSdGF8PgrmMvg=="></script>
+  
+
+
+  
+  
+  
+  
+  
+  
+    
+    <script defer src="/lib/zoom/zoom.min.umd.b4b722fcb5d42f34f52b30a92f3521b69f403ca9d96d0d6179eb537cb870f5d83fdf1fe836688d95d5c99fefbda4170487711006e56051fa67ea00da10521721.js" integrity="sha512-tLci/LXULzT1KzCpLzUhtp9APKnZbQ1heetTfLhw9dg/3x/oNmiNldXJn&#43;&#43;9pBcEh3EQBuVgUfpn6gDaEFIXIQ=="></script>
+    
+    <script defer src="/js/medium-zoom.7f76d937fbb793f3703fedc60ee1e6345259cf2ada403d1876b806fffeaeb2ba6fc594eaccad75c96d5d2425e9fb833748bf1221b4d90d3cf78cf073e104f814.js" integrity="sha512-f3bZN/u3k/NwP&#43;3GDuHmNFJZzyraQD0YdrgG//6usrpvxZTqzK11yW1dJCXp&#43;4M3SL8SIbTZDTz3jPBz4QT4FA=="></script>
+  
+  
+  
+  
+
+  
+  
+  
+    
+  
+  
+    
+    
+    
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+    
+    <script
+      defer
+      type="text/javascript"
+      id="script-bundle"
+      src="/js/main.bundle.min.eee20202bf66badfd33b8ccdfeca68b4361999a7c90ccff82ab31d8f4dafdc8e09848344e28bd1bd3cd80fa63d4e109fede339f1decbc06cfa159ba3e479919e.js"
+      integrity="sha512-7uICAr9mut/TO4zN/spotDYZmafJDM/4KrMdj02v3I4JhINE4ovRvTzYD6Y9ThCf7eM58d7LwGz6FZuj5HmRng=="
+      data-copy="复制"
+      data-copied="已复制"></script>
+  
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+  
+
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://chail-blog.pages.dev/",
+    "name": "chail\u0027s Blog",
+    "description": "chail 的个人博客",
+    "inLanguage": "zh-cn",
+    "url": "https://chail-blog.pages.dev/",
+    
+    "publisher" : {
+      "@type": "Person",
+      "name": "chail"
+    }
+  }
+  </script>
+
+
+
+  
+  
+    
+
+
+
+
+  
+
+  
+  
+
+  
+  
+
+  
+  
+</head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <body class="flex flex-col h-screen m-auto leading-7 max-w-7xl px-6 sm:px-14 md:px-24 lg:px-32 text-lg bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral bf-scrollbar">
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="px-3 py-1 text-sm -translate-y-8 rounded-b-lg bg-primary-200 focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content">
+        <span class="font-bold text-primary-600 pe-2 dark:text-primary-400">&darr;</span>
+        跳过正文
+      </a>
+    </div>
+    <header>
+      
+      
+        <div class="min-h-32"></div>
+<div class="fixed inset-x-0 top-3 z-100 px-3 sm:top-5 sm:px-6">
+  <div
+    class="relative mx-auto max-w-7xl rounded-2xl border border-neutral-200/80 shadow-lg shadow-neutral-900/5 dark:border-neutral-700/80 [&_img.logo]:max-h-10 [&_img.logo]:max-w-10">
+    <div class="absolute inset-0 -z-10 rounded-2xl bg-neutral/60 backdrop-blur-xl dark:bg-neutral-800/60"></div>
+    <div class="px-3">
+      <div class="main-menu flex items-center w-full gap-2 p-1 pl-0">
+  
+  
+    <a href="/" class="text-base font-medium truncate min-w-0 shrink">
+      chail&rsquo;s Blog
+    </a>
+  
+  <div class="flex items-center ms-auto">
+    <div class="hidden md:flex">
+      <nav aria-label="" class="flex items-center gap-x-5 h-12">
+  
+
+  
+
+  
+
+  
+    <div class="flex items-center">
+      <button
+        id="appearance-switcher"
+        aria-label="切换为深色模式"
+        type="button"
+        class="text-sm bf-icon-color-hover"
+        title="切换为深色模式">
+        <div class="flex items-center justify-center dark:hidden">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+        </div>
+        <div class="items-center justify-center hidden dark:flex">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+        </div>
+      </button>
+    </div>
+  
+
+  
+    <button
+      id="search-button"
+      aria-label="搜索 (/)"
+      class="flex items-center gap-2 rounded-lg border bf-border-color bf-border-color-hover bg-neutral-100/50 px-2 py-1 text-sm text-neutral-500 transition-colors hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral-400 dark:hover:text-primary-400"
+      title="搜索 (/)">
+      <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+      <kbd
+        id="search-shortcut-hint"
+        class="pointer-events-none font-sans text-xs text-neutral-500 dark:text-neutral-400"
+        aria-hidden="true">
+        ⌘K
+      </kbd>
+    </button>
+  
+</nav>
+
+
+
+    </div>
+    <div class="flex md:hidden">
+      
+<div class="mobile-header-row relative flex items-center h-14 gap-4">
+  
+
+  
+    <button
+      id="appearance-switcher-mobile"
+      type="button"
+      aria-label="切换为深色模式"
+      title="切换为深色模式"
+      class="flex items-center justify-center text-neutral-900 hover:text-primary-600 dark:text-neutral-200 dark:hover:text-primary-400">
+      <div class="dark:hidden">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+      </div>
+      <div class="hidden dark:block">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+      </div>
+    </button>
+  
+
+  
+    <button
+      id="search-button-mobile"
+      aria-label="搜索 (/)"
+      class="flex items-center justify-center bf-icon-color-hover"
+      title="搜索 (/)">
+      <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+    </button>
+  
+
+  
+</div>
+
+
+
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+  <script>
+    (function () {
+      var mainmenu = document.querySelector(".main-menu");
+      if (!mainmenu) return;
+
+      var path = window.location.pathname;
+      var links = mainmenu.querySelectorAll('a[href="' + path + '"]');
+
+      links.forEach(function (link) {
+        var targets = link.querySelectorAll("span");
+        targets.forEach(function (el) {
+          el.classList.add("active");
+        });
+      });
+    })();
+  </script>
+
+
+    </div>
+  </div>
+</div>
+
+      
+    </header>
+    <div class="relative flex flex-col grow">
+      <main id="main-content" class="grow">
+        
+  
+    
+    
+      <article class="max-w-full prose dark:prose-invert">
+  
+    <header>
+      <h1>chail's Blog</h1>
+    </header>
+  
+  <section class="w-full"></section>
+</article>
+
+    
+  
+  <section>
+    
+
+
+  
+    
+  
+  <h2 class="mt-8 text-2xl font-extrabold mb-10">最近的文章</h2>
+
+  
+    
+
+
+
+<section class="w-full grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E6%AD%BB%E4%BA%A1%E5%91%8A%E8%AF%89%E6%88%91%E4%BB%AC%E8%A6%81%E6%B4%BB%E5%BE%97%E5%B9%B8%E7%A6%8F/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          死亡告诉我们：要活得幸福
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-02-02T18:27:02&#43;08:00">2026-02-02</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">3 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E5%A4%96%E7%89%A9%E6%8A%A5/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    外物报
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E5%9C%A8%E8%B7%AF%E4%B8%8A/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          在路上
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-01-30T18:53:22&#43;08:00">2026-01-30</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">1 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E5%A4%96%E7%89%A9%E6%8A%A5/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    外物报
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          最短路算法：Dijkstra&Bellman-Ford&SPFA
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-01-27T20:16:34&#43;08:00">2026-01-27</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">5 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    算法足迹
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+    
+
+    
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+    
+      
+      
+    
+
+    
+    
+      
+    
+  
+
+
+
+<article
+  class="article-link--card group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300/80 bg-white/85 dark:border-neutral-600/80 dark:bg-neutral-900/80">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E4%BA%94%E8%89%B2%E8%8A%B1/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          五色花--请保持着初放时的安详
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-01-26T21:12:32&#43;08:00">2026-01-26</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">1 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E5%A4%96%E7%89%A9%E6%8A%A5/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    外物报
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+  
+</section>
+
+  
+
+  
+
+
+  </section>
+
+        
+
+
+  
+
+
+
+
+
+
+<div
+  id="scroll-to-top"
+  class="fixed bottom-6 end-6 z-50 transform translate-y-4 opacity-0 duration-200">
+  <a
+    href="#the-top"
+    class="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+    aria-label="返回顶部"
+    title="返回顶部">
+    &uarr;
+  </a>
+</div>
+
+      </main><footer id="site-footer" class="py-10 print:hidden">
+  
+  
+    
+  
+  <div class="flex items-center justify-between">
+    
+    
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          &copy;
+          2026
+          chail
+      </p>
+    
+
+    
+    
+      <p class="text-xs text-neutral-500 dark:text-neutral-400">
+        
+        
+        由 <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> &amp; <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://blowfish.page/" target="_blank" rel="noopener noreferrer">Blowfish</a> 强力驱动
+      </p>
+    
+  </div>
+  
+  
+</footer>
+<div
+  id="search-wrapper"
+  role="dialog"
+  aria-modal="true"
+  aria-label="搜索"
+  class="invisible fixed inset-0 flex h-screen w-screen cursor-default flex-col bg-neutral-500/50 p-4 backdrop-blur-sm dark:bg-neutral-900/50 sm:p-6 md:p-[10vh] lg:p-[12vh] z-500"
+  data-url="/">
+  <div
+    id="search-modal"
+    class="flex flex-col w-full max-w-3xl min-h-0 mx-auto border rounded-md shadow-lg top-20 border-neutral-200 bg-neutral dark:border-neutral-700 dark:bg-neutral-800">
+    <header class="relative z-10 flex items-center justify-between flex-none px-2">
+      <form class="flex items-center flex-auto min-w-0">
+        <div class="flex items-center justify-center w-8 h-8 text-neutral-400">
+          <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+        </div>
+        <input
+          type="search"
+          id="search-query"
+          aria-label="搜索"
+          class="flex flex-auto h-12 mx-1 bg-transparent appearance-none focus:outline-dotted focus:outline-2 focus:outline-transparent"
+          placeholder="搜索"
+          tabindex="0">
+      </form>
+      <button
+        id="close-search-button"
+        class="flex items-center justify-center w-8 h-8 text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+        title="关闭 (Esc)">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+      </button>
+    </header>
+    <section class="flex-auto px-2 overflow-auto">
+      <ul id="search-results">
+        
+      </ul>
+    </section>
+  </div>
+</div>
+
+    </div>
+    
+    
+  </body>
+  
+</html>

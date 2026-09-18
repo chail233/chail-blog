@@ -1,0 +1,5 @@
+# -- Development overrides --
+# Only applied when running `hugo server`
+
+[pagination]
+  pagerSize = 50

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://chail-blog.pages.dev/sitemap.xml

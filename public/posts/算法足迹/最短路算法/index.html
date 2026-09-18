@@ -1,287 +1,1654 @@
-<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>最短路算法：Dijkstra&amp;Bellman-Ford&amp;SPFA | chail`s Blog</title><meta name=keywords content><meta name=description content="最短路算法：Dijkstra&amp;Bellman-Ford&amp;SPFA
-书接上回，继续图论中的经典算法，今天是最短路的经典算法：Dijkstra，Bellman--Ford，以及Bellman--Ford的优化版本SPFA。
+<!doctype html>
+<html
+  lang="zh-cn"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="dark"
+  data-auto-appearance="true"><head>
+  <meta charset="utf-8">
+  
+    <meta http-equiv="content-language" content="zh-cn">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color">
 
-Dijkstra例题
-题目描述
-如图，求最短路径。
+  
+  
+    <title>最短路算法：Dijkstra&Bellman-Ford&SPFA &middot; chail&#39;s Blog</title>
+    <meta name="title" content="最短路算法：Dijkstra&Bellman-Ford&SPFA &middot; chail&#39;s Blog">
+  
 
-输入格式
-顶点数n 边数m,n<=10,m<=100
-m条边的顶点和权值
-终点
-输出格式
-顶点0到终点的最短路径
-输入样例
-6 9
-0 2 5
-0 3 30
-1 0 2
-1 4 8
-2 1 15
-2 5 7
-4 3 4
-5 3 10
-5 4 18
-4
-输出样例
-28
-我们需要找到0到某个点的最短路径。等等，最短？和上次的最小生成树很像啊。不过并不完全一样。虽然同样都是找最小的权值，但是最小生成树要求的是连通所有节点，路径并非是最短的，而最短路问题要求找到权值最短的路径。
-思路
-Dijkstra的思想和最小生成树的Prim比较相似。同样把注意力放在节点上：我们从起点出发，选择起点可去的那条最短的路，以此到达了下一个点，那么不难想到，这条路径就是从起点到下一个点的最短路径（事实上应该有一个严格的证明，不过这里问题不在这）。
-**那么以此类推，每次都选择当前能走的最短的路，以此到达的点就是起点到这个点的最短路。**这简直和Prim一模一样对吧！不过在这里是一种递推关系，我们通过一步步求解最短的找到目标的最短路。
-实现
-还是一样，写一个结构体，构造一个邻接表来构建图。思考一下，怎么样每次都找到可走的最短的路。直接枚举太慢了，显然不符合我们的风度。同样采用Prim中的优先队列优化方法，把能走的路存入优先队列，这样每次都能找到最短的。再用一个数组dijk来记录最短路，$dijk[i]表示到达点的最短路。设当前选择的路的长度为表示到达i点的最短路。设当前选择的路的长度为l，当前将从，当前将从i到到j，那么可以得到递推式，那么可以得到递推式dijk[j] = dijk[i] + l$。
-代码
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <algorithm>
-using namespace std;
-struct r{
-	int f;
-	int t;
-	int l;
-	bool operator<(const r& oth) const{
-		return l>oth.l;
-	}
-};
-int dijk[15];
-bool ud[15] = {false};
-vector<r> rs[15];
-priority_queue<r> q;
-int main(){
-	int n, m, to;
-	cin >> n >> m;
-	for(int i=1;i<=m;++i){
-		int a, b, l;
-		cin >> a >> b >> l;
-		rs[a].push_back({a,b,l});
-	}
-	cin >> to;
-	q.push({0, 0, 0});
-	dijk[0] = 0;
-	while(!q.empty()){
-		r cr = q.top();
-		q.pop();
-		if(ud[cr.t]) continue;
-		dijk[cr.t] = cr.l;
-		ud[cr.t] = true;
-		if(!rs[cr.t].empty()){
-			for(r tr:rs[cr.t]){
-				if(!ud[tr.t]) {
-					tr.l += dijk[tr.f];//最短路径的值 
-					q.push(tr);
-				}
-			}
-		}
-	}
-	cout << dijk[to];
-	return 0;
-}
-Bellman-ford例题
-题目描述
-平面上有$n$个点$（n≤100）$，每个点的坐标均在$-10000~10000$之间。其中的一些点之间有连线。"><meta name=author content><link rel=canonical href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/><link crossorigin=anonymous href=../../../assets/css/stylesheet.css rel="preload stylesheet" as=style><link rel=icon href=https://chail-blog.pages.dev/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://chail-blog.pages.dev/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://chail-blog.pages.dev/favicon-32x32.png><link rel=apple-touch-icon href=https://chail-blog.pages.dev/apple-touch-icon.png><link rel=mask-icon href=https://chail-blog.pages.dev/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/"><meta property="og:site_name" content="chail`s Blog"><meta property="og:title" content="最短路算法：Dijkstra&Bellman-Ford&SPFA"><meta property="og:description" content="最短路算法：Dijkstra&amp;Bellman-Ford&amp;SPFA 书接上回，继续图论中的经典算法，今天是最短路的经典算法：Dijkstra，Bellman--Ford，以及Bellman--Ford的优化版本SPFA。
-Dijkstra例题 题目描述 如图，求最短路径。 输入格式 顶点数n 边数m,n<=10,m<=100
-m条边的顶点和权值
-终点
-输出格式 顶点0到终点的最短路径
-输入样例 6 90 2 50 3 301 0 21 4 82 1 152 5 74 3 45 3 105 4 184 输出样例 28 我们需要找到0到某个点的最短路径。等等，最短？和上次的最小生成树很像啊。不过并不完全一样。虽然同样都是找最小的权值，但是最小生成树要求的是连通所有节点，路径并非是最短的，而最短路问题要求找到权值最短的路径。
-思路 Dijkstra的思想和最小生成树的Prim比较相似。同样把注意力放在节点上：我们从起点出发，选择起点可去的那条最短的路，以此到达了下一个点，那么不难想到，这条路径就是从起点到下一个点的最短路径（事实上应该有一个严格的证明，不过这里问题不在这）。
-**那么以此类推，每次都选择当前能走的最短的路，以此到达的点就是起点到这个点的最短路。**这简直和Prim一模一样对吧！不过在这里是一种递推关系，我们通过一步步求解最短的找到目标的最短路。
-实现 还是一样，写一个结构体，构造一个邻接表来构建图。思考一下，怎么样每次都找到可走的最短的路。直接枚举太慢了，显然不符合我们的风度。同样采用Prim中的优先队列优化方法，把能走的路存入优先队列，这样每次都能找到最短的。再用一个数组dijk来记录最短路，$dijk[i]表示到达点的最短路。设当前选择的路的长度为表示到达i点的最短路。设当前选择的路的长度为l，当前将从，当前将从i到到j，那么可以得到递推式，那么可以得到递推式dijk[j] = dijk[i] + l$。
-代码 #include <iostream> #include <vector> #include <queue> #include <algorithm> using namespace std; struct r{ int f; int t; int l; bool operator<(const r& oth) const{ return l>oth.l; } }; int dijk[15]; bool ud[15] = {false}; vector<r> rs[15]; priority_queue<r> q; int main(){ int n, m, to; cin >> n >> m; for(int i=1;i<=m;++i){ int a, b, l; cin >> a >> b >> l; rs[a].push_back({a,b,l}); } cin >> to; q.push({0, 0, 0}); dijk[0] = 0; while(!q.empty()){ r cr = q.top(); q.pop(); if(ud[cr.t]) continue; dijk[cr.t] = cr.l; ud[cr.t] = true; if(!rs[cr.t].empty()){ for(r tr:rs[cr.t]){ if(!ud[tr.t]) { tr.l += dijk[tr.f];//最短路径的值 q.push(tr); } } } } cout << dijk[to]; return 0; } Bellman-ford例题 题目描述 平面上有$n$个点$（n≤100）$，每个点的坐标均在$-10000~10000$之间。其中的一些点之间有连线。"><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-01-27T20:16:34+08:00"><meta property="article:modified_time" content="2026-01-27T20:16:34+08:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="最短路算法：Dijkstra&Bellman-Ford&SPFA"><meta name=twitter:description content="最短路算法：Dijkstra&amp;Bellman-Ford&amp;SPFA 书接上回，继续图论中的经典算法，今天是最短路的经典算法：Dijkstra，Bellman--Ford，以及Bellman--Ford的优化版本SPFA。
-Dijkstra例题 题目描述 如图，求最短路径。 输入格式 顶点数n 边数m,n<=10,m<=100
-m条边的顶点和权值
-终点
-输出格式 顶点0到终点的最短路径
-输入样例 6 90 2 50 3 301 0 21 4 82 1 152 5 74 3 45 3 105 4 184 输出样例 28 我们需要找到0到某个点的最短路径。等等，最短？和上次的最小生成树很像啊。不过并不完全一样。虽然同样都是找最小的权值，但是最小生成树要求的是连通所有节点，路径并非是最短的，而最短路问题要求找到权值最短的路径。
-思路 Dijkstra的思想和最小生成树的Prim比较相似。同样把注意力放在节点上：我们从起点出发，选择起点可去的那条最短的路，以此到达了下一个点，那么不难想到，这条路径就是从起点到下一个点的最短路径（事实上应该有一个严格的证明，不过这里问题不在这）。
-**那么以此类推，每次都选择当前能走的最短的路，以此到达的点就是起点到这个点的最短路。**这简直和Prim一模一样对吧！不过在这里是一种递推关系，我们通过一步步求解最短的找到目标的最短路。
-实现 还是一样，写一个结构体，构造一个邻接表来构建图。思考一下，怎么样每次都找到可走的最短的路。直接枚举太慢了，显然不符合我们的风度。同样采用Prim中的优先队列优化方法，把能走的路存入优先队列，这样每次都能找到最短的。再用一个数组dijk来记录最短路，$dijk[i]表示到达点的最短路。设当前选择的路的长度为表示到达i点的最短路。设当前选择的路的长度为l，当前将从，当前将从i到到j，那么可以得到递推式，那么可以得到递推式dijk[j] = dijk[i] + l$。
-代码 #include <iostream> #include <vector> #include <queue> #include <algorithm> using namespace std; struct r{ int f; int t; int l; bool operator<(const r& oth) const{ return l>oth.l; } }; int dijk[15]; bool ud[15] = {false}; vector<r> rs[15]; priority_queue<r> q; int main(){ int n, m, to; cin >> n >> m; for(int i=1;i<=m;++i){ int a, b, l; cin >> a >> b >> l; rs[a].push_back({a,b,l}); } cin >> to; q.push({0, 0, 0}); dijk[0] = 0; while(!q.empty()){ r cr = q.top(); q.pop(); if(ud[cr.t]) continue; dijk[cr.t] = cr.l; ud[cr.t] = true; if(!rs[cr.t].empty()){ for(r tr:rs[cr.t]){ if(!ud[tr.t]) { tr.l += dijk[tr.f];//最短路径的值 q.push(tr); } } } } cout << dijk[to]; return 0; } Bellman-ford例题 题目描述 平面上有$n$个点$（n≤100）$，每个点的坐标均在$-10000~10000$之间。其中的一些点之间有连线。"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://chail-blog.pages.dev/posts/"},{"@type":"ListItem","position":2,"name":"最短路算法：Dijkstra\u0026Bellman-Ford\u0026SPFA","item":"https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"最短路算法：Dijkstra\u0026Bellman-Ford\u0026SPFA","name":"最短路算法：Dijkstra\u0026Bellman-Ford\u0026SPFA","description":"最短路算法：Dijkstra\u0026amp;Bellman-Ford\u0026amp;SPFA 书接上回，继续图论中的经典算法，今天是最短路的经典算法：Dijkstra，Bellman--Ford，以及Bellman--Ford的优化版本SPFA。\nDijkstra例题 题目描述 如图，求最短路径。 输入格式 顶点数n 边数m,n\u0026lt;=10,m\u0026lt;=100\nm条边的顶点和权值\n终点\n输出格式 顶点0到终点的最短路径\n输入样例 6 9\r0 2 5\r0 3 30\r1 0 2\r1 4 8\r2 1 15\r2 5 7\r4 3 4\r5 3 10\r5 4 18\r4 输出样例 28 我们需要找到0到某个点的最短路径。等等，最短？和上次的最小生成树很像啊。不过并不完全一样。虽然同样都是找最小的权值，但是最小生成树要求的是连通所有节点，路径并非是最短的，而最短路问题要求找到权值最短的路径。\n思路 Dijkstra的思想和最小生成树的Prim比较相似。同样把注意力放在节点上：我们从起点出发，选择起点可去的那条最短的路，以此到达了下一个点，那么不难想到，这条路径就是从起点到下一个点的最短路径（事实上应该有一个严格的证明，不过这里问题不在这）。\n**那么以此类推，每次都选择当前能走的最短的路，以此到达的点就是起点到这个点的最短路。**这简直和Prim一模一样对吧！不过在这里是一种递推关系，我们通过一步步求解最短的找到目标的最短路。\n实现 还是一样，写一个结构体，构造一个邻接表来构建图。思考一下，怎么样每次都找到可走的最短的路。直接枚举太慢了，显然不符合我们的风度。同样采用Prim中的优先队列优化方法，把能走的路存入优先队列，这样每次都能找到最短的。再用一个数组dijk来记录最短路，$dijk[i]表示到达点的最短路。设当前选择的路的长度为表示到达i点的最短路。设当前选择的路的长度为l，当前将从，当前将从i到到j，那么可以得到递推式，那么可以得到递推式dijk[j] = dijk[i] + l$。\n代码 #include \u0026lt;iostream\u0026gt; #include \u0026lt;vector\u0026gt; #include \u0026lt;queue\u0026gt; #include \u0026lt;algorithm\u0026gt; using namespace std; struct r{ int f; int t; int l; bool operator\u0026lt;(const r\u0026amp; oth) const{ return l\u0026gt;oth.l; } }; int dijk[15]; bool ud[15] = {false}; vector\u0026lt;r\u0026gt; rs[15]; priority_queue\u0026lt;r\u0026gt; q; int main(){ int n, m, to; cin \u0026gt;\u0026gt; n \u0026gt;\u0026gt; m; for(int i=1;i\u0026lt;=m;++i){ int a, b, l; cin \u0026gt;\u0026gt; a \u0026gt;\u0026gt; b \u0026gt;\u0026gt; l; rs[a].push_back({a,b,l}); } cin \u0026gt;\u0026gt; to; q.push({0, 0, 0}); dijk[0] = 0; while(!q.empty()){ r cr = q.top(); q.pop(); if(ud[cr.t]) continue; dijk[cr.t] = cr.l; ud[cr.t] = true; if(!rs[cr.t].empty()){ for(r tr:rs[cr.t]){ if(!ud[tr.t]) { tr.l += dijk[tr.f];//最短路径的值 q.push(tr); } } } } cout \u0026lt;\u0026lt; dijk[to]; return 0; } Bellman-ford例题 题目描述 平面上有$n$个点$（n≤100）$，每个点的坐标均在$-10000~10000$之间。其中的一些点之间有连线。\n","keywords":[],"articleBody":"最短路算法：Dijkstra\u0026Bellman-Ford\u0026SPFA 书接上回，继续图论中的经典算法，今天是最短路的经典算法：Dijkstra，Bellman--Ford，以及Bellman--Ford的优化版本SPFA。\nDijkstra例题 题目描述 如图，求最短路径。 输入格式 顶点数n 边数m,n\u003c=10,m\u003c=100\nm条边的顶点和权值\n终点\n输出格式 顶点0到终点的最短路径\n输入样例 6 9\r0 2 5\r0 3 30\r1 0 2\r1 4 8\r2 1 15\r2 5 7\r4 3 4\r5 3 10\r5 4 18\r4 输出样例 28 我们需要找到0到某个点的最短路径。等等，最短？和上次的最小生成树很像啊。不过并不完全一样。虽然同样都是找最小的权值，但是最小生成树要求的是连通所有节点，路径并非是最短的，而最短路问题要求找到权值最短的路径。\n思路 Dijkstra的思想和最小生成树的Prim比较相似。同样把注意力放在节点上：我们从起点出发，选择起点可去的那条最短的路，以此到达了下一个点，那么不难想到，这条路径就是从起点到下一个点的最短路径（事实上应该有一个严格的证明，不过这里问题不在这）。\n**那么以此类推，每次都选择当前能走的最短的路，以此到达的点就是起点到这个点的最短路。**这简直和Prim一模一样对吧！不过在这里是一种递推关系，我们通过一步步求解最短的找到目标的最短路。\n实现 还是一样，写一个结构体，构造一个邻接表来构建图。思考一下，怎么样每次都找到可走的最短的路。直接枚举太慢了，显然不符合我们的风度。同样采用Prim中的优先队列优化方法，把能走的路存入优先队列，这样每次都能找到最短的。再用一个数组dijk来记录最短路，$dijk[i]表示到达点的最短路。设当前选择的路的长度为表示到达i点的最短路。设当前选择的路的长度为l，当前将从，当前将从i到到j，那么可以得到递推式，那么可以得到递推式dijk[j] = dijk[i] + l$。\n代码 #include #include #include #include using namespace std; struct r{ int f; int t; int l; bool operator\u003c(const r\u0026 oth) const{ return l\u003eoth.l; } }; int dijk[15]; bool ud[15] = {false}; vector\u003cr\u003e rs[15]; priority_queue\u003cr\u003e q; int main(){ int n, m, to; cin \u003e\u003e n \u003e\u003e m; for(int i=1;i\u003c=m;++i){ int a, b, l; cin \u003e\u003e a \u003e\u003e b \u003e\u003e l; rs[a].push_back({a,b,l}); } cin \u003e\u003e to; q.push({0, 0, 0}); dijk[0] = 0; while(!q.empty()){ r cr = q.top(); q.pop(); if(ud[cr.t]) continue; dijk[cr.t] = cr.l; ud[cr.t] = true; if(!rs[cr.t].empty()){ for(r tr:rs[cr.t]){ if(!ud[tr.t]) { tr.l += dijk[tr.f];//最短路径的值 q.push(tr); } } } } cout \u003c\u003c dijk[to]; return 0; } Bellman-ford例题 题目描述 平面上有$n$个点$（n≤100）$，每个点的坐标均在$-10000~10000$之间。其中的一些点之间有连线。\n若有连线，则表示可从一个点到达另一个点，即两点间有通路，通路的距离为两点间的直线距离。现在的任务是找出从一点到另一点之间的最短路径。\n已知两点坐标分别为 $（x1,y1) (x2,y2)$, 则 两点间的距离为 $sqrt( (x2-x1)* (x2-x1) + (y2-y1)*(y2-y1) )$\n输入格式 共$n+m+3$行，其中:\n第一行为整数$n$。\n第2行到第$n+1$行（共$n$行） ，每行两个整数$x$和$y$，描述了一个点的坐标。\n第$n+2$行为一个整数$m$，表示图中连线的个数。\n此后的$m$ 行，每行描述一条连线，由两个整数$i$和$j$组成， 表示第$i$个点和第$j$个点之间有连线。\n最后一行：两个整数$s$和$t$，分别表示源点和目标点。\n输出格式 一行，一个实数（保留两位小数），表示从$s$到$t$的最短路径长度。\n输入样例 5 0 0\r2 0\r2 2\r0 2\r3 1\r5 1 2\r1 3\r1 4\r2 5\r3 5\r1 5 输出样例 3.41 事实上，Dijkstra会出点问题：如果存在负权的边，那么Dijkstra就会失效，因为它的贪心策略只注重当下，没有考虑到后面可能的负边。\n思路 而Bellman--Ford算法可以解决这个问题。Bellford--Ford通过松弛来一步步找到到达终点的最短路。\n用一个$dis$数组来记录到$i$的最短路，初始化为最大值。将起点的$dis$初始化为0。不断地遍历已知的路来更新最短路。当遍历了$n-1$遍时，就找到了所有的最短路。\n怎么解释呢，比如第一次遍历时更新了从起点到相邻点的$dis$，第二次更新了相邻点的相邻点，也可能包括起点，以此类推…最终所有点的$dis$都得到了更新，也就得到了最短路。这实在是一种有趣的动态规划的方法。\n实现 用结构体存储边，按思路遍历$n-1$次边即可。不过这显然浪费了性能，因为一开始后面的点根本去不了，而到了后面前面的点或许已经找到了最短路，有时所有点都找到了最优解但仍然在遍历。\n有一个简单的优化方案，我们可以用一个变量来记录每次遍历是否有点的情况发生了改变。如果有一次遍历没有任何$dis$改变，那么此时已经找到了最优解，结束遍历。\n代码 #include #include #include #include #include #include using namespace std; struct p{ double x; double y; }; struct l{ int f; int t; double len; }; vector\u003cl\u003e ls; p ps[105]; double dis[105]; int main(){ int n; cin \u003e\u003e n; for(int i=1;i\u003c=n;++i){ double a, b; cin \u003e\u003e a \u003e\u003e b; ps[i].x=a; ps[i].y=b; } int m; cin \u003e\u003e m; for(int i=1;i\u003c=m;++i){ int x, y; cin \u003e\u003e x \u003e\u003e y; double len = sqrt((ps[x].x-ps[y].x)*(ps[x].x-ps[y].x)+(ps[x].y-ps[y].y)*(ps[x].y-ps[y].y)); ls.push_back({x, y, len}); } int s, t; cin \u003e\u003e s \u003e\u003e t; fill(dis, dis+1+n, 9999999); dis[s] = 0; for(int k=1;k\u003cn;++k){ bool flag = false; for(l pl:ls){ if(dis[pl.t]\u003edis[pl.f]+pl.len){ dis[pl.t] = dis[pl.f]+pl.len; flag = true; } } if(!flag) break; } cout \u003c\u003c fixed \u003c\u003c setprecision(2) \u003c\u003c dis[t]; return 0; } 显然这样只解决了一部分问题，“一开始后面的点根本去不了，而到了后面前面的点或许已经找到了最短路”的问题还没有得到解决，对此还有一个优化方案，那就是只松弛能被松弛的两个点。这就是Bellman-Ford的进化版：SPFA。\nSPFA 用邻接表存储图，用一个队列来存储当前还没有得到答案并能松弛的点。一开始把起点推入队列，然后不断地取出队列里的点，遍历该点的边并更新dis。对于更新了的点，还可以继续通过它找到答案，所以接下来把它推入队列。就这样循环往复，最后便高效地得到了答案。\n代码 #include #include #include #include #include using namespace std; struct p{ int x; int y; }; struct l{ int t; double len; }; vector\u003cl\u003e ls[105]; p ps[105]; double dis[105]; queue\u003cint\u003e q; bool inq[105] {false}; int main(){ int n; cin \u003e\u003e n; for(int i=1;i\u003c=n;++i) cin \u003e\u003e ps[i].x \u003e\u003e ps[i].y; int m; cin \u003e\u003e m; for(int i=1;i\u003c=m;++i){ int x, y; cin \u003e\u003e x \u003e\u003e y; double len = sqrt((ps[x].x-ps[y].x)*(ps[x].x-ps[y].x)+(ps[x].y-ps[y].y)*(ps[x].y-ps[y].y)); ls[x].push_back({y, len}); } fill(dis, dis+1+n, 9999999); int s, t; cin \u003e\u003e s \u003e\u003e t; dis[s] = 0; q.push(s); inq[s] = true; while(!q.empty()){ int f = q.front(); q.pop(); inq[f] = false; if(!ls[f].empty()){ for(l cl:ls[f]){ if(dis[cl.t]\u003edis[f]+cl.len){ dis[cl.t] = dis[f]+cl.len; if(!inq[cl.t]) q.push(cl.t); } } } } cout \u003c\u003c fixed \u003c\u003c setprecision(2) \u003c\u003c dis[t]; return 0; } ","wordCount":"477","inLanguage":"en","datePublished":"2026-01-27T20:16:34+08:00","dateModified":"2026-01-27T20:16:34+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/"},"publisher":{"@type":"Organization","name":"chail`s Blog","logo":{"@type":"ImageObject","url":"https://chail-blog.pages.dev/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://chail-blog.pages.dev/ accesskey=h title="chail`s Blog (Alt + H)">chail`s Blog</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
-<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">最短路算法：Dijkstra&amp;Bellman-Ford&amp;SPFA</h1><div class=post-meta><span title='2026-01-27 20:16:34 +0800 CST'>January 27, 2026</span></div></header><div class="post-content md-content"><h1 id=最短路算法dijkstrabellman-fordspfa>最短路算法：Dijkstra&amp;Bellman-Ford&amp;SPFA<a hidden class=anchor aria-hidden=true href=#最短路算法dijkstrabellman-fordspfa>#</a></h1><p>书接上回，继续<code>图论</code>中的经典算法，今天是最短路的经典算法：<code>Dijkstra</code>，<code>Bellman--Ford</code>，以及<code>Bellman--Ford</code>的优化版本<code>SPFA</code>。</p><hr><h2 id=dijkstra例题><code>Dijkstra</code>例题<a hidden class=anchor aria-hidden=true href=#dijkstra例题>#</a></h2><h3 id=题目描述>题目描述<a hidden class=anchor aria-hidden=true href=#题目描述>#</a></h3><p>如图，求最短路径。
-<img loading=lazy src=https://img.wemd.app/1769511189463_805p5a.png></p><h3 id=输入格式>输入格式<a hidden class=anchor aria-hidden=true href=#输入格式>#</a></h3><p>顶点数n 边数m,n&lt;=10,m&lt;=100</p><p>m条边的顶点和权值</p><p>终点</p><h3 id=输出格式>输出格式<a hidden class=anchor aria-hidden=true href=#输出格式>#</a></h3><p>顶点0到终点的最短路径</p><h3 id=输入样例>输入样例<a hidden class=anchor aria-hidden=true href=#输入样例>#</a></h3><pre tabindex=0><code>6 9
-0 2 5
-0 3 30
-1 0 2
-1 4 8
-2 1 15
-2 5 7
-4 3 4
-5 3 10
-5 4 18
-4
-</code></pre><h3 id=输出样例>输出样例<a hidden class=anchor aria-hidden=true href=#输出样例>#</a></h3><pre tabindex=0><code>28
-</code></pre><p>我们需要找到0到某个点的最短路径。等等，最短？和上次的最小生成树很像啊。不过并不完全一样。虽然同样都是找最小的权值，但是<strong>最小生成树要求的是连通所有节点，路径并非是最短的，而最短路问题要求找到权值最短的路径</strong>。</p><h3 id=思路>思路<a hidden class=anchor aria-hidden=true href=#思路>#</a></h3><p><code>Dijkstra</code>的思想和最小生成树的<code>Prim</code>比较相似。同样把注意力放在节点上：<strong>我们从起点出发，选择起点可去的那条最短的路，以此到达了下一个点，那么不难想到，这条路径就是从起点到下一个点的最短路径</strong>（事实上应该有一个严格的证明，不过这里问题不在这）。</p><p>**那么以此类推，每次都选择当前能走的最短的路，以此到达的点就是起点到这个点的最短路。**这简直和Prim一模一样对吧！不过在这里是一种递推关系，我们通过一步步求解最短的找到目标的最短路。</p><h3 id=实现>实现<a hidden class=anchor aria-hidden=true href=#实现>#</a></h3><p>还是一样，写一个结构体，构造一个邻接表来构建图。思考一下，怎么样每次都找到可走的最短的路。直接枚举太慢了，显然不符合我们的风度。同样采用Prim中的<strong>优先队列优化方法</strong>，<strong>把能走的路存入优先队列，这样每次都能找到最短的</strong>。再用一个数组dijk来记录最短路，$dijk[i]表示到达点的最短路。设当前选择的路的长度为表示到达i点的最短路。设当前选择的路的长度为l，当前将从，当前将从i到到j，那么可以得到递推式，那么可以得到递推式dijk[j] = dijk[i] + l$。</p><h3 id=代码>代码<a hidden class=anchor aria-hidden=true href=#代码>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-C++ data-lang=C++><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iostream&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;vector&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;queue&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;algorithm&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> <span style=color:#66d9ef>namespace</span> std;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>r</span>{
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> f;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> t;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> l;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>bool</span> <span style=color:#66d9ef>operator</span><span style=color:#f92672>&lt;</span>(<span style=color:#66d9ef>const</span> r<span style=color:#f92672>&amp;</span> oth) <span style=color:#66d9ef>const</span>{
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> l<span style=color:#f92672>&gt;</span>oth.l;
-</span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>};
-</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> dijk[<span style=color:#ae81ff>15</span>];
-</span></span><span style=display:flex><span><span style=color:#66d9ef>bool</span> ud[<span style=color:#ae81ff>15</span>] <span style=color:#f92672>=</span> {false};
-</span></span><span style=display:flex><span>vector<span style=color:#f92672>&lt;</span>r<span style=color:#f92672>&gt;</span> rs[<span style=color:#ae81ff>15</span>];
-</span></span><span style=display:flex><span>priority_queue<span style=color:#f92672>&lt;</span>r<span style=color:#f92672>&gt;</span> q;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>(){
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> n, m, to;
-</span></span><span style=display:flex><span>	cin <span style=color:#f92672>&gt;&gt;</span> n <span style=color:#f92672>&gt;&gt;</span> m;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span>(<span style=color:#66d9ef>int</span> i<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>;i<span style=color:#f92672>&lt;=</span>m;<span style=color:#f92672>++</span>i){
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>int</span> a, b, l;
-</span></span><span style=display:flex><span>		cin <span style=color:#f92672>&gt;&gt;</span> a <span style=color:#f92672>&gt;&gt;</span> b <span style=color:#f92672>&gt;&gt;</span> l;
-</span></span><span style=display:flex><span>		rs[a].push_back({a,b,l});
-</span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>	cin <span style=color:#f92672>&gt;&gt;</span> to;
-</span></span><span style=display:flex><span>	q.push({<span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0</span>});
-</span></span><span style=display:flex><span>	dijk[<span style=color:#ae81ff>0</span>] <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>while</span>(<span style=color:#f92672>!</span>q.empty()){
-</span></span><span style=display:flex><span>		r cr <span style=color:#f92672>=</span> q.top();
-</span></span><span style=display:flex><span>		q.pop();
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span>(ud[cr.t]) <span style=color:#66d9ef>continue</span>;
-</span></span><span style=display:flex><span>		dijk[cr.t] <span style=color:#f92672>=</span> cr.l;
-</span></span><span style=display:flex><span>		ud[cr.t] <span style=color:#f92672>=</span> true;
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span>(<span style=color:#f92672>!</span>rs[cr.t].empty()){
-</span></span><span style=display:flex><span>			<span style=color:#66d9ef>for</span>(r tr:rs[cr.t]){
-</span></span><span style=display:flex><span>				<span style=color:#66d9ef>if</span>(<span style=color:#f92672>!</span>ud[tr.t]) {
-</span></span><span style=display:flex><span>					tr.l <span style=color:#f92672>+=</span> dijk[tr.f];<span style=color:#75715e>//最短路径的值 
-</span></span></span><span style=display:flex><span>					q.push(tr);
-</span></span><span style=display:flex><span>				}
-</span></span><span style=display:flex><span>			}
-</span></span><span style=display:flex><span>		}
-</span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>	cout <span style=color:#f92672>&lt;&lt;</span> dijk[to];
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h2 id=bellman-ford例题><code>Bellman-ford</code>例题<a hidden class=anchor aria-hidden=true href=#bellman-ford例题>#</a></h2><h3 id=题目描述-1>题目描述<a hidden class=anchor aria-hidden=true href=#题目描述-1>#</a></h3><p>平面上有$n$个点$（n≤100）$，每个点的坐标均在$-10000~10000$之间。其中的一些点之间有连线。</p><p>若有连线，则表示可从一个点到达另一个点，即两点间有通路，通路的距离为两点间的直线距离。现在的任务是找出从一点到另一点之间的最短路径。</p><p>已知两点坐标分别为 $（x1,y1) (x2,y2)$, 则 两点间的距离为 $sqrt( (x2-x1)* (x2-x1) + (y2-y1)*(y2-y1) )$</p><h3 id=输入格式-1>输入格式<a hidden class=anchor aria-hidden=true href=#输入格式-1>#</a></h3><p>共$n+m+3$行，其中:</p><p>第一行为整数$n$。</p><p>第2行到第$n+1$行（共$n$行） ，每行两个整数$x$和$y$，描述了一个点的坐标。</p><p>第$n+2$行为一个整数$m$，表示图中连线的个数。</p><p>此后的$m$ 行，每行描述一条连线，由两个整数$i$和$j$组成，
-表示第$i$个点和第$j$个点之间有连线。</p><p>最后一行：两个整数$s$和$t$，分别表示源点和目标点。</p><h3 id=输出格式-1>输出格式<a hidden class=anchor aria-hidden=true href=#输出格式-1>#</a></h3><p>一行，一个实数（保留两位小数），表示从$s$到$t$的最短路径长度。</p><h3 id=输入样例-1>输入样例<a hidden class=anchor aria-hidden=true href=#输入样例-1>#</a></h3><pre tabindex=0><code>5 
-0 0
-2 0
-2 2
-0 2
-3 1
-5 
-1 2
-1 3
-1 4
-2 5
-3 5
-1 5
-</code></pre><h3 id=输出样例-1>输出样例<a hidden class=anchor aria-hidden=true href=#输出样例-1>#</a></h3><pre tabindex=0><code>3.41
-</code></pre><hr><p>事实上，<code>Dijkstra</code>会出点问题：如果存在负权的边，那么<code>Dijkstra</code>就会失效，因为它的贪心策略只注重当下，没有考虑到后面可能的负边。</p><h3 id=思路-1>思路<a hidden class=anchor aria-hidden=true href=#思路-1>#</a></h3><p>而<code>Bellman--Ford</code>算法可以解决这个问题。<code>Bellford--Ford</code>通过<code>松弛</code>来一步步找到到达终点的最短路。</p><p><strong>用一个$dis$数组来记录到$i$的最短路，初始化为最大值。将起点的$dis$初始化为0。不断地遍历已知的路来更新最短路。当遍历了$n-1$遍时，就找到了所有的最短路</strong>。</p><p>怎么解释呢，比如第一次遍历时更新了从起点到相邻点的$dis$，第二次更新了相邻点的相邻点，也可能包括起点，以此类推&mldr;最终所有点的$dis$都得到了更新，也就得到了最短路。这实在是一种有趣的动态规划的方法。</p><h3 id=实现-1>实现<a hidden class=anchor aria-hidden=true href=#实现-1>#</a></h3><p>用结构体存储边，按思路遍历$n-1$次边即可。不过这显然浪费了性能，因为一开始后面的点根本去不了，而到了后面前面的点或许已经找到了最短路，有时所有点都找到了最优解但仍然在遍历。</p><p>有一个简单的优化方案，我们<strong>可以用一个变量来记录每次遍历是否有点的情况发生了改变。如果有一次遍历没有任何$dis$改变，那么此时已经找到了最优解，结束遍历</strong>。</p><h3 id=代码-1>代码<a hidden class=anchor aria-hidden=true href=#代码-1>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-C++ data-lang=C++><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iostream&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;algorithm&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;cmath&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;cstring&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;vector&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iomanip&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> <span style=color:#66d9ef>namespace</span> std;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>p</span>{
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>double</span> x;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>double</span> y;
-</span></span><span style=display:flex><span>};
-</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>l</span>{
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> f;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> t;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>double</span> len;
-</span></span><span style=display:flex><span>};
-</span></span><span style=display:flex><span>vector<span style=color:#f92672>&lt;</span>l<span style=color:#f92672>&gt;</span> ls;
-</span></span><span style=display:flex><span>p ps[<span style=color:#ae81ff>105</span>];
-</span></span><span style=display:flex><span><span style=color:#66d9ef>double</span> dis[<span style=color:#ae81ff>105</span>];
-</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>(){
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> n;
-</span></span><span style=display:flex><span>	cin <span style=color:#f92672>&gt;&gt;</span> n;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span>(<span style=color:#66d9ef>int</span> i<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>;i<span style=color:#f92672>&lt;=</span>n;<span style=color:#f92672>++</span>i){
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>double</span> a, b;
-</span></span><span style=display:flex><span>		cin <span style=color:#f92672>&gt;&gt;</span> a <span style=color:#f92672>&gt;&gt;</span> b;
-</span></span><span style=display:flex><span>		ps[i].x<span style=color:#f92672>=</span>a;
-</span></span><span style=display:flex><span>		ps[i].y<span style=color:#f92672>=</span>b;
-</span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> m;
-</span></span><span style=display:flex><span>	cin <span style=color:#f92672>&gt;&gt;</span> m;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span>(<span style=color:#66d9ef>int</span> i<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>;i<span style=color:#f92672>&lt;=</span>m;<span style=color:#f92672>++</span>i){
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>int</span> x, y;
-</span></span><span style=display:flex><span>		cin <span style=color:#f92672>&gt;&gt;</span> x <span style=color:#f92672>&gt;&gt;</span> y;
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>double</span> len <span style=color:#f92672>=</span> sqrt((ps[x].x<span style=color:#f92672>-</span>ps[y].x)<span style=color:#f92672>*</span>(ps[x].x<span style=color:#f92672>-</span>ps[y].x)<span style=color:#f92672>+</span>(ps[x].y<span style=color:#f92672>-</span>ps[y].y)<span style=color:#f92672>*</span>(ps[x].y<span style=color:#f92672>-</span>ps[y].y));
-</span></span><span style=display:flex><span>		ls.push_back({x, y, len});
-</span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> s, t;
-</span></span><span style=display:flex><span>	cin <span style=color:#f92672>&gt;&gt;</span> s <span style=color:#f92672>&gt;&gt;</span> t;
-</span></span><span style=display:flex><span>	fill(dis, dis<span style=color:#f92672>+</span><span style=color:#ae81ff>1</span><span style=color:#f92672>+</span>n, <span style=color:#ae81ff>9999999</span>);
-</span></span><span style=display:flex><span>	dis[s] <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span>(<span style=color:#66d9ef>int</span> k<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>;k<span style=color:#f92672>&lt;</span>n;<span style=color:#f92672>++</span>k){
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>bool</span> flag <span style=color:#f92672>=</span> false;
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>for</span>(l pl:ls){
-</span></span><span style=display:flex><span>			<span style=color:#66d9ef>if</span>(dis[pl.t]<span style=color:#f92672>&gt;</span>dis[pl.f]<span style=color:#f92672>+</span>pl.len){
-</span></span><span style=display:flex><span>				dis[pl.t] <span style=color:#f92672>=</span> dis[pl.f]<span style=color:#f92672>+</span>pl.len;
-</span></span><span style=display:flex><span>				flag <span style=color:#f92672>=</span> true;
-</span></span><span style=display:flex><span>			}
-</span></span><span style=display:flex><span>		}
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span>(<span style=color:#f92672>!</span>flag) <span style=color:#66d9ef>break</span>;
-</span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>	cout <span style=color:#f92672>&lt;&lt;</span> fixed <span style=color:#f92672>&lt;&lt;</span> setprecision(<span style=color:#ae81ff>2</span>) <span style=color:#f92672>&lt;&lt;</span> dis[t];
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>显然这样只解决了一部分问题，“一开始后面的点根本去不了，而到了后面前面的点或许已经找到了最短路”的问题还没有得到解决，对此还有一个优化方案，那就是只松弛能被松弛的两个点。这就是<code>Bellman-Ford</code>的进化版：<code>SPFA</code>。</p><h2 id=spfa><code>SPFA</code><a hidden class=anchor aria-hidden=true href=#spfa>#</a></h2><p>用邻接表存储图，<strong>用一个队列来存储当前还没有得到答案并能松弛的点</strong>。<strong>一开始把起点推入队列，然后不断地取出队列里的点，遍历该点的边并更新dis。对于更新了的点，还可以继续通过它找到答案，所以接下来把它推入队列。就这样循环往复，最后便高效地得到了答案。</strong></p><h3 id=代码-2>代码<a hidden class=anchor aria-hidden=true href=#代码-2>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-C++ data-lang=C++><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iostream&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;queue&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;algorithm&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iomanip&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;cmath&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> <span style=color:#66d9ef>namespace</span> std;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>p</span>{
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> x;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> y;
-</span></span><span style=display:flex><span>};
-</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>l</span>{
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> t;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>double</span> len;
-</span></span><span style=display:flex><span>};
-</span></span><span style=display:flex><span>vector<span style=color:#f92672>&lt;</span>l<span style=color:#f92672>&gt;</span> ls[<span style=color:#ae81ff>105</span>];
-</span></span><span style=display:flex><span>p ps[<span style=color:#ae81ff>105</span>];
-</span></span><span style=display:flex><span><span style=color:#66d9ef>double</span> dis[<span style=color:#ae81ff>105</span>];
-</span></span><span style=display:flex><span>queue<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>int</span><span style=color:#f92672>&gt;</span> q;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>bool</span> inq[<span style=color:#ae81ff>105</span>] {false};
-</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>(){
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> n;
-</span></span><span style=display:flex><span>	cin <span style=color:#f92672>&gt;&gt;</span> n;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span>(<span style=color:#66d9ef>int</span> i<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>;i<span style=color:#f92672>&lt;=</span>n;<span style=color:#f92672>++</span>i) cin <span style=color:#f92672>&gt;&gt;</span> ps[i].x <span style=color:#f92672>&gt;&gt;</span> ps[i].y;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> m;
-</span></span><span style=display:flex><span>	cin <span style=color:#f92672>&gt;&gt;</span> m;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span>(<span style=color:#66d9ef>int</span> i<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>;i<span style=color:#f92672>&lt;=</span>m;<span style=color:#f92672>++</span>i){
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>int</span> x, y;
-</span></span><span style=display:flex><span>		cin <span style=color:#f92672>&gt;&gt;</span> x <span style=color:#f92672>&gt;&gt;</span> y;
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>double</span> len <span style=color:#f92672>=</span> sqrt((ps[x].x<span style=color:#f92672>-</span>ps[y].x)<span style=color:#f92672>*</span>(ps[x].x<span style=color:#f92672>-</span>ps[y].x)<span style=color:#f92672>+</span>(ps[x].y<span style=color:#f92672>-</span>ps[y].y)<span style=color:#f92672>*</span>(ps[x].y<span style=color:#f92672>-</span>ps[y].y));
-</span></span><span style=display:flex><span>		ls[x].push_back({y, len});
-</span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>	fill(dis, dis<span style=color:#f92672>+</span><span style=color:#ae81ff>1</span><span style=color:#f92672>+</span>n, <span style=color:#ae81ff>9999999</span>);
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> s, t;
-</span></span><span style=display:flex><span>	cin <span style=color:#f92672>&gt;&gt;</span> s <span style=color:#f92672>&gt;&gt;</span> t;
-</span></span><span style=display:flex><span>	dis[s] <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
-</span></span><span style=display:flex><span>	q.push(s);
-</span></span><span style=display:flex><span>	inq[s] <span style=color:#f92672>=</span> true;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>while</span>(<span style=color:#f92672>!</span>q.empty()){
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>int</span> f <span style=color:#f92672>=</span> q.front();
-</span></span><span style=display:flex><span>		q.pop();
-</span></span><span style=display:flex><span>		inq[f] <span style=color:#f92672>=</span> false;
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span>(<span style=color:#f92672>!</span>ls[f].empty()){
-</span></span><span style=display:flex><span>			<span style=color:#66d9ef>for</span>(l cl:ls[f]){
-</span></span><span style=display:flex><span>				<span style=color:#66d9ef>if</span>(dis[cl.t]<span style=color:#f92672>&gt;</span>dis[f]<span style=color:#f92672>+</span>cl.len){
-</span></span><span style=display:flex><span>					dis[cl.t] <span style=color:#f92672>=</span> dis[f]<span style=color:#f92672>+</span>cl.len;
-</span></span><span style=display:flex><span>					<span style=color:#66d9ef>if</span>(<span style=color:#f92672>!</span>inq[cl.t]) q.push(cl.t);
-</span></span><span style=display:flex><span>				}
-</span></span><span style=display:flex><span>			}
-</span></span><span style=display:flex><span>		}
-</span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>	cout <span style=color:#f92672>&lt;&lt;</span> fixed <span style=color:#f92672>&lt;&lt;</span> setprecision(<span style=color:#ae81ff>2</span>) <span style=color:#f92672>&lt;&lt;</span> dis[t];
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></div></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://chail-blog.pages.dev/>chail`s Blog</a></span> ·
-<span>Powered by
-<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
-<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
-</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script></body></html>
+  
+  
+  
+  
+  
+    
+  
+    
+  
+    
+  
+  
+    <meta name="description" content="chail 的个人博客">
+  
+  
+  
+  
+  <link rel="canonical" href="https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/">
+  
+  
+  
+
+  
+  
+    <meta name="author" content="chail">
+  
+  
+
+  
+  <meta property="og:url" content="https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/">
+	<meta property="og:site_name" content="chail&#39;s Blog">
+	<meta property="og:title" content="最短路算法：Dijkstra&Bellman-Ford&SPFA">
+	<meta property="og:description" content="最短路算法：Dijkstra&amp;Bellman-Ford&amp;SPFA#书接上回，继续图论中的经典算法，今天是最短路的经典算法：Dijkstra，Bellman--Ford，以及Bellman--Ford的优化版本SPFA。">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2026-01-27T20:16:34+08:00">
+		<meta property="article:modified_time" content="2026-01-27T20:16:34+08:00">
+
+  
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="最短路算法：Dijkstra&Bellman-Ford&SPFA">
+	<meta name="twitter:description" content="最短路算法：Dijkstra&amp;Bellman-Ford&amp;SPFA#书接上回，继续图论中的经典算法，今天是最短路的经典算法：Dijkstra，Bellman--Ford，以及Bellman--Ford的优化版本SPFA。">
+
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+  
+    
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/main.bundle.min.e197f572a3a6477ef62726e5044645ab5d984d529ef22a7dffbed424175be554d3e9c850c3fdded22d2fc5f3b3c7cf1f4afc1c184e56f71c710d7a258aee97aa.css"
+    integrity="sha512-4Zf1cqOmR372JyblBEZFq12YTVKe8ip9/77UJBdb5VTT6chQw/3e0i0vxfOzx88fSvwcGE5W9xxxDXoliu6Xqg==">
+
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/appearance.min.11183536302aa30e374452803c0154673009b5a4995c7f6559d1c935544cc591b599a5f2adfaeda41e1cc865bd62bdace9b0672a75294ce49d185f0f82b98cbe.js"
+    integrity="sha512-ERg1NjAqow43RFKAPAFUZzAJtaSZXH9lWdHJNVRMxZG1maXyrfrtpB4cyGW9Yr2s6bBnKnUpTOSdGF8PgrmMvg=="></script>
+  
+
+
+  
+  
+  
+  
+  
+  
+    
+    <script defer src="/lib/zoom/zoom.min.umd.b4b722fcb5d42f34f52b30a92f3521b69f403ca9d96d0d6179eb537cb870f5d83fdf1fe836688d95d5c99fefbda4170487711006e56051fa67ea00da10521721.js" integrity="sha512-tLci/LXULzT1KzCpLzUhtp9APKnZbQ1heetTfLhw9dg/3x/oNmiNldXJn&#43;&#43;9pBcEh3EQBuVgUfpn6gDaEFIXIQ=="></script>
+    
+    <script defer src="/js/medium-zoom.7f76d937fbb793f3703fedc60ee1e6345259cf2ada403d1876b806fffeaeb2ba6fc594eaccad75c96d5d2425e9fb833748bf1221b4d90d3cf78cf073e104f814.js" integrity="sha512-f3bZN/u3k/NwP&#43;3GDuHmNFJZzyraQD0YdrgG//6usrpvxZTqzK11yW1dJCXp&#43;4M3SL8SIbTZDTz3jPBz4QT4FA=="></script>
+  
+  
+  
+  
+    
+    <script
+      type="text/javascript"
+      src="/js/reading-progress.min.5d84577898a2dc0e1ed36baf2acb508e94e0c0f59a7fdeef67c1aa264029d9a17ccaff47182411b19d9de2eec2d6ac67f610f61bd938aa18af177ed66030cff1.js"
+      integrity="sha512-XYRXeJii3A4e02uvKstQjpTgwPWaf97vZ8GqJkAp2aF8yv9HGCQRsZ2d4u7C1qxn9hD2G9k4qhivF37WYDDP8Q=="></script>
+  
+
+  
+  
+  
+    
+  
+  
+    
+    
+    
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+    
+    <script
+      defer
+      type="text/javascript"
+      id="script-bundle"
+      src="/js/main.bundle.min.eee20202bf66badfd33b8ccdfeca68b4361999a7c90ccff82ab31d8f4dafdc8e09848344e28bd1bd3cd80fa63d4e109fede339f1decbc06cfa159ba3e479919e.js"
+      integrity="sha512-7uICAr9mut/TO4zN/spotDYZmafJDM/4KrMdj02v3I4JhINE4ovRvTzYD6Y9ThCf7eM58d7LwGz6FZuj5HmRng=="
+      data-copy="复制"
+      data-copied="已复制"></script>
+  
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+  
+
+  
+  <script type="application/ld+json">
+  [{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "articleSection": "Posts",
+    "name": "最短路算法：Dijkstra\u0026Bellman-Ford\u0026SPFA",
+    "headline": "最短路算法：Dijkstra\u0026Bellman-Ford\u0026SPFA",
+    
+    "inLanguage": "zh-cn",
+    "url" : "https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/",
+    "author" : {
+      "@type": "Person",
+      "name": "chail",
+      "image": "https://chail-blog.pages.dev/img/blowfish_logo.png"
+    },
+    "copyrightYear": "2026",
+    "dateCreated": "2026-01-27T20:16:34\u002b08:00",
+    "datePublished": "2026-01-27T20:16:34\u002b08:00",
+    
+    "dateModified": "2026-01-27T20:16:34\u002b08:00",
+    
+    
+    
+    "mainEntityOfPage": "https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/",
+    "wordCount":  2322 
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Posts",
+            "item": "https://chail-blog.pages.dev/posts/"
+          },{
+        "@type": "ListItem",
+        "position":  2 ,
+        "name": "最短路算法：Dijkstra\u0026Bellman-Ford\u0026SPFA",
+        "item": "https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/"
+      }
+    ]
+  }]
+  </script>
+
+
+
+  
+  
+    
+
+
+
+
+  
+
+  
+  
+
+  
+  
+
+  
+  
+</head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <body class="flex flex-col h-screen m-auto leading-7 max-w-7xl px-6 sm:px-14 md:px-24 lg:px-32 text-lg bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral bf-scrollbar">
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="px-3 py-1 text-sm -translate-y-8 rounded-b-lg bg-primary-200 focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content">
+        <span class="font-bold text-primary-600 pe-2 dark:text-primary-400">&darr;</span>
+        跳过正文
+      </a>
+    </div>
+    <header>
+      
+      
+        <div class="min-h-32"></div>
+<div class="fixed inset-x-0 top-3 z-100 px-3 sm:top-5 sm:px-6">
+  <div
+    class="relative mx-auto max-w-7xl rounded-2xl border border-neutral-200/80 shadow-lg shadow-neutral-900/5 dark:border-neutral-700/80 [&_img.logo]:max-h-10 [&_img.logo]:max-w-10">
+    <div class="absolute inset-0 -z-10 rounded-2xl bg-neutral/60 backdrop-blur-xl dark:bg-neutral-800/60"></div>
+    <div class="px-3">
+      <div class="main-menu flex items-center w-full gap-2 p-1 pl-0">
+  
+  
+    <a href="/" class="text-base font-medium truncate min-w-0 shrink">
+      chail&rsquo;s Blog
+    </a>
+  
+  <div class="flex items-center ms-auto">
+    <div class="hidden md:flex">
+      <nav aria-label="" class="flex items-center gap-x-5 h-12">
+  
+
+  
+
+  
+
+  
+    <div class="flex items-center">
+      <button
+        id="appearance-switcher"
+        aria-label="切换为深色模式"
+        type="button"
+        class="text-sm bf-icon-color-hover"
+        title="切换为深色模式">
+        <div class="flex items-center justify-center dark:hidden">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+        </div>
+        <div class="items-center justify-center hidden dark:flex">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+        </div>
+      </button>
+    </div>
+  
+
+  
+    <button
+      id="search-button"
+      aria-label="搜索 (/)"
+      class="flex items-center gap-2 rounded-lg border bf-border-color bf-border-color-hover bg-neutral-100/50 px-2 py-1 text-sm text-neutral-500 transition-colors hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral-400 dark:hover:text-primary-400"
+      title="搜索 (/)">
+      <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+      <kbd
+        id="search-shortcut-hint"
+        class="pointer-events-none font-sans text-xs text-neutral-500 dark:text-neutral-400"
+        aria-hidden="true">
+        ⌘K
+      </kbd>
+    </button>
+  
+</nav>
+
+
+
+    </div>
+    <div class="flex md:hidden">
+      
+<div class="mobile-header-row relative flex items-center h-14 gap-4">
+  
+
+  
+    <button
+      id="appearance-switcher-mobile"
+      type="button"
+      aria-label="切换为深色模式"
+      title="切换为深色模式"
+      class="flex items-center justify-center text-neutral-900 hover:text-primary-600 dark:text-neutral-200 dark:hover:text-primary-400">
+      <div class="dark:hidden">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+      </div>
+      <div class="hidden dark:block">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+      </div>
+    </button>
+  
+
+  
+    <button
+      id="search-button-mobile"
+      aria-label="搜索 (/)"
+      class="flex items-center justify-center bf-icon-color-hover"
+      title="搜索 (/)">
+      <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+    </button>
+  
+
+  
+</div>
+
+
+
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+  <script>
+    (function () {
+      var mainmenu = document.querySelector(".main-menu");
+      if (!mainmenu) return;
+
+      var path = window.location.pathname;
+      var links = mainmenu.querySelectorAll('a[href="' + path + '"]');
+
+      links.forEach(function (link) {
+        var targets = link.querySelectorAll("span");
+        targets.forEach(function (el) {
+          el.classList.add("active");
+        });
+      });
+    })();
+  </script>
+
+
+    </div>
+  </div>
+</div>
+
+      
+    </header>
+    <div class="relative flex flex-col grow">
+      <main id="main-content" class="grow">
+        
+  
+  
+  
+  
+    <div
+  id="reading-progress"
+  class="fixed left-0 top-0 z-100 h-1 w-0 bg-primary-500 dark:bg-primary-400 print:hidden"
+  aria-hidden="true"></div>
+
+  
+  <article>
+    
+    
+
+    
+    <header id="single_header" class="mt-5 max-w-prose">
+      
+        <ol class="text-sm text-neutral-500 dark:text-neutral-400 print:hidden">
+  
+  
+    
+  
+    
+  
+  <li class="hidden">
+    <a class="hover:underline decoration-neutral-300 dark:underline-neutral-600" href="/"
+      >chail&#39;s Blog</a
+    ><span class="px-1 text-primary-500">/</span>
+  </li>
+
+  
+  <li class="inline">
+    <a class="hover:underline decoration-neutral-300 dark:underline-neutral-600" href="/posts/"
+      >Posts</a
+    ><span class="px-1 text-primary-500">/</span>
+  </li>
+
+  
+  <li class="hidden">
+    <a class="hover:underline decoration-neutral-300 dark:underline-neutral-600" href="/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/"
+      >最短路算法：Dijkstra&amp;Bellman-Ford&amp;SPFA</a
+    ><span class="px-1 text-primary-500">/</span>
+  </li>
+
+</ol>
+
+
+      
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        最短路算法：Dijkstra&Bellman-Ford&SPFA
+      </h1>
+      <div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+        
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-01-27T20:16:34&#43;08:00">2026-01-27</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">5 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    算法足迹
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+      </div>
+      
+        
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    
+      
+      
+<div class="flex author">
+  
+    
+    
+      
+    
+    
+      
+      
+      
+        
+        
+        
+      
+      <img
+        class="!mt-0 !mb-0 h-24 w-24 rounded-full me-4"
+        width="96"
+        height="96"
+        alt="chail"
+        src="/img/blowfish_logo_hu_e78ff8f30e4b6ecb.png"
+        data-zoom-src="/img/blowfish_logo_hu_409d77466262840e.png">
+    
+  
+  <div class="place-self-center">
+    
+      <div class="text-[0.6rem] uppercase leading-3 text-neutral-500 dark:text-neutral-400">
+        作者
+      </div>
+      <div class="font-semibold leading-6 text-neutral-800 dark:text-neutral-300">
+        chail
+      </div>
+    
+    
+      <div class="text-sm text-neutral-700 dark:text-neutral-400">记录生活、算法与思考</div>
+    
+    <div class="text-2xl sm:text-lg">
+</div>
+  </div>
+</div>
+
+    
+  
+
+  
+    <div class="mb-5"></div>
+  
+
+      
+    </header>
+
+    
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
+      
+      
+      
+      
+      
+        <div class="order-first lg:ms-auto px-0 lg:order-last lg:ps-8 lg:max-w-2xs">
+          <div class="toc ps-5 print:hidden lg:sticky lg:top-[140px]">
+            <details
+  open
+  id="TOCView"
+  class="toc-right mt-0 overflow-y-auto overscroll-contain bf-scrollbar rounded-lg -ms-5 ps-5 pe-2 hidden lg:block">
+  <summary
+    class="block py-1 text-lg font-semibold cursor-pointer bg-neutral-100 text-neutral-800 -ms-5 ps-5 dark:bg-neutral-700 dark:text-neutral-100 lg:hidden">
+    目录
+  </summary>
+  <div
+    class="min-w-[220px] py-2 border-dotted border-s-1 -ms-5 ps-5 dark:border-neutral-600">
+    <nav id="TableOfContents" aria-label="目录">
+  <ul>
+    <li><a href="#dijkstra例题"><code>Dijkstra</code>例题</a>
+      <ul>
+        <li><a href="#题目描述">题目描述</a></li>
+        <li><a href="#输入格式">输入格式</a></li>
+        <li><a href="#输出格式">输出格式</a></li>
+        <li><a href="#输入样例">输入样例</a></li>
+        <li><a href="#输出样例">输出样例</a></li>
+        <li><a href="#思路">思路</a></li>
+        <li><a href="#实现">实现</a></li>
+        <li><a href="#代码">代码</a></li>
+      </ul>
+    </li>
+    <li><a href="#bellman-ford例题"><code>Bellman-ford</code>例题</a>
+      <ul>
+        <li><a href="#题目描述-1">题目描述</a></li>
+        <li><a href="#输入格式-1">输入格式</a></li>
+        <li><a href="#输出格式-1">输出格式</a></li>
+        <li><a href="#输入样例-1">输入样例</a></li>
+        <li><a href="#输出样例-1">输出样例</a></li>
+        <li><a href="#思路-1">思路</a></li>
+        <li><a href="#实现-1">实现</a></li>
+        <li><a href="#代码-1">代码</a></li>
+      </ul>
+    </li>
+    <li><a href="#spfa"><code>SPFA</code></a>
+      <ul>
+        <li><a href="#代码-2">代码</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</details>
+<details class="toc-inside mt-0 overflow-hidden rounded-lg -ms-5 ps-5 lg:hidden">
+  <summary
+    class="py-1 text-lg font-semibold cursor-pointer bg-neutral-100 text-neutral-800 -ms-5 ps-5 dark:bg-neutral-700 dark:text-neutral-100 lg:hidden">
+    目录
+  </summary>
+  <div
+    class="py-2 border-dotted border-neutral-300 border-s-1 -ms-5 ps-5 dark:border-neutral-600">
+    <nav id="TableOfContentsMobile" aria-label="目录">
+  <ul>
+    <li><a href="#dijkstra例题"><code>Dijkstra</code>例题</a>
+      <ul>
+        <li><a href="#题目描述">题目描述</a></li>
+        <li><a href="#输入格式">输入格式</a></li>
+        <li><a href="#输出格式">输出格式</a></li>
+        <li><a href="#输入样例">输入样例</a></li>
+        <li><a href="#输出样例">输出样例</a></li>
+        <li><a href="#思路">思路</a></li>
+        <li><a href="#实现">实现</a></li>
+        <li><a href="#代码">代码</a></li>
+      </ul>
+    </li>
+    <li><a href="#bellman-ford例题"><code>Bellman-ford</code>例题</a>
+      <ul>
+        <li><a href="#题目描述-1">题目描述</a></li>
+        <li><a href="#输入格式-1">输入格式</a></li>
+        <li><a href="#输出格式-1">输出格式</a></li>
+        <li><a href="#输入样例-1">输入样例</a></li>
+        <li><a href="#输出样例-1">输出样例</a></li>
+        <li><a href="#思路-1">思路</a></li>
+        <li><a href="#实现-1">实现</a></li>
+        <li><a href="#代码-1">代码</a></li>
+      </ul>
+    </li>
+    <li><a href="#spfa"><code>SPFA</code></a>
+      <ul>
+        <li><a href="#代码-2">代码</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</details>
+
+
+<script>
+  (function () {
+    'use strict'
+
+    const SCROLL_OFFSET_RATIO = 0.33
+    const TOC_SELECTOR = '#TableOfContents'
+    const ANCHOR_SELECTOR = '.anchor'
+    const TOC_LINK_SELECTOR = 'a[href^="#"]'
+    const NESTED_LIST_SELECTOR = 'li ul'
+    const ACTIVE_CLASS = 'active'
+    let isJumpingToAnchor = false
+
+    function getActiveAnchorId(anchors, offsetRatio) {
+      
+      
+      
+      
+      
+      
+      const canScroll =
+        document.documentElement.scrollHeight > window.innerHeight + 1
+      if (!canScroll) {
+        const fromHash = decodeURIComponent(window.location.hash.substring(1))
+        const known = [...document.querySelectorAll('#TableOfContents a[href^="#"]')]
+          .map(link => decodeURIComponent(link.getAttribute('href').substring(1)))
+        if (fromHash && known.includes(fromHash)) return fromHash
+      }
+
+      const threshold = window.scrollY + window.innerHeight * offsetRatio
+      const tocLinks = [...document.querySelectorAll('#TableOfContents a[href^="#"]')]
+      const tocIds = new Set(tocLinks.map(link => link.getAttribute('href').substring(1)))
+
+      if (isJumpingToAnchor) {
+        for (let i = 0; i < anchors.length; i++) {
+          const anchor = anchors[i]
+          if (!tocIds.has(anchor.id)) continue
+          const top = anchor.getBoundingClientRect().top + window.scrollY
+          if (Math.abs(window.scrollY - top) < 100) {
+            return anchor.id
+          }
+        }
+      }
+
+      for (let i = anchors.length - 1; i >= 0; i--) {
+        const top = anchors[i].getBoundingClientRect().top + window.scrollY
+        if (top <= threshold && tocIds.has(anchors[i].id)) {
+          return anchors[i].id
+        }
+      }
+      return anchors.find(anchor => tocIds.has(anchor.id))?.id || ''
+    }
+
+    function updateTOC({ toc, anchors, links, scrollOffset, collapseInactive }) {
+      const activeId = getActiveAnchorId(anchors, scrollOffset)
+      if (!activeId) return
+
+      links.forEach(link => {
+        const isActive = link.getAttribute('href') === `#${activeId}`
+        link.classList.toggle(ACTIVE_CLASS, isActive)
+
+        if (collapseInactive) {
+          const ul = link.closest('li')?.querySelector('ul')
+          if (ul) ul.style.display = isActive ? '' : 'none'
+        }
+      })
+
+      if (collapseInactive) {
+        const activeLink = toc.querySelector(`a[href="#${CSS.escape(activeId)}"]`)
+        let el = activeLink
+        while (el && el !== toc) {
+          if (el.tagName === 'UL') el.style.display = ''
+          if (el.tagName === 'LI') el.querySelector('ul')?.style.setProperty('display', '')
+          el = el.parentElement
+        }
+      }
+    }
+
+    function initTOC() {
+      const toc = document.querySelector(TOC_SELECTOR)
+      if (!toc) return
+
+      const collapseInactive = false
+      const anchors = [...document.querySelectorAll(ANCHOR_SELECTOR)]
+      const links = [...toc.querySelectorAll(TOC_LINK_SELECTOR)]
+
+      if (collapseInactive) {
+        toc.querySelectorAll(NESTED_LIST_SELECTOR).forEach(ul => ul.style.display = 'none')
+      }
+
+      links.forEach(link => {
+        link.addEventListener('click', () => {
+          isJumpingToAnchor = true
+        })
+      })
+
+      const config = {
+        toc,
+        anchors,
+        links,
+        scrollOffset: SCROLL_OFFSET_RATIO,
+        collapseInactive
+      }
+
+      window.addEventListener('scroll', () => updateTOC(config), { passive: true })
+      window.addEventListener('hashchange', () => updateTOC(config), { passive: true })
+
+      updateTOC(config)
+    }
+
+    document.readyState === 'loading'
+      ? document.addEventListener('DOMContentLoaded', initTOC)
+      : initTOC()
+  })()
+</script>
+
+
+          </div>
+        </div>
+      
+
+
+      <div class="min-w-0 min-h-0 max-w-fit">
+        
+
+        <div class="article-content max-w-prose mb-20">
+          
+<h1 class="relative group">最短路算法：Dijkstra&amp;Bellman-Ford&amp;SPFA
+    <div id="最短路算法dijkstrabellman-fordspfa" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e6%9c%80%e7%9f%ad%e8%b7%af%e7%ae%97%e6%b3%95dijkstrabellman-fordspfa" aria-label="锚点">#</a>
+    </span>
+    
+</h1>
+<p>书接上回，继续<code>图论</code>中的经典算法，今天是最短路的经典算法：<code>Dijkstra</code>，<code>Bellman--Ford</code>，以及<code>Bellman--Ford</code>的优化版本<code>SPFA</code>。</p>
+<hr>
+
+<h2 class="relative group"><code>Dijkstra</code>例题
+    <div id="dijkstra例题" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#dijkstra%e4%be%8b%e9%a2%98" aria-label="锚点">#</a>
+    </span>
+    
+</h2>
+
+<h3 class="relative group">题目描述
+    <div id="题目描述" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<p>如图，求最短路径。
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="low"
+    alt=""
+    src="https://img.wemd.app/1769511189463_805p5a.png"
+    ></figure>
+</p>
+
+<h3 class="relative group">输入格式
+    <div id="输入格式" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e8%be%93%e5%85%a5%e6%a0%bc%e5%bc%8f" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<p>顶点数n 边数m,n&lt;=10,m&lt;=100</p>
+<p>m条边的顶点和权值</p>
+<p>终点</p>
+
+<h3 class="relative group">输出格式
+    <div id="输出格式" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e8%be%93%e5%87%ba%e6%a0%bc%e5%bc%8f" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<p>顶点0到终点的最短路径</p>
+
+<h3 class="relative group">输入样例
+    <div id="输入样例" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e8%be%93%e5%85%a5%e6%a0%b7%e4%be%8b" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">6 9
+</span></span><span class="line"><span class="cl">0 2 5
+</span></span><span class="line"><span class="cl">0 3 30
+</span></span><span class="line"><span class="cl">1 0 2
+</span></span><span class="line"><span class="cl">1 4 8
+</span></span><span class="line"><span class="cl">2 1 15
+</span></span><span class="line"><span class="cl">2 5 7
+</span></span><span class="line"><span class="cl">4 3 4
+</span></span><span class="line"><span class="cl">5 3 10
+</span></span><span class="line"><span class="cl">5 4 18
+</span></span><span class="line"><span class="cl">4</span></span></code></pre></div></div>
+
+<h3 class="relative group">输出样例
+    <div id="输出样例" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e8%be%93%e5%87%ba%e6%a0%b7%e4%be%8b" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">28</span></span></code></pre></div></div>
+<p>我们需要找到0到某个点的最短路径。等等，最短？和上次的最小生成树很像啊。不过并不完全一样。虽然同样都是找最小的权值，但是<strong>最小生成树要求的是连通所有节点，路径并非是最短的，而最短路问题要求找到权值最短的路径</strong>。</p>
+
+<h3 class="relative group">思路
+    <div id="思路" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e6%80%9d%e8%b7%af" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<p><code>Dijkstra</code>的思想和最小生成树的<code>Prim</code>比较相似。同样把注意力放在节点上：<strong>我们从起点出发，选择起点可去的那条最短的路，以此到达了下一个点，那么不难想到，这条路径就是从起点到下一个点的最短路径</strong>（事实上应该有一个严格的证明，不过这里问题不在这）。</p>
+<p>**那么以此类推，每次都选择当前能走的最短的路，以此到达的点就是起点到这个点的最短路。**这简直和Prim一模一样对吧！不过在这里是一种递推关系，我们通过一步步求解最短的找到目标的最短路。</p>
+
+<h3 class="relative group">实现
+    <div id="实现" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e5%ae%9e%e7%8e%b0" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<p>还是一样，写一个结构体，构造一个邻接表来构建图。思考一下，怎么样每次都找到可走的最短的路。直接枚举太慢了，显然不符合我们的风度。同样采用Prim中的<strong>优先队列优化方法</strong>，<strong>把能走的路存入优先队列，这样每次都能找到最短的</strong>。再用一个数组dijk来记录最短路，$dijk[i]表示到达点的最短路。设当前选择的路的长度为表示到达i点的最短路。设当前选择的路的长度为l，当前将从，当前将从i到到j，那么可以得到递推式，那么可以得到递推式dijk[j] = dijk[i] + l$。</p>
+
+<h3 class="relative group">代码
+    <div id="代码" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e4%bb%a3%e7%a0%81" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;queue&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">r</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">l</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">r</span><span class="o">&amp;</span> <span class="n">oth</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="n">l</span><span class="o">&gt;</span><span class="n">oth</span><span class="p">.</span><span class="n">l</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">dijk</span><span class="p">[</span><span class="mi">15</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">ud</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="nb">false</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">vector</span><span class="o">&lt;</span><span class="n">r</span><span class="o">&gt;</span> <span class="n">rs</span><span class="p">[</span><span class="mi">15</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="n">priority_queue</span><span class="o">&lt;</span><span class="n">r</span><span class="o">&gt;</span> <span class="n">q</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">to</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span> <span class="o">&gt;&gt;</span> <span class="n">m</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">m</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">l</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="n">b</span> <span class="o">&gt;&gt;</span> <span class="n">l</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">rs</span><span class="p">[</span><span class="n">a</span><span class="p">].</span><span class="n">push_back</span><span class="p">({</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">l</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">to</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">	<span class="n">dijk</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">q</span><span class="p">.</span><span class="n">empty</span><span class="p">()){</span>
+</span></span><span class="line"><span class="cl">		<span class="n">r</span> <span class="n">cr</span> <span class="o">=</span> <span class="n">q</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="n">q</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span><span class="p">(</span><span class="n">ud</span><span class="p">[</span><span class="n">cr</span><span class="p">.</span><span class="n">t</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">dijk</span><span class="p">[</span><span class="n">cr</span><span class="p">.</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">cr</span><span class="p">.</span><span class="n">l</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">ud</span><span class="p">[</span><span class="n">cr</span><span class="p">.</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">rs</span><span class="p">[</span><span class="n">cr</span><span class="p">.</span><span class="n">t</span><span class="p">].</span><span class="n">empty</span><span class="p">()){</span>
+</span></span><span class="line"><span class="cl">			<span class="k">for</span><span class="p">(</span><span class="n">r</span> <span class="nl">tr</span><span class="p">:</span><span class="n">rs</span><span class="p">[</span><span class="n">cr</span><span class="p">.</span><span class="n">t</span><span class="p">]){</span>
+</span></span><span class="line"><span class="cl">				<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">ud</span><span class="p">[</span><span class="n">tr</span><span class="p">.</span><span class="n">t</span><span class="p">])</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">					<span class="n">tr</span><span class="p">.</span><span class="n">l</span> <span class="o">+=</span> <span class="n">dijk</span><span class="p">[</span><span class="n">tr</span><span class="p">.</span><span class="n">f</span><span class="p">];</span><span class="c1">//最短路径的值 
+</span></span></span><span class="line"><span class="cl">					<span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">tr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">dijk</span><span class="p">[</span><span class="n">to</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div></div>
+
+<h2 class="relative group"><code>Bellman-ford</code>例题
+    <div id="bellman-ford例题" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#bellman-ford%e4%be%8b%e9%a2%98" aria-label="锚点">#</a>
+    </span>
+    
+</h2>
+
+<h3 class="relative group">题目描述
+    <div id="题目描述-1" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0-1" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<p>平面上有$n$个点$（n≤100）$，每个点的坐标均在$-10000~10000$之间。其中的一些点之间有连线。</p>
+<p>若有连线，则表示可从一个点到达另一个点，即两点间有通路，通路的距离为两点间的直线距离。现在的任务是找出从一点到另一点之间的最短路径。</p>
+<p>已知两点坐标分别为 $（x1,y1)  (x2,y2)$, 则 两点间的距离为 $sqrt( (x2-x1)* (x2-x1) + (y2-y1)*(y2-y1)  )$</p>
+
+<h3 class="relative group">输入格式
+    <div id="输入格式-1" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e8%be%93%e5%85%a5%e6%a0%bc%e5%bc%8f-1" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<p>共$n+m+3$行，其中:</p>
+<p>第一行为整数$n$。</p>
+<p>第2行到第$n+1$行（共$n$行） ，每行两个整数$x$和$y$，描述了一个点的坐标。</p>
+<p>第$n+2$行为一个整数$m$，表示图中连线的个数。</p>
+<p>此后的$m$ 行，每行描述一条连线，由两个整数$i$和$j$组成，
+表示第$i$个点和第$j$个点之间有连线。</p>
+<p>最后一行：两个整数$s$和$t$，分别表示源点和目标点。</p>
+
+<h3 class="relative group">输出格式
+    <div id="输出格式-1" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e8%be%93%e5%87%ba%e6%a0%bc%e5%bc%8f-1" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<p>一行，一个实数（保留两位小数），表示从$s$到$t$的最短路径长度。</p>
+
+<h3 class="relative group">输入样例
+    <div id="输入样例-1" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e8%be%93%e5%85%a5%e6%a0%b7%e4%be%8b-1" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">5 
+</span></span><span class="line"><span class="cl">0 0
+</span></span><span class="line"><span class="cl">2 0
+</span></span><span class="line"><span class="cl">2 2
+</span></span><span class="line"><span class="cl">0 2
+</span></span><span class="line"><span class="cl">3 1
+</span></span><span class="line"><span class="cl">5 
+</span></span><span class="line"><span class="cl">1 2
+</span></span><span class="line"><span class="cl">1 3
+</span></span><span class="line"><span class="cl">1 4
+</span></span><span class="line"><span class="cl">2 5
+</span></span><span class="line"><span class="cl">3 5
+</span></span><span class="line"><span class="cl">1 5</span></span></code></pre></div></div>
+
+<h3 class="relative group">输出样例
+    <div id="输出样例-1" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e8%be%93%e5%87%ba%e6%a0%b7%e4%be%8b-1" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">3.41</span></span></code></pre></div></div>
+<hr>
+<p>事实上，<code>Dijkstra</code>会出点问题：如果存在负权的边，那么<code>Dijkstra</code>就会失效，因为它的贪心策略只注重当下，没有考虑到后面可能的负边。</p>
+
+<h3 class="relative group">思路
+    <div id="思路-1" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e6%80%9d%e8%b7%af-1" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<p>而<code>Bellman--Ford</code>算法可以解决这个问题。<code>Bellford--Ford</code>通过<code>松弛</code>来一步步找到到达终点的最短路。</p>
+<p><strong>用一个$dis$数组来记录到$i$的最短路，初始化为最大值。将起点的$dis$初始化为0。不断地遍历已知的路来更新最短路。当遍历了$n-1$遍时，就找到了所有的最短路</strong>。</p>
+<p>怎么解释呢，比如第一次遍历时更新了从起点到相邻点的$dis$，第二次更新了相邻点的相邻点，也可能包括起点，以此类推&hellip;最终所有点的$dis$都得到了更新，也就得到了最短路。这实在是一种有趣的动态规划的方法。</p>
+
+<h3 class="relative group">实现
+    <div id="实现-1" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e5%ae%9e%e7%8e%b0-1" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<p>用结构体存储边，按思路遍历$n-1$次边即可。不过这显然浪费了性能，因为一开始后面的点根本去不了，而到了后面前面的点或许已经找到了最短路，有时所有点都找到了最优解但仍然在遍历。</p>
+<p>有一个简单的优化方案，我们<strong>可以用一个变量来记录每次遍历是否有点的情况发生了改变。如果有一次遍历没有任何$dis$改变，那么此时已经找到了最优解，结束遍历</strong>。</p>
+
+<h3 class="relative group">代码
+    <div id="代码-1" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e4%bb%a3%e7%a0%81-1" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iomanip&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">p</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">double</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">double</span> <span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">l</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">double</span> <span class="n">len</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">vector</span><span class="o">&lt;</span><span class="n">l</span><span class="o">&gt;</span> <span class="n">ls</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">p</span> <span class="n">ps</span><span class="p">[</span><span class="mi">105</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kt">double</span> <span class="n">dis</span><span class="p">[</span><span class="mi">105</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">double</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="n">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">x</span><span class="o">=</span><span class="n">a</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">y</span><span class="o">=</span><span class="n">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">m</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">m</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">m</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">double</span> <span class="n">len</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">ps</span><span class="p">[</span><span class="n">x</span><span class="p">].</span><span class="n">x</span><span class="o">-</span><span class="n">ps</span><span class="p">[</span><span class="n">y</span><span class="p">].</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="n">x</span><span class="p">].</span><span class="n">x</span><span class="o">-</span><span class="n">ps</span><span class="p">[</span><span class="n">y</span><span class="p">].</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="n">x</span><span class="p">].</span><span class="n">y</span><span class="o">-</span><span class="n">ps</span><span class="p">[</span><span class="n">y</span><span class="p">].</span><span class="n">y</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="n">x</span><span class="p">].</span><span class="n">y</span><span class="o">-</span><span class="n">ps</span><span class="p">[</span><span class="n">y</span><span class="p">].</span><span class="n">y</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">		<span class="n">ls</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">len</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">s</span><span class="p">,</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">s</span> <span class="o">&gt;&gt;</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">fill</span><span class="p">(</span><span class="n">dis</span><span class="p">,</span> <span class="n">dis</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">n</span><span class="p">,</span> <span class="mi">9999999</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">dis</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">k</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="o">++</span><span class="n">k</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">bool</span> <span class="n">flag</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">for</span><span class="p">(</span><span class="n">l</span> <span class="nl">pl</span><span class="p">:</span><span class="n">ls</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span><span class="p">(</span><span class="n">dis</span><span class="p">[</span><span class="n">pl</span><span class="p">.</span><span class="n">t</span><span class="p">]</span><span class="o">&gt;</span><span class="n">dis</span><span class="p">[</span><span class="n">pl</span><span class="p">.</span><span class="n">f</span><span class="p">]</span><span class="o">+</span><span class="n">pl</span><span class="p">.</span><span class="n">len</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">				<span class="n">dis</span><span class="p">[</span><span class="n">pl</span><span class="p">.</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">dis</span><span class="p">[</span><span class="n">pl</span><span class="p">.</span><span class="n">f</span><span class="p">]</span><span class="o">+</span><span class="n">pl</span><span class="p">.</span><span class="n">len</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">				<span class="n">flag</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">flag</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">fixed</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">dis</span><span class="p">[</span><span class="n">t</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div></div>
+<p>显然这样只解决了一部分问题，“一开始后面的点根本去不了，而到了后面前面的点或许已经找到了最短路”的问题还没有得到解决，对此还有一个优化方案，那就是只松弛能被松弛的两个点。这就是<code>Bellman-Ford</code>的进化版：<code>SPFA</code>。</p>
+
+<h2 class="relative group"><code>SPFA</code>
+    <div id="spfa" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#spfa" aria-label="锚点">#</a>
+    </span>
+    
+</h2>
+<p>用邻接表存储图，<strong>用一个队列来存储当前还没有得到答案并能松弛的点</strong>。<strong>一开始把起点推入队列，然后不断地取出队列里的点，遍历该点的边并更新dis。对于更新了的点，还可以继续通过它找到答案，所以接下来把它推入队列。就这样循环往复，最后便高效地得到了答案。</strong></p>
+
+<h3 class="relative group">代码
+    <div id="代码-2" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#%e4%bb%a3%e7%a0%81-2" aria-label="锚点">#</a>
+    </span>
+    
+</h3>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;queue&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iomanip&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">p</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">l</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">double</span> <span class="n">len</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="n">vector</span><span class="o">&lt;</span><span class="n">l</span><span class="o">&gt;</span> <span class="n">ls</span><span class="p">[</span><span class="mi">105</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="n">p</span> <span class="n">ps</span><span class="p">[</span><span class="mi">105</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kt">double</span> <span class="n">dis</span><span class="p">[</span><span class="mi">105</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="n">queue</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">q</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">inq</span><span class="p">[</span><span class="mi">105</span><span class="p">]</span> <span class="p">{</span><span class="nb">false</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">m</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">m</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">m</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">double</span> <span class="n">len</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">ps</span><span class="p">[</span><span class="n">x</span><span class="p">].</span><span class="n">x</span><span class="o">-</span><span class="n">ps</span><span class="p">[</span><span class="n">y</span><span class="p">].</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="n">x</span><span class="p">].</span><span class="n">x</span><span class="o">-</span><span class="n">ps</span><span class="p">[</span><span class="n">y</span><span class="p">].</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="n">x</span><span class="p">].</span><span class="n">y</span><span class="o">-</span><span class="n">ps</span><span class="p">[</span><span class="n">y</span><span class="p">].</span><span class="n">y</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="n">x</span><span class="p">].</span><span class="n">y</span><span class="o">-</span><span class="n">ps</span><span class="p">[</span><span class="n">y</span><span class="p">].</span><span class="n">y</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">		<span class="n">ls</span><span class="p">[</span><span class="n">x</span><span class="p">].</span><span class="n">push_back</span><span class="p">({</span><span class="n">y</span><span class="p">,</span> <span class="n">len</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="n">fill</span><span class="p">(</span><span class="n">dis</span><span class="p">,</span> <span class="n">dis</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">n</span><span class="p">,</span> <span class="mi">9999999</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">s</span><span class="p">,</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">s</span> <span class="o">&gt;&gt;</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">dis</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">inq</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">q</span><span class="p">.</span><span class="n">empty</span><span class="p">()){</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">f</span> <span class="o">=</span> <span class="n">q</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="n">q</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="n">inq</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">ls</span><span class="p">[</span><span class="n">f</span><span class="p">].</span><span class="n">empty</span><span class="p">()){</span>
+</span></span><span class="line"><span class="cl">			<span class="k">for</span><span class="p">(</span><span class="n">l</span> <span class="nl">cl</span><span class="p">:</span><span class="n">ls</span><span class="p">[</span><span class="n">f</span><span class="p">]){</span>
+</span></span><span class="line"><span class="cl">				<span class="k">if</span><span class="p">(</span><span class="n">dis</span><span class="p">[</span><span class="n">cl</span><span class="p">.</span><span class="n">t</span><span class="p">]</span><span class="o">&gt;</span><span class="n">dis</span><span class="p">[</span><span class="n">f</span><span class="p">]</span><span class="o">+</span><span class="n">cl</span><span class="p">.</span><span class="n">len</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">					<span class="n">dis</span><span class="p">[</span><span class="n">cl</span><span class="p">.</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">dis</span><span class="p">[</span><span class="n">f</span><span class="p">]</span><span class="o">+</span><span class="n">cl</span><span class="p">.</span><span class="n">len</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">					<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">inq</span><span class="p">[</span><span class="n">cl</span><span class="p">.</span><span class="n">t</span><span class="p">])</span> <span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">cl</span><span class="p">.</span><span class="n">t</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">fixed</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">dis</span><span class="p">[</span><span class="n">t</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div></div>
+
+          
+          
+          
+        </div>
+        
+        
+
+        
+
+        
+  
+  
+    <h2 class="mt-8 text-2xl font-extrabold mb-10">相关文章</h2>
+    <section class="w-full grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+      
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+    
+    
+      
+    
+      
+    
+      
+    
+  
+
+  
+  
+    
+    
+  
+
+  
+  
+    
+  
+
+
+
+<article
+  class="article-link--related group relative min-h-full min-w-full overflow-hidden rounded-lg border border-neutral-300 dark:border-neutral-600">
+  
+  
+  <div class="p-4">
+    <header>
+      <a
+        
+          href="/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E4%BA%94%E8%89%B2%E8%8A%B1/"
+        
+        class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2">
+        <h2>
+          五色花--请保持着初放时的安详
+          
+        </h2>
+      </a>
+    </header>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-01-26T21:12:32&#43;08:00">2026-01-26</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">1 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/%E5%A4%96%E7%89%A9%E6%8A%A5/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    外物报
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+    </div>
+  
+
+
+    </div>
+    
+  </div>
+  <div class="px-6 pt-4 pb-2"></div>
+</article>
+
+      
+    </section>
+  
+
+
+      </div>
+    </section>
+
+    
+    <footer class="pt-8 max-w-prose print:hidden">
+      
+  
+    
+    
+    
+    <div class="pt-8">
+      <hr class="border-dotted border-neutral-300 dark:border-neutral-600">
+      <div class="flex justify-between pt-3">
+        <span class="flex flex-col">
+          
+            <a
+              class="flex text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+              href="/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E4%BA%94%E8%89%B2%E8%8A%B1/">
+              <span class="leading-6">
+                <span class="inline-block rtl:rotate-180">&larr;</span>&ensp;五色花--请保持着初放时的安详
+              </span>
+            </a>
+            
+              <span class="ms-6 mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                <time datetime="2026-01-26T21:12:32&#43;08:00">2026-01-26</time>
+              </span>
+            
+          
+        </span>
+        <span class="flex flex-col items-end">
+          
+            <a
+              class="flex text-right text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+              href="/posts/%E5%A4%96%E7%89%A9%E6%8A%A5/%E5%9C%A8%E8%B7%AF%E4%B8%8A/">
+              <span class="leading-6">
+                在路上&ensp;<span class="inline-block rtl:rotate-180">&rarr;</span>
+              </span>
+            </a>
+            
+              <span class="me-6 mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                <time datetime="2026-01-30T18:53:22&#43;08:00">2026-01-30</time>
+              </span>
+            
+          
+        </span>
+      </div>
+    </div>
+  
+
+
+      
+
+    </footer>
+  </article>
+
+        
+
+
+  
+
+
+
+
+
+
+<div
+  id="scroll-to-top"
+  class="fixed bottom-6 end-6 z-50 transform translate-y-4 opacity-0 duration-200">
+  <a
+    href="#the-top"
+    class="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+    aria-label="返回顶部"
+    title="返回顶部">
+    &uarr;
+  </a>
+</div>
+
+      </main><footer id="site-footer" class="py-10 print:hidden">
+  
+  
+    
+  
+  <div class="flex items-center justify-between">
+    
+    
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          &copy;
+          2026
+          chail
+      </p>
+    
+
+    
+    
+      <p class="text-xs text-neutral-500 dark:text-neutral-400">
+        
+        
+        由 <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> &amp; <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://blowfish.page/" target="_blank" rel="noopener noreferrer">Blowfish</a> 强力驱动
+      </p>
+    
+  </div>
+  
+  
+</footer>
+<div
+  id="search-wrapper"
+  role="dialog"
+  aria-modal="true"
+  aria-label="搜索"
+  class="invisible fixed inset-0 flex h-screen w-screen cursor-default flex-col bg-neutral-500/50 p-4 backdrop-blur-sm dark:bg-neutral-900/50 sm:p-6 md:p-[10vh] lg:p-[12vh] z-500"
+  data-url="/">
+  <div
+    id="search-modal"
+    class="flex flex-col w-full max-w-3xl min-h-0 mx-auto border rounded-md shadow-lg top-20 border-neutral-200 bg-neutral dark:border-neutral-700 dark:bg-neutral-800">
+    <header class="relative z-10 flex items-center justify-between flex-none px-2">
+      <form class="flex items-center flex-auto min-w-0">
+        <div class="flex items-center justify-center w-8 h-8 text-neutral-400">
+          <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+        </div>
+        <input
+          type="search"
+          id="search-query"
+          aria-label="搜索"
+          class="flex flex-auto h-12 mx-1 bg-transparent appearance-none focus:outline-dotted focus:outline-2 focus:outline-transparent"
+          placeholder="搜索"
+          tabindex="0">
+      </form>
+      <button
+        id="close-search-button"
+        class="flex items-center justify-center w-8 h-8 text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+        title="关闭 (Esc)">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+      </button>
+    </header>
+    <section class="flex-auto px-2 overflow-auto">
+      <ul id="search-results">
+        
+      </ul>
+    </section>
+  </div>
+</div>
+
+    </div>
+    
+    
+  </body>
+  
+</html>
