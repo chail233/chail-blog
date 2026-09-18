@@ -77,3 +77,6 @@ smartTOCHideUnfocusedChildren = false
   groupByYear = false
   cardView = true
   cardViewScreenWidth = false
+
+fingerprintAlgorithm = ""
+assets = { disableFingerprinting = true }
