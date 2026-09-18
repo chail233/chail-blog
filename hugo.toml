@@ -1,5 +1,5 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://chail-blog.pages.dev/'
 locale = 'en-us'
-title = 'My New Hugo Project'
+title = 'chail`s Blog'
 theme = "PaperMod"
 
