@@ -9,3 +9,5 @@ theme = "PaperMod"
 enableInlineShortcodes = false
 [security.subresourceIntegrity]
 enable = false
+[params.assets]
+disableFingerprinting = true
