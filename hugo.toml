@@ -11,3 +11,10 @@ enableInlineShortcodes = false
 enable = false
 [params.assets]
 disableFingerprinting = true
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+ignoreLogs = ['warning-goldmark-raw-html']

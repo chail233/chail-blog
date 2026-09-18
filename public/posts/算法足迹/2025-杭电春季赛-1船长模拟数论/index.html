@@ -1,0 +1,159 @@
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>[2025 杭电春季赛 1]船长（模拟，数论） | chail`s Blog</title><meta name=keywords content><meta name=description content="[2025 杭电春季赛 1]船长（模拟，数论）
+感觉这是一道有点难度的模拟题！杭电春季赛的题似乎都比较好，这道题很适合用来锻炼思维与码力。
+题目
+题目描述
+大嘤帝国的东格玛男人，染染，终于成为了一名水手！
+正如隔壁某位将军的那句“不想做将军的士兵不是好士兵”，不想做船长的水手不是好水手。作为一名好水手，染染自然也报名参与了船长的竞选。
+报名那天，经过广泛的交流，染染得知，包括他自己在内，总共有 $n$ 名水手参与竞选。这 $n$ 名水手都被赋予了一个编号，可以认为第 $i$ 名参与竞选的水手的编号即为 $i$。特别的，染染的编号为 $p0$。
+这 $n$ 名参与竞选的水手当然也不是谁都有竞争力的。根据染染的情报，只有 $k$ 名水手会对染染造成威胁，其中第 $j$ 名水手的编号为 $pj$，而染染当然不想在竞选时碰上这些对手。
+竞选会持续若干轮，每轮会在仍在竞选的水手中大致筛选掉其中的一半，直至仍在竞选的水手只剩下一名，这一名水手就是最后的船长。在每一轮竞选中，假设仍在竞选的水手剩下 $m$ 名，编号从小到大依次为 $q1,q2,⋯,qm$，则水手 $q1$和水手 $q2$ 进行一次较量，水手 $q3$和水手 $q4$进行一次较量，依此类推总共进行 $⌊m/2⌋$（$m/2$，下取整）次较量，并剩下 $⌈m/2⌉$($m/2$ ， 上取正）名水手进入下一轮竞选。注意，如果 $m$ 为奇数，则水手 $qm$在本次竞选中不用参与任何一次较量，直接进入下一轮竞选。
+现在，染染想要知道，如果他和其它水手的较量一定赢，而其他水手之间的较量双方赢的概率相等（即都是 $1/2$），则染染不会碰上会对染染造成威胁的 $k$ 名水手的概率对 $998244353$ 取模后的结果。
+输入格式
+本题单个测试点内包含多组测试数据。
+输入第一行一个正整数 $T (1≤T≤20)$，表示数据组数。
+每组数据第一行两个非负整数 $n (1≤n≤10^9)$和 $k (0≤k<min⁡{n,10^5})$，分别表示参与竞选的水手数量和会对染染造成威胁的水手数量。
+第二行$k+1$ 个两两不同的正整数 $p0,p1,p2,⋯,pk (1≤pj≤n)$，表示染染的编号和会对染染造成威胁的水手的编号。
+保证单个测试点内每组数据中 $k+1$ 的和不超过 $10^6$。
+输出格式
+对于每组数据输出一行一个非负整数，表示答案概率对 $998244353$ 取模后的结果。
+输入样例
+3
+10 0
+1
+8 2
+1 3 5
+4 2
+1 3 4
+输出样例
+1
+623902721
+0
+数据范围与提示
+对于第一组样例，没有水手能对染染造成威胁，答案即为 $1$。"><meta name=author content><link rel=canonical href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2025-%E6%9D%AD%E7%94%B5%E6%98%A5%E5%AD%A3%E8%B5%9B-1%E8%88%B9%E9%95%BF%E6%A8%A1%E6%8B%9F%E6%95%B0%E8%AE%BA/><link crossorigin=anonymous href=../../../assets/css/stylesheet.css rel="preload stylesheet" as=style><link rel=icon href=https://chail-blog.pages.dev/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://chail-blog.pages.dev/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://chail-blog.pages.dev/favicon-32x32.png><link rel=apple-touch-icon href=https://chail-blog.pages.dev/apple-touch-icon.png><link rel=mask-icon href=https://chail-blog.pages.dev/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2025-%E6%9D%AD%E7%94%B5%E6%98%A5%E5%AD%A3%E8%B5%9B-1%E8%88%B9%E9%95%BF%E6%A8%A1%E6%8B%9F%E6%95%B0%E8%AE%BA/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2025-%E6%9D%AD%E7%94%B5%E6%98%A5%E5%AD%A3%E8%B5%9B-1%E8%88%B9%E9%95%BF%E6%A8%A1%E6%8B%9F%E6%95%B0%E8%AE%BA/"><meta property="og:site_name" content="chail`s Blog"><meta property="og:title" content="[2025 杭电春季赛 1]船长（模拟，数论）"><meta property="og:description" content="[2025 杭电春季赛 1]船长（模拟，数论） 感觉这是一道有点难度的模拟题！杭电春季赛的题似乎都比较好，这道题很适合用来锻炼思维与码力。
+题目 题目描述 大嘤帝国的东格玛男人，染染，终于成为了一名水手！
+正如隔壁某位将军的那句“不想做将军的士兵不是好士兵”，不想做船长的水手不是好水手。作为一名好水手，染染自然也报名参与了船长的竞选。
+报名那天，经过广泛的交流，染染得知，包括他自己在内，总共有 $n$ 名水手参与竞选。这 $n$ 名水手都被赋予了一个编号，可以认为第 $i$ 名参与竞选的水手的编号即为 $i$。特别的，染染的编号为 $p0$。
+这 $n$ 名参与竞选的水手当然也不是谁都有竞争力的。根据染染的情报，只有 $k$ 名水手会对染染造成威胁，其中第 $j$ 名水手的编号为 $pj$，而染染当然不想在竞选时碰上这些对手。
+竞选会持续若干轮，每轮会在仍在竞选的水手中大致筛选掉其中的一半，直至仍在竞选的水手只剩下一名，这一名水手就是最后的船长。在每一轮竞选中，假设仍在竞选的水手剩下 $m$ 名，编号从小到大依次为 $q1,q2,⋯,qm$，则水手 $q1$和水手 $q2$ 进行一次较量，水手 $q3$和水手 $q4$进行一次较量，依此类推总共进行 $⌊m/2⌋$（$m/2$，下取整）次较量，并剩下 $⌈m/2⌉$($m/2$ ， 上取正）名水手进入下一轮竞选。注意，如果 $m$ 为奇数，则水手 $qm$在本次竞选中不用参与任何一次较量，直接进入下一轮竞选。
+现在，染染想要知道，如果他和其它水手的较量一定赢，而其他水手之间的较量双方赢的概率相等（即都是 $1/2$），则染染不会碰上会对染染造成威胁的 $k$ 名水手的概率对 $998244353$ 取模后的结果。
+输入格式 本题单个测试点内包含多组测试数据。
+输入第一行一个正整数 $T (1≤T≤20)$，表示数据组数。
+每组数据第一行两个非负整数 $n (1≤n≤10^9)$和 $k (0≤k<min⁡{n,10^5})$，分别表示参与竞选的水手数量和会对染染造成威胁的水手数量。
+第二行$k+1$ 个两两不同的正整数 $p0,p1,p2,⋯,pk (1≤pj≤n)$，表示染染的编号和会对染染造成威胁的水手的编号。
+保证单个测试点内每组数据中 $k+1$ 的和不超过 $10^6$。
+输出格式 对于每组数据输出一行一个非负整数，表示答案概率对 $998244353$ 取模后的结果。
+输入样例 310 018 21 3 54 21 3 4 输出样例 16239027210 数据范围与提示 对于第一组样例，没有水手能对染染造成威胁，答案即为 $1$。"><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-02-15T22:29:09+08:00"><meta property="article:modified_time" content="2026-02-15T22:29:09+08:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="[2025 杭电春季赛 1]船长（模拟，数论）"><meta name=twitter:description content="[2025 杭电春季赛 1]船长（模拟，数论） 感觉这是一道有点难度的模拟题！杭电春季赛的题似乎都比较好，这道题很适合用来锻炼思维与码力。
+题目 题目描述 大嘤帝国的东格玛男人，染染，终于成为了一名水手！
+正如隔壁某位将军的那句“不想做将军的士兵不是好士兵”，不想做船长的水手不是好水手。作为一名好水手，染染自然也报名参与了船长的竞选。
+报名那天，经过广泛的交流，染染得知，包括他自己在内，总共有 $n$ 名水手参与竞选。这 $n$ 名水手都被赋予了一个编号，可以认为第 $i$ 名参与竞选的水手的编号即为 $i$。特别的，染染的编号为 $p0$。
+这 $n$ 名参与竞选的水手当然也不是谁都有竞争力的。根据染染的情报，只有 $k$ 名水手会对染染造成威胁，其中第 $j$ 名水手的编号为 $pj$，而染染当然不想在竞选时碰上这些对手。
+竞选会持续若干轮，每轮会在仍在竞选的水手中大致筛选掉其中的一半，直至仍在竞选的水手只剩下一名，这一名水手就是最后的船长。在每一轮竞选中，假设仍在竞选的水手剩下 $m$ 名，编号从小到大依次为 $q1,q2,⋯,qm$，则水手 $q1$和水手 $q2$ 进行一次较量，水手 $q3$和水手 $q4$进行一次较量，依此类推总共进行 $⌊m/2⌋$（$m/2$，下取整）次较量，并剩下 $⌈m/2⌉$($m/2$ ， 上取正）名水手进入下一轮竞选。注意，如果 $m$ 为奇数，则水手 $qm$在本次竞选中不用参与任何一次较量，直接进入下一轮竞选。
+现在，染染想要知道，如果他和其它水手的较量一定赢，而其他水手之间的较量双方赢的概率相等（即都是 $1/2$），则染染不会碰上会对染染造成威胁的 $k$ 名水手的概率对 $998244353$ 取模后的结果。
+输入格式 本题单个测试点内包含多组测试数据。
+输入第一行一个正整数 $T (1≤T≤20)$，表示数据组数。
+每组数据第一行两个非负整数 $n (1≤n≤10^9)$和 $k (0≤k<min⁡{n,10^5})$，分别表示参与竞选的水手数量和会对染染造成威胁的水手数量。
+第二行$k+1$ 个两两不同的正整数 $p0,p1,p2,⋯,pk (1≤pj≤n)$，表示染染的编号和会对染染造成威胁的水手的编号。
+保证单个测试点内每组数据中 $k+1$ 的和不超过 $10^6$。
+输出格式 对于每组数据输出一行一个非负整数，表示答案概率对 $998244353$ 取模后的结果。
+输入样例 310 018 21 3 54 21 3 4 输出样例 16239027210 数据范围与提示 对于第一组样例，没有水手能对染染造成威胁，答案即为 $1$。"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://chail-blog.pages.dev/posts/"},{"@type":"ListItem","position":2,"name":"[2025 杭电春季赛 1]船长（模拟，数论）","item":"https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2025-%E6%9D%AD%E7%94%B5%E6%98%A5%E5%AD%A3%E8%B5%9B-1%E8%88%B9%E9%95%BF%E6%A8%A1%E6%8B%9F%E6%95%B0%E8%AE%BA/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"[2025 杭电春季赛 1]船长（模拟，数论）","name":"[2025 杭电春季赛 1]船长（模拟，数论）","description":"[2025 杭电春季赛 1]船长（模拟，数论） 感觉这是一道有点难度的模拟题！杭电春季赛的题似乎都比较好，这道题很适合用来锻炼思维与码力。\n题目 题目描述 大嘤帝国的东格玛男人，染染，终于成为了一名水手！\n正如隔壁某位将军的那句“不想做将军的士兵不是好士兵”，不想做船长的水手不是好水手。作为一名好水手，染染自然也报名参与了船长的竞选。\n报名那天，经过广泛的交流，染染得知，包括他自己在内，总共有 $n$ 名水手参与竞选。这 $n$ 名水手都被赋予了一个编号，可以认为第 $i$ 名参与竞选的水手的编号即为 $i$。特别的，染染的编号为 $p0$。\n这 $n$ 名参与竞选的水手当然也不是谁都有竞争力的。根据染染的情报，只有 $k$ 名水手会对染染造成威胁，其中第 $j$ 名水手的编号为 $pj$，而染染当然不想在竞选时碰上这些对手。\n竞选会持续若干轮，每轮会在仍在竞选的水手中大致筛选掉其中的一半，直至仍在竞选的水手只剩下一名，这一名水手就是最后的船长。在每一轮竞选中，假设仍在竞选的水手剩下 $m$ 名，编号从小到大依次为 $q1,q2,⋯,qm$，则水手 $q1$和水手 $q2$ 进行一次较量，水手 $q3$和水手 $q4$进行一次较量，依此类推总共进行 $⌊m/2⌋$（$m/2$，下取整）次较量，并剩下 $⌈m/2⌉$($m/2$ ， 上取正）名水手进入下一轮竞选。注意，如果 $m$ 为奇数，则水手 $qm$在本次竞选中不用参与任何一次较量，直接进入下一轮竞选。\n现在，染染想要知道，如果他和其它水手的较量一定赢，而其他水手之间的较量双方赢的概率相等（即都是 $1/2$），则染染不会碰上会对染染造成威胁的 $k$ 名水手的概率对 $998244353$ 取模后的结果。\n输入格式 本题单个测试点内包含多组测试数据。\n输入第一行一个正整数 $T (1≤T≤20)$，表示数据组数。\n每组数据第一行两个非负整数 $n (1≤n≤10^9)$和 $k (0≤k\u0026lt;min⁡{n,10^5})$，分别表示参与竞选的水手数量和会对染染造成威胁的水手数量。\n第二行$k+1$ 个两两不同的正整数 $p0,p1,p2,⋯,pk (1≤pj≤n)$，表示染染的编号和会对染染造成威胁的水手的编号。\n保证单个测试点内每组数据中 $k+1$ 的和不超过 $10^6$。\n输出格式 对于每组数据输出一行一个非负整数，表示答案概率对 $998244353$ 取模后的结果。\n输入样例 3\r10 0\r1\r8 2\r1 3 5\r4 2\r1 3 4 输出样例 1\r623902721\r0 数据范围与提示 对于第一组样例，没有水手能对染染造成威胁，答案即为 $1$。\n","keywords":[],"articleBody":"[2025 杭电春季赛 1]船长（模拟，数论） 感觉这是一道有点难度的模拟题！杭电春季赛的题似乎都比较好，这道题很适合用来锻炼思维与码力。\n题目 题目描述 大嘤帝国的东格玛男人，染染，终于成为了一名水手！\n正如隔壁某位将军的那句“不想做将军的士兵不是好士兵”，不想做船长的水手不是好水手。作为一名好水手，染染自然也报名参与了船长的竞选。\n报名那天，经过广泛的交流，染染得知，包括他自己在内，总共有 $n$ 名水手参与竞选。这 $n$ 名水手都被赋予了一个编号，可以认为第 $i$ 名参与竞选的水手的编号即为 $i$。特别的，染染的编号为 $p0$。\n这 $n$ 名参与竞选的水手当然也不是谁都有竞争力的。根据染染的情报，只有 $k$ 名水手会对染染造成威胁，其中第 $j$ 名水手的编号为 $pj$，而染染当然不想在竞选时碰上这些对手。\n竞选会持续若干轮，每轮会在仍在竞选的水手中大致筛选掉其中的一半，直至仍在竞选的水手只剩下一名，这一名水手就是最后的船长。在每一轮竞选中，假设仍在竞选的水手剩下 $m$ 名，编号从小到大依次为 $q1,q2,⋯,qm$，则水手 $q1$和水手 $q2$ 进行一次较量，水手 $q3$和水手 $q4$进行一次较量，依此类推总共进行 $⌊m/2⌋$（$m/2$，下取整）次较量，并剩下 $⌈m/2⌉$($m/2$ ， 上取正）名水手进入下一轮竞选。注意，如果 $m$ 为奇数，则水手 $qm$在本次竞选中不用参与任何一次较量，直接进入下一轮竞选。\n现在，染染想要知道，如果他和其它水手的较量一定赢，而其他水手之间的较量双方赢的概率相等（即都是 $1/2$），则染染不会碰上会对染染造成威胁的 $k$ 名水手的概率对 $998244353$ 取模后的结果。\n输入格式 本题单个测试点内包含多组测试数据。\n输入第一行一个正整数 $T (1≤T≤20)$，表示数据组数。\n每组数据第一行两个非负整数 $n (1≤n≤10^9)$和 $k (0≤k","wordCount":"338","inLanguage":"en","datePublished":"2026-02-15T22:29:09+08:00","dateModified":"2026-02-15T22:29:09+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2025-%E6%9D%AD%E7%94%B5%E6%98%A5%E5%AD%A3%E8%B5%9B-1%E8%88%B9%E9%95%BF%E6%A8%A1%E6%8B%9F%E6%95%B0%E8%AE%BA/"},"publisher":{"@type":"Organization","name":"chail`s Blog","logo":{"@type":"ImageObject","url":"https://chail-blog.pages.dev/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://chail-blog.pages.dev/ accesskey=h title="chail`s Blog (Alt + H)">chail`s Blog</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">[2025 杭电春季赛 1]船长（模拟，数论）</h1><div class=post-meta><span title='2026-02-15 22:29:09 +0800 CST'>February 15, 2026</span></div></header><div class="post-content md-content"><h1 id=2025-杭电春季赛-1船长模拟数论>[2025 杭电春季赛 1]船长（模拟，数论）<a hidden class=anchor aria-hidden=true href=#2025-杭电春季赛-1船长模拟数论>#</a></h1><p>感觉这是一道有点难度的模拟题！杭电春季赛的题似乎都比较好，<strong>这道题很适合用来锻炼思维与码力</strong>。</p><h2 id=题目>题目<a hidden class=anchor aria-hidden=true href=#题目>#</a></h2><h3 id=题目描述>题目描述<a hidden class=anchor aria-hidden=true href=#题目描述>#</a></h3><p>大嘤帝国的东格玛男人，染染，终于成为了一名水手！</p><p>正如隔壁某位将军的那句“不想做将军的士兵不是好士兵”，不想做船长的水手不是好水手。作为一名好水手，染染自然也报名参与了船长的竞选。</p><p>报名那天，经过广泛的交流，染染得知，包括他自己在内，总共有 $n$ 名水手参与竞选。这 $n$ 名水手都被赋予了一个编号，可以认为第 $i$ 名参与竞选的水手的编号即为 $i$。特别的，染染的编号为 $p0$。</p><p>这 $n$ 名参与竞选的水手当然也不是谁都有竞争力的。根据染染的情报，只有 $k$ 名水手会对染染造成威胁，其中第 $j$ 名水手的编号为 $pj$，而染染当然不想在竞选时碰上这些对手。</p><p>竞选会持续若干轮，每轮会在仍在竞选的水手中大致筛选掉其中的一半，直至仍在竞选的水手只剩下一名，这一名水手就是最后的船长。在每一轮竞选中，假设仍在竞选的水手剩下 $m$ 名，编号从小到大依次为 $q1,q2,⋯,qm$，则水手 $q1$和水手 $q2$ 进行一次较量，水手 $q3$和水手 $q4$进行一次较量，依此类推总共进行 $⌊m/2⌋$（$m/2$，下取整）次较量，并剩下 $⌈m/2⌉$($m/2$ ， 上取正）名水手进入下一轮竞选。注意，如果 $m$ 为奇数，则水手 $qm$在本次竞选中不用参与任何一次较量，直接进入下一轮竞选。</p><p>现在，染染想要知道，如果他和其它水手的较量一定赢，而其他水手之间的较量双方赢的概率相等（即都是 $1/2$），则染染不会碰上会对染染造成威胁的 $k$ 名水手的概率对 $998244353$ 取模后的结果。</p><h3 id=输入格式>输入格式<a hidden class=anchor aria-hidden=true href=#输入格式>#</a></h3><p>本题单个测试点内包含多组测试数据。</p><p>输入第一行一个正整数 $T (1≤T≤20)$，表示数据组数。</p><p>每组数据第一行两个非负整数 $n (1≤n≤10^9)$和 $k (0≤k&lt;min⁡{n,10^5})$，分别表示参与竞选的水手数量和会对染染造成威胁的水手数量。</p><p>第二行$k+1$ 个两两不同的正整数 $p0,p1,p2,⋯,pk (1≤pj≤n)$，表示染染的编号和会对染染造成威胁的水手的编号。</p><p>保证单个测试点内每组数据中 $k+1$ 的和不超过 $10^6$。</p><h3 id=输出格式>输出格式<a hidden class=anchor aria-hidden=true href=#输出格式>#</a></h3><p>对于每组数据输出一行一个非负整数，表示答案概率对 $998244353$ 取模后的结果。</p><h3 id=输入样例>输入样例<a hidden class=anchor aria-hidden=true href=#输入样例>#</a></h3><pre tabindex=0><code>3
+10 0
+1
+8 2
+1 3 5
+4 2
+1 3 4
+</code></pre><h3 id=输出样例>输出样例<a hidden class=anchor aria-hidden=true href=#输出样例>#</a></h3><pre tabindex=0><code>1
+623902721
+0
+</code></pre><h3 id=数据范围与提示>数据范围与提示<a hidden class=anchor aria-hidden=true href=#数据范围与提示>#</a></h3><p>对于第一组样例，没有水手能对染染造成威胁，答案即为 $1$。</p><p>对于第二组样例，染染分别有可能在第二轮碰上水手 $3$ 和在第三轮碰上水手 $5$，碰上的概率分别为 $1/2$ 和 $1/4$，答案为 $(1−1/2)(1−1/4)=3/8$</p><p>对于第三组样例，不管第一轮竞选是水手 $3$ 还是水手 $4$ 赢，染染都会在第二轮碰上，所以答案为 $0$。</p><h2 id=题解>题解<a hidden class=anchor aria-hidden=true href=#题解>#</a></h2><h3 id=前置知识>前置知识<a hidden class=anchor aria-hidden=true href=#前置知识>#</a></h3><p>这道题需要算概率，我们无法用计算机方便地算分数，那么就需要用到`<strong>乘法逆元</strong>。<img loading=lazy src=https://img.wemd.app/1770782787629_pq603u.png>
+对于逆元，需要用一个快速幂来计算：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#66d9ef>int</span> mod <span style=color:#f92672>=</span> <span style=color:#ae81ff>998244353</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>qp</span>(<span style=color:#66d9ef>int</span> a,<span style=color:#66d9ef>int</span> b){
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> res <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>	a<span style=color:#f92672>%=</span>mod;
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>while</span>(b){
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span>(b<span style=color:#f92672>&amp;</span><span style=color:#ae81ff>1</span><span style=color:#f92672>==</span><span style=color:#ae81ff>1</span>) res <span style=color:#f92672>=</span> res<span style=color:#f92672>*</span>a<span style=color:#f92672>%</span>mod;
+</span></span><span style=display:flex><span>		a <span style=color:#f92672>=</span> a<span style=color:#f92672>*</span>a<span style=color:#f92672>%</span>mod;
+</span></span><span style=display:flex><span>		b<span style=color:#f92672>&gt;&gt;=</span><span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> res;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#66d9ef>int</span> inv2 <span style=color:#f92672>=</span> qp(<span style=color:#ae81ff>2</span>, mod<span style=color:#f92672>-</span><span style=color:#ae81ff>2</span>);
+</span></span><span style=display:flex><span><span style=color:#75715e>//int被宏定义为了long long
+</span></span></span></code></pre></div><p>这里是两两竞选，分母只会是2，那就把2的逆元 $inv2$ 提前记录下来。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#66d9ef>int</span> inv2 <span style=color:#f92672>=</span> qp(<span style=color:#ae81ff>2</span>, mod<span style=color:#f92672>-</span><span style=color:#ae81ff>2</span>);
+</span></span></code></pre></div><h3 id=思考>思考<a hidden class=anchor aria-hidden=true href=#思考>#</a></h3><p>我们很容易可以发现，<strong>最后的概率由每一轮染染遇到有威胁对手的概率决定</strong>，而<strong>这些有威胁的对手可以出现在某轮的概率是可以计算出来的</strong>。另外，<strong>每一轮的水手的相对顺序也是不变的</strong>。通过这些信息，我们们就可以想到用开始给的信息计算出每一轮有威胁水手的概率和染染与他们较量的概率。</p><p>这看似是个很简单的模拟，但是需要一些小巧思。首先我们只对 $k$ 个有威胁的水手模拟，这是我们关注的，否则会超时。每一轮，用一个数组 $p$ 记录我们关注的水手的编号（<strong>包括染染,记录染染为 $p0$</strong>），用数组 $f$ 记录该轮每个水手出现的概率，并且分别用 $q$，$g$ 记录上述下一轮的信息进行迭代。每一轮都计算染染遇到有威胁水手的概率。</p><p>对每个水手的编号减一操作，<strong>这样的话这个编号除以2就是这个水手胜利后下一轮的编号</strong>，这样我们就可用来判断两个水手是否在本轮较量。<strong>这样做还有一个好处就是对编号和 $1$ 进行按位异或计算可以得到他的对手的编号</strong>。（话说这种方法谁能想到啊喂。）这样子就可以剩下许多代码上的麻烦。</p><p>对于每一轮我们可以做以下判断来进行迭代：</p><ol><li>如果 $p0/2 == p[i]/2$，那么染染本轮有可能与编号为 $p[i]$ 的有威胁的水手较量，答案应该乘 $1-f[i]$ 。</li><li>如果 $p[i]/2==p[i+1]/2$，那么这两个有威胁的水手在本轮较量，下一轮 $p[i]/2$ 这个编号会产生有威胁的水手的概率为 $f[i]*f[i+1]*inv2$。</li><li>如果 $p[i]$ ^ $1>=n$，那么此水手本轮轮空。</li><li>如果上述条件都没有满足，那水手 $p[i]$本轮和没有威胁的水手较量，胜利概率$1/2$。</li></ol><p>通过上述判断，就可以计算每轮的情况，再迭代给下一轮，直到只剩下染染一人，同时我们也得到了答案。</p><h3 id=代码>代码<a hidden class=anchor aria-hidden=true href=#代码>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iostream&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;algorithm&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;vector&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#define int long long
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> <span style=color:#66d9ef>namespace</span> std;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#66d9ef>int</span> mod <span style=color:#f92672>=</span> <span style=color:#ae81ff>998244353</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>qp</span>(<span style=color:#66d9ef>int</span> a,<span style=color:#66d9ef>int</span> b){
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> res <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>	a<span style=color:#f92672>%=</span>mod;
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>while</span>(b){
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span>(b<span style=color:#f92672>&amp;</span><span style=color:#ae81ff>1</span><span style=color:#f92672>==</span><span style=color:#ae81ff>1</span>) res <span style=color:#f92672>=</span> res<span style=color:#f92672>*</span>a<span style=color:#f92672>%</span>mod;
+</span></span><span style=display:flex><span>		a <span style=color:#f92672>=</span> a<span style=color:#f92672>*</span>a<span style=color:#f92672>%</span>mod;
+</span></span><span style=display:flex><span>		b<span style=color:#f92672>&gt;&gt;=</span><span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> res;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#66d9ef>int</span> inv2 <span style=color:#f92672>=</span> qp(<span style=color:#ae81ff>2</span>, mod<span style=color:#f92672>-</span><span style=color:#ae81ff>2</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>signed</span> <span style=color:#a6e22e>main</span>(){
+</span></span><span style=display:flex><span>	ios<span style=color:#f92672>::</span>sync_with_stdio(false);
+</span></span><span style=display:flex><span>	cin.tie(<span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>	cout.tie(<span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> t;
+</span></span><span style=display:flex><span>	cin <span style=color:#f92672>&gt;&gt;</span> t;
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span>(<span style=color:#66d9ef>int</span> ti<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>;ti<span style=color:#f92672>&lt;=</span>t;<span style=color:#f92672>++</span>ti){
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>int</span> n, k;
+</span></span><span style=display:flex><span>		cin <span style=color:#f92672>&gt;&gt;</span> n <span style=color:#f92672>&gt;&gt;</span> k;
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>int</span> p0;
+</span></span><span style=display:flex><span>		cin <span style=color:#f92672>&gt;&gt;</span> p0;
+</span></span><span style=display:flex><span>		p0<span style=color:#f92672>--</span>;
+</span></span><span style=display:flex><span>		vector<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>int</span><span style=color:#f92672>&gt;</span> p(k);
+</span></span><span style=display:flex><span>		vector<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>int</span><span style=color:#f92672>&gt;</span> f(k,<span style=color:#ae81ff>1</span>);
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>for</span>(<span style=color:#66d9ef>int</span> i<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>;i<span style=color:#f92672>&lt;</span>k;<span style=color:#f92672>++</span>i){
+</span></span><span style=display:flex><span>			cin <span style=color:#f92672>&gt;&gt;</span> p[i];
+</span></span><span style=display:flex><span>			p[i]<span style=color:#f92672>--</span>;
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>		sort(p.begin(), p.end());
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>int</span> ans <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>while</span>(p.size()){
+</span></span><span style=display:flex><span>			vector<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>int</span><span style=color:#f92672>&gt;</span> g,q;
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>for</span>(<span style=color:#66d9ef>int</span> i<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>;i<span style=color:#f92672>&lt;</span>p.size();){
+</span></span><span style=display:flex><span>				<span style=color:#66d9ef>if</span>(p0<span style=color:#f92672>/</span><span style=color:#ae81ff>2</span><span style=color:#f92672>==</span>p[i]<span style=color:#f92672>/</span><span style=color:#ae81ff>2</span>){
+</span></span><span style=display:flex><span>					ans <span style=color:#f92672>*=</span> (<span style=color:#ae81ff>1</span><span style=color:#f92672>+</span>mod<span style=color:#f92672>-</span>f[i]<span style=color:#f92672>+</span>mod)<span style=color:#f92672>%</span>mod;
+</span></span><span style=display:flex><span>					ans<span style=color:#f92672>%=</span>mod;
+</span></span><span style=display:flex><span>					i<span style=color:#f92672>++</span>;
+</span></span><span style=display:flex><span>				}
+</span></span><span style=display:flex><span>				<span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span>(i<span style=color:#f92672>+</span><span style=color:#ae81ff>1</span><span style=color:#f92672>&lt;</span>p.size() <span style=color:#f92672>&amp;&amp;</span> (p[i]<span style=color:#f92672>/</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>==</span> p[i<span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>]<span style=color:#f92672>/</span><span style=color:#ae81ff>2</span>)){
+</span></span><span style=display:flex><span>					q.push_back(p[i]<span style=color:#f92672>/</span><span style=color:#ae81ff>2</span>);
+</span></span><span style=display:flex><span>					g.push_back((f[i]<span style=color:#f92672>+</span>f[i<span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>])<span style=color:#f92672>%</span>mod <span style=color:#f92672>*</span> inv2 <span style=color:#f92672>%</span> mod);
+</span></span><span style=display:flex><span>					i<span style=color:#f92672>+=</span><span style=color:#ae81ff>2</span>;
+</span></span><span style=display:flex><span>				}
+</span></span><span style=display:flex><span>				<span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span>((p[i]<span style=color:#f92672>^</span><span style=color:#ae81ff>1</span>)<span style=color:#f92672>&gt;=</span>n){
+</span></span><span style=display:flex><span>					q.push_back(p[i]<span style=color:#f92672>/</span><span style=color:#ae81ff>2</span>);
+</span></span><span style=display:flex><span>					g.push_back(f[i]<span style=color:#f92672>%</span>mod);
+</span></span><span style=display:flex><span>					i<span style=color:#f92672>++</span>;
+</span></span><span style=display:flex><span>				}
+</span></span><span style=display:flex><span>				<span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>					q.push_back(p[i]<span style=color:#f92672>/</span><span style=color:#ae81ff>2</span>);
+</span></span><span style=display:flex><span>					g.push_back(f[i]<span style=color:#f92672>*</span>inv2<span style=color:#f92672>%</span>mod);
+</span></span><span style=display:flex><span>					i<span style=color:#f92672>++</span>;
+</span></span><span style=display:flex><span>				}
+</span></span><span style=display:flex><span>			}
+</span></span><span style=display:flex><span>			p <span style=color:#f92672>=</span> q;
+</span></span><span style=display:flex><span>			f <span style=color:#f92672>=</span> g;
+</span></span><span style=display:flex><span>			n <span style=color:#f92672>=</span> (n<span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>)<span style=color:#f92672>/</span><span style=color:#ae81ff>2</span>;
+</span></span><span style=display:flex><span>			p0<span style=color:#f92672>/=</span><span style=color:#ae81ff>2</span>;
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>		cout <span style=color:#f92672>&lt;&lt;</span> (ans<span style=color:#f92672>%</span>mod<span style=color:#f92672>+</span>mod)<span style=color:#f92672>%</span>mod <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>;
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://chail-blog.pages.dev/>chail`s Blog</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script></body></html>

@@ -1,0 +1,126 @@
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>2026杭电春季赛热身赛-1007最大三段和（kadane算法） | chail`s Blog</title><meta name=keywords content><meta name=description content="2026杭电春季赛热身赛-1007最大三段和（kadane算法）
+
+春天来了，我们可以在各处看到盛开的花朵，多么美丽！而各个程序设计竞赛也将如这些花一样接踵而至。为了进一步提升程序设计能力，就让我来记录一下杭电赛的学习吧！今天的这道题主要记录kadane算法的学习，这道题便是前两天新鲜出炉的热身赛题目！
+
+题目
+Problem Description
+木木同学最近做了一道最大子段和，感觉很有意思，然后想了一下如果取两段呢？他很快就会了。那如果取三段呢？木木同学学艺不精没想出来，于是便来请教你了。
+给出一个长度为
+n 的序列 a，要求从中选出三个子段，使得这三个子段的所有数字和最大。每个子段的长度至少为1，并且
+两个子段之间至少间隔一个数，同时要求第二个子段长度为1。
+Input
+
+Output&amp;Sample
+
+题解
+思考
+对于单一的最大子段和问题，很好去解决，只要找到差值最大的前缀和就可以了。而最大三段和似乎就有些棘手了。这道题有一个条件：第二个子段的长度为1。这样的特殊的条件自然会让我们很在意。
+其他两段或许没那么好确定，但这个长度为1的第二段就很好考虑了。它一定不能在数组的端点和端点相邻的位置，因为子段需要至少隔一个数字。而当它的位置确定后，我们要做的就是在它的左边和右边分别选一个和最大的子段。等等，这样我们不就把问题解决了？对于每一个可能的中间点，找到最大的左子段和右子段。
+最大左子段和最大右子段怎么找。由于枚举中点已经有了O(n)，找这两段就必须是O(1)或者O(logn)。想一下，我们可以预处理每个位置下最大的左子段和最大的右子段。而kadane算法可以以O(n)的时间复杂度完成。
+kadane算法
+Kadane算法是一种用于解决最大子数组和问题的动态规划算法。它的核心思想是在遍历数组的过程中，维护一个局部最优解，并最终得到全局最优解。
+Kadane算法的核心思想是：
+对于每个位置i，计算以该位置结尾的最大子数组和
+状态转移：dp[i] = max(nums[i], dp[i-1] + nums[i])
+最终答案：max(dp[0], dp[1], &mldr;, dp[n-1])
+那么我们就可以用kadane分别预处理左右最大子段
+		for(int i=1;i<=n;++i){
+			if(i == 1) ldp[i] = a[i];
+			else ldp[i] = max(a[i], ldp[i-1] + a[i]);
+			if(i == 1) lm[i] = ldp[i];
+			else lm[i] = max(lm[i-1], ldp[i]);
+		}
+		for(int i=n;i>=1;--i){
+			if(i == n) rdp[i] = a[i];
+			else rdp[i] = max(a[i], rdp[i+1] + a[i]);
+			if(i == n) rm[i] = rdp[i];
+			else rm[i] = max(rm[i+1], rdp[i]);
+		}
+这样我们只需要枚举中间子段，就可以得到每一个中间子段对应的最大结果，从而找出最终的答案。"><meta name=author content><link rel=canonical href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2026%E6%9D%AD%E7%94%B5%E6%98%A5%E5%AD%A3%E8%B5%9B-%E6%9C%80%E5%A4%A7%E4%B8%89%E6%AE%B5%E5%92%8C/><link crossorigin=anonymous href=../../../assets/css/stylesheet.css rel="preload stylesheet" as=style><link rel=icon href=https://chail-blog.pages.dev/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://chail-blog.pages.dev/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://chail-blog.pages.dev/favicon-32x32.png><link rel=apple-touch-icon href=https://chail-blog.pages.dev/apple-touch-icon.png><link rel=mask-icon href=https://chail-blog.pages.dev/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2026%E6%9D%AD%E7%94%B5%E6%98%A5%E5%AD%A3%E8%B5%9B-%E6%9C%80%E5%A4%A7%E4%B8%89%E6%AE%B5%E5%92%8C/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2026%E6%9D%AD%E7%94%B5%E6%98%A5%E5%AD%A3%E8%B5%9B-%E6%9C%80%E5%A4%A7%E4%B8%89%E6%AE%B5%E5%92%8C/"><meta property="og:site_name" content="chail`s Blog"><meta property="og:title" content="2026杭电春季赛热身赛-1007最大三段和（kadane算法）"><meta property="og:description" content="2026杭电春季赛热身赛-1007最大三段和（kadane算法） 春天来了，我们可以在各处看到盛开的花朵，多么美丽！而各个程序设计竞赛也将如这些花一样接踵而至。为了进一步提升程序设计能力，就让我来记录一下杭电赛的学习吧！今天的这道题主要记录kadane算法的学习，这道题便是前两天新鲜出炉的热身赛题目！
+题目 Problem Description 木木同学最近做了一道最大子段和，感觉很有意思，然后想了一下如果取两段呢？他很快就会了。那如果取三段呢？木木同学学艺不精没想出来，于是便来请教你了。
+给出一个长度为 n 的序列 a，要求从中选出三个子段，使得这三个子段的所有数字和最大。每个子段的长度至少为1，并且 两个子段之间至少间隔一个数，同时要求第二个子段长度为1。
+Input Output&amp;Sample 题解 思考 对于单一的最大子段和问题，很好去解决，只要找到差值最大的前缀和就可以了。而最大三段和似乎就有些棘手了。这道题有一个条件：第二个子段的长度为1。这样的特殊的条件自然会让我们很在意。
+其他两段或许没那么好确定，但这个长度为1的第二段就很好考虑了。它一定不能在数组的端点和端点相邻的位置，因为子段需要至少隔一个数字。而当它的位置确定后，我们要做的就是在它的左边和右边分别选一个和最大的子段。等等，这样我们不就把问题解决了？对于每一个可能的中间点，找到最大的左子段和右子段。
+最大左子段和最大右子段怎么找。由于枚举中点已经有了O(n)，找这两段就必须是O(1)或者O(logn)。想一下，我们可以预处理每个位置下最大的左子段和最大的右子段。而kadane算法可以以O(n)的时间复杂度完成。
+kadane算法 Kadane算法是一种用于解决最大子数组和问题的动态规划算法。它的核心思想是在遍历数组的过程中，维护一个局部最优解，并最终得到全局最优解。
+Kadane算法的核心思想是：
+对于每个位置i，计算以该位置结尾的最大子数组和
+状态转移：dp[i] = max(nums[i], dp[i-1] + nums[i])
+最终答案：max(dp[0], dp[1], …, dp[n-1])
+那么我们就可以用kadane分别预处理左右最大子段
+for(int i=1;i<=n;++i){ if(i == 1) ldp[i] = a[i]; else ldp[i] = max(a[i], ldp[i-1] + a[i]); if(i == 1) lm[i] = ldp[i]; else lm[i] = max(lm[i-1], ldp[i]); } for(int i=n;i>=1;--i){ if(i == n) rdp[i] = a[i]; else rdp[i] = max(a[i], rdp[i+1] + a[i]); if(i == n) rm[i] = rdp[i]; else rm[i] = max(rm[i+1], rdp[i]); } 这样我们只需要枚举中间子段，就可以得到每一个中间子段对应的最大结果，从而找出最终的答案。"><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-03-15T10:15:12+08:00"><meta property="article:modified_time" content="2026-03-15T10:15:12+08:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="2026杭电春季赛热身赛-1007最大三段和（kadane算法）"><meta name=twitter:description content="2026杭电春季赛热身赛-1007最大三段和（kadane算法） 春天来了，我们可以在各处看到盛开的花朵，多么美丽！而各个程序设计竞赛也将如这些花一样接踵而至。为了进一步提升程序设计能力，就让我来记录一下杭电赛的学习吧！今天的这道题主要记录kadane算法的学习，这道题便是前两天新鲜出炉的热身赛题目！
+题目 Problem Description 木木同学最近做了一道最大子段和，感觉很有意思，然后想了一下如果取两段呢？他很快就会了。那如果取三段呢？木木同学学艺不精没想出来，于是便来请教你了。
+给出一个长度为 n 的序列 a，要求从中选出三个子段，使得这三个子段的所有数字和最大。每个子段的长度至少为1，并且 两个子段之间至少间隔一个数，同时要求第二个子段长度为1。
+Input Output&amp;Sample 题解 思考 对于单一的最大子段和问题，很好去解决，只要找到差值最大的前缀和就可以了。而最大三段和似乎就有些棘手了。这道题有一个条件：第二个子段的长度为1。这样的特殊的条件自然会让我们很在意。
+其他两段或许没那么好确定，但这个长度为1的第二段就很好考虑了。它一定不能在数组的端点和端点相邻的位置，因为子段需要至少隔一个数字。而当它的位置确定后，我们要做的就是在它的左边和右边分别选一个和最大的子段。等等，这样我们不就把问题解决了？对于每一个可能的中间点，找到最大的左子段和右子段。
+最大左子段和最大右子段怎么找。由于枚举中点已经有了O(n)，找这两段就必须是O(1)或者O(logn)。想一下，我们可以预处理每个位置下最大的左子段和最大的右子段。而kadane算法可以以O(n)的时间复杂度完成。
+kadane算法 Kadane算法是一种用于解决最大子数组和问题的动态规划算法。它的核心思想是在遍历数组的过程中，维护一个局部最优解，并最终得到全局最优解。
+Kadane算法的核心思想是：
+对于每个位置i，计算以该位置结尾的最大子数组和
+状态转移：dp[i] = max(nums[i], dp[i-1] + nums[i])
+最终答案：max(dp[0], dp[1], …, dp[n-1])
+那么我们就可以用kadane分别预处理左右最大子段
+for(int i=1;i<=n;++i){ if(i == 1) ldp[i] = a[i]; else ldp[i] = max(a[i], ldp[i-1] + a[i]); if(i == 1) lm[i] = ldp[i]; else lm[i] = max(lm[i-1], ldp[i]); } for(int i=n;i>=1;--i){ if(i == n) rdp[i] = a[i]; else rdp[i] = max(a[i], rdp[i+1] + a[i]); if(i == n) rm[i] = rdp[i]; else rm[i] = max(rm[i+1], rdp[i]); } 这样我们只需要枚举中间子段，就可以得到每一个中间子段对应的最大结果，从而找出最终的答案。"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://chail-blog.pages.dev/posts/"},{"@type":"ListItem","position":2,"name":"2026杭电春季赛热身赛-1007最大三段和（kadane算法）","item":"https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2026%E6%9D%AD%E7%94%B5%E6%98%A5%E5%AD%A3%E8%B5%9B-%E6%9C%80%E5%A4%A7%E4%B8%89%E6%AE%B5%E5%92%8C/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"2026杭电春季赛热身赛-1007最大三段和（kadane算法）","name":"2026杭电春季赛热身赛-1007最大三段和（kadane算法）","description":"2026杭电春季赛热身赛-1007最大三段和（kadane算法） 春天来了，我们可以在各处看到盛开的花朵，多么美丽！而各个程序设计竞赛也将如这些花一样接踵而至。为了进一步提升程序设计能力，就让我来记录一下杭电赛的学习吧！今天的这道题主要记录kadane算法的学习，这道题便是前两天新鲜出炉的热身赛题目！\n题目 Problem Description 木木同学最近做了一道最大子段和，感觉很有意思，然后想了一下如果取两段呢？他很快就会了。那如果取三段呢？木木同学学艺不精没想出来，于是便来请教你了。\n给出一个长度为 n 的序列 a，要求从中选出三个子段，使得这三个子段的所有数字和最大。每个子段的长度至少为1，并且 两个子段之间至少间隔一个数，同时要求第二个子段长度为1。\nInput Output\u0026amp;Sample 题解 思考 对于单一的最大子段和问题，很好去解决，只要找到差值最大的前缀和就可以了。而最大三段和似乎就有些棘手了。这道题有一个条件：第二个子段的长度为1。这样的特殊的条件自然会让我们很在意。\n其他两段或许没那么好确定，但这个长度为1的第二段就很好考虑了。它一定不能在数组的端点和端点相邻的位置，因为子段需要至少隔一个数字。而当它的位置确定后，我们要做的就是在它的左边和右边分别选一个和最大的子段。等等，这样我们不就把问题解决了？对于每一个可能的中间点，找到最大的左子段和右子段。\n最大左子段和最大右子段怎么找。由于枚举中点已经有了O(n)，找这两段就必须是O(1)或者O(logn)。想一下，我们可以预处理每个位置下最大的左子段和最大的右子段。而kadane算法可以以O(n)的时间复杂度完成。\nkadane算法 Kadane算法是一种用于解决最大子数组和问题的动态规划算法。它的核心思想是在遍历数组的过程中，维护一个局部最优解，并最终得到全局最优解。\nKadane算法的核心思想是：\n对于每个位置i，计算以该位置结尾的最大子数组和\n状态转移：dp[i] = max(nums[i], dp[i-1] + nums[i])\n最终答案：max(dp[0], dp[1], \u0026hellip;, dp[n-1])\n那么我们就可以用kadane分别预处理左右最大子段\nfor(int i=1;i\u0026lt;=n;++i){ if(i == 1) ldp[i] = a[i]; else ldp[i] = max(a[i], ldp[i-1] + a[i]); if(i == 1) lm[i] = ldp[i]; else lm[i] = max(lm[i-1], ldp[i]); } for(int i=n;i\u0026gt;=1;--i){ if(i == n) rdp[i] = a[i]; else rdp[i] = max(a[i], rdp[i+1] + a[i]); if(i == n) rm[i] = rdp[i]; else rm[i] = max(rm[i+1], rdp[i]); } 这样我们只需要枚举中间子段，就可以得到每一个中间子段对应的最大结果，从而找出最终的答案。\n","keywords":[],"articleBody":"2026杭电春季赛热身赛-1007最大三段和（kadane算法） 春天来了，我们可以在各处看到盛开的花朵，多么美丽！而各个程序设计竞赛也将如这些花一样接踵而至。为了进一步提升程序设计能力，就让我来记录一下杭电赛的学习吧！今天的这道题主要记录kadane算法的学习，这道题便是前两天新鲜出炉的热身赛题目！\n题目 Problem Description 木木同学最近做了一道最大子段和，感觉很有意思，然后想了一下如果取两段呢？他很快就会了。那如果取三段呢？木木同学学艺不精没想出来，于是便来请教你了。\n给出一个长度为 n 的序列 a，要求从中选出三个子段，使得这三个子段的所有数字和最大。每个子段的长度至少为1，并且 两个子段之间至少间隔一个数，同时要求第二个子段长度为1。\nInput Output\u0026Sample 题解 思考 对于单一的最大子段和问题，很好去解决，只要找到差值最大的前缀和就可以了。而最大三段和似乎就有些棘手了。这道题有一个条件：第二个子段的长度为1。这样的特殊的条件自然会让我们很在意。\n其他两段或许没那么好确定，但这个长度为1的第二段就很好考虑了。它一定不能在数组的端点和端点相邻的位置，因为子段需要至少隔一个数字。而当它的位置确定后，我们要做的就是在它的左边和右边分别选一个和最大的子段。等等，这样我们不就把问题解决了？对于每一个可能的中间点，找到最大的左子段和右子段。\n最大左子段和最大右子段怎么找。由于枚举中点已经有了O(n)，找这两段就必须是O(1)或者O(logn)。想一下，我们可以预处理每个位置下最大的左子段和最大的右子段。而kadane算法可以以O(n)的时间复杂度完成。\nkadane算法 Kadane算法是一种用于解决最大子数组和问题的动态规划算法。它的核心思想是在遍历数组的过程中，维护一个局部最优解，并最终得到全局最优解。\nKadane算法的核心思想是：\n对于每个位置i，计算以该位置结尾的最大子数组和\n状态转移：dp[i] = max(nums[i], dp[i-1] + nums[i])\n最终答案：max(dp[0], dp[1], …, dp[n-1])\n那么我们就可以用kadane分别预处理左右最大子段\nfor(int i=1;i\u003c=n;++i){ if(i == 1) ldp[i] = a[i]; else ldp[i] = max(a[i], ldp[i-1] + a[i]); if(i == 1) lm[i] = ldp[i]; else lm[i] = max(lm[i-1], ldp[i]); } for(int i=n;i\u003e=1;--i){ if(i == n) rdp[i] = a[i]; else rdp[i] = max(a[i], rdp[i+1] + a[i]); if(i == n) rm[i] = rdp[i]; else rm[i] = max(rm[i+1], rdp[i]); } 这样我们只需要枚举中间子段，就可以得到每一个中间子段对应的最大结果，从而找出最终的答案。\n完整代码 #include #include #include using namespace std;\rint a[500005];\rint ldp[500005];\rint rdp[500005];\rint lm[500005];\rint rm[500005];\rint main(){\rios::sync_with_stdio(false);\rcin.tie(0);\rcout.tie(0);\rint t;\rcin \u003e\u003e t;\rwhile(t--){\rint n;\rcin \u003e\u003e n;\rfor(int i=1;i\u003c=n;++i) cin \u003e\u003e a[i];\rmemset(ldp, 0, sizeof(ldp));\rmemset(rdp, 0, sizeof(rdp));\rmemset(lm, 0, sizeof(lm));\rmemset(rm, 0, sizeof(rm));\rfor(int i=1;i\u003c=n;++i){\rif(i == 1) ldp[i] = a[i];\relse ldp[i] = max(a[i], ldp[i-1] + a[i]);\rif(i == 1) lm[i] = ldp[i];\relse lm[i] = max(lm[i-1], ldp[i]);\r}\rfor(int i=n;i\u003e=1;--i){\rif(i == n) rdp[i] = a[i];\relse rdp[i] = max(a[i], rdp[i+1] + a[i]);\rif(i == n) rm[i] = rdp[i];\relse rm[i] = max(rm[i+1], rdp[i]);\r}\rint res = -1e9;\rfor(int k=3;k\u003c=n-2;++k){\rres = max(res, a[k]+lm[k-2]+rm[k+2]);\r}\rcout \u003c\u003c res \u003c\u003c \"\\n\";\r}\rreturn 0;\r} ","wordCount":"215","inLanguage":"en","datePublished":"2026-03-15T10:15:12+08:00","dateModified":"2026-03-15T10:15:12+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://chail-blog.pages.dev/posts/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/2026%E6%9D%AD%E7%94%B5%E6%98%A5%E5%AD%A3%E8%B5%9B-%E6%9C%80%E5%A4%A7%E4%B8%89%E6%AE%B5%E5%92%8C/"},"publisher":{"@type":"Organization","name":"chail`s Blog","logo":{"@type":"ImageObject","url":"https://chail-blog.pages.dev/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://chail-blog.pages.dev/ accesskey=h title="chail`s Blog (Alt + H)">chail`s Blog</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">2026杭电春季赛热身赛-1007最大三段和（kadane算法）</h1><div class=post-meta><span title='2026-03-15 10:15:12 +0800 CST'>March 15, 2026</span></div></header><div class="post-content md-content"><h1 id=2026杭电春季赛热身赛-1007最大三段和kadane算法>2026杭电春季赛热身赛-1007最大三段和（kadane算法）<a hidden class=anchor aria-hidden=true href=#2026杭电春季赛热身赛-1007最大三段和kadane算法>#</a></h1><blockquote><p>春天来了，我们可以在各处看到盛开的花朵，多么美丽！而各个程序设计竞赛也将如这些花一样接踵而至。为了进一步提升程序设计能力，就让我来记录一下杭电赛的学习吧！今天的这道题主要记录kadane算法的学习，这道题便是前两天新鲜出炉的热身赛题目！</p></blockquote><h2 id=题目>题目<a hidden class=anchor aria-hidden=true href=#题目>#</a></h2><h3 id=problem-description>Problem Description<a hidden class=anchor aria-hidden=true href=#problem-description>#</a></h3><p>木木同学最近做了一道最大子段和，感觉很有意思，然后想了一下如果取两段呢？他很快就会了。那如果取三段呢？木木同学学艺不精没想出来，于是便来请教你了。</p><p>给出一个长度为
+n 的序列 a，要求从中选出三个子段，使得这三个子段的所有数字和最大。每个子段的长度至少为1，并且
+两个子段之间至少间隔一个数，同时要求第二个子段长度为1。</p><h3 id=input>Input<a hidden class=anchor aria-hidden=true href=#input>#</a></h3><p><img loading=lazy src=https://img.wemd.app/1773539956677_ohnk61.png></p><h3 id=outputsample>Output&amp;Sample<a hidden class=anchor aria-hidden=true href=#outputsample>#</a></h3><p><img loading=lazy src=https://img.wemd.app/1773540009568_14yghr.png></p><h2 id=题解>题解<a hidden class=anchor aria-hidden=true href=#题解>#</a></h2><h3 id=思考>思考<a hidden class=anchor aria-hidden=true href=#思考>#</a></h3><p>对于单一的最大子段和问题，很好去解决，只要找到差值最大的前缀和就可以了。而最大三段和似乎就有些棘手了。这道题有一个条件：<strong>第二个子段的长度为1</strong>。这样的特殊的条件自然会让我们很在意。</p><p>其他两段或许没那么好确定，但这个长度为1的第二段就很好考虑了。它一定不能在数组的端点和端点相邻的位置，因为子段需要至少隔一个数字。<strong>而当它的位置确定后，我们要做的就是在它的左边和右边分别选一个和最大的子段</strong>。等等，这样我们不就把问题解决了？<strong>对于每一个可能的中间点，找到最大的左子段和右子段。</strong></p><p>最大左子段和最大右子段怎么找。由于枚举中点已经有了O(n)，找这两段就必须是O(1)或者O(logn)。想一下，<strong>我们可以预处理每个位置下最大的左子段和最大的右子段</strong>。而kadane算法可以以O(n)的时间复杂度完成。</p><h3 id=kadane算法>kadane算法<a hidden class=anchor aria-hidden=true href=#kadane算法>#</a></h3><p>Kadane算法是一种用于解决最大子数组和问题的动态规划算法。它的核心思想是在遍历数组的过程中，维护一个局部最优解，并最终得到全局最优解。</p><p>Kadane算法的核心思想是：</p><p><strong>对于每个位置i，计算以该位置结尾的最大子数组和</strong></p><p>状态转移：dp[i] = max(nums[i], dp[i-1] + nums[i])</p><p>最终答案：max(dp[0], dp[1], &mldr;, dp[n-1])</p><p>那么我们就可以用kadane分别预处理左右最大子段</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-cpp data-lang=cpp><span style=display:flex><span>		<span style=color:#66d9ef>for</span>(<span style=color:#66d9ef>int</span> i<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>;i<span style=color:#f92672>&lt;=</span>n;<span style=color:#f92672>++</span>i){
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>if</span>(i <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span>) ldp[i] <span style=color:#f92672>=</span> a[i];
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>else</span> ldp[i] <span style=color:#f92672>=</span> max(a[i], ldp[i<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>] <span style=color:#f92672>+</span> a[i]);
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>if</span>(i <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span>) lm[i] <span style=color:#f92672>=</span> ldp[i];
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>else</span> lm[i] <span style=color:#f92672>=</span> max(lm[i<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>], ldp[i]);
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>for</span>(<span style=color:#66d9ef>int</span> i<span style=color:#f92672>=</span>n;i<span style=color:#f92672>&gt;=</span><span style=color:#ae81ff>1</span>;<span style=color:#f92672>--</span>i){
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>if</span>(i <span style=color:#f92672>==</span> n) rdp[i] <span style=color:#f92672>=</span> a[i];
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>else</span> rdp[i] <span style=color:#f92672>=</span> max(a[i], rdp[i<span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>] <span style=color:#f92672>+</span> a[i]);
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>if</span>(i <span style=color:#f92672>==</span> n) rm[i] <span style=color:#f92672>=</span> rdp[i];
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>else</span> rm[i] <span style=color:#f92672>=</span> max(rm[i<span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>], rdp[i]);
+</span></span><span style=display:flex><span>		}
+</span></span></code></pre></div><p>这样我们只需要枚举中间子段，就可以得到每一个中间子段对应的最大结果，从而找出最终的答案。</p><h3 id=完整代码>完整代码<a hidden class=anchor aria-hidden=true href=#完整代码>#</a></h3><pre tabindex=0><code>#include &lt;iostream&gt;
+#include &lt;algorithm&gt;
+#include &lt;cstring&gt;
+using namespace std;
+int a[500005];
+int ldp[500005];
+int rdp[500005];
+int lm[500005];
+int rm[500005];
+int main(){
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+	int t;
+	cin &gt;&gt; t;
+	while(t--){
+		int n;
+		cin &gt;&gt; n;
+		for(int i=1;i&lt;=n;++i) cin &gt;&gt; a[i];
+		memset(ldp, 0, sizeof(ldp));
+		memset(rdp, 0, sizeof(rdp));
+		memset(lm, 0, sizeof(lm));
+		memset(rm, 0, sizeof(rm));
+		for(int i=1;i&lt;=n;++i){
+			if(i == 1) ldp[i] = a[i];
+			else ldp[i] = max(a[i], ldp[i-1] + a[i]);
+			if(i == 1) lm[i] = ldp[i];
+			else lm[i] = max(lm[i-1], ldp[i]);
+		}
+		for(int i=n;i&gt;=1;--i){
+			if(i == n) rdp[i] = a[i];
+			else rdp[i] = max(a[i], rdp[i+1] + a[i]);
+			if(i == n) rm[i] = rdp[i];
+			else rm[i] = max(rm[i+1], rdp[i]);
+		}
+		int res = -1e9;
+		for(int k=3;k&lt;=n-2;++k){
+			res = max(res, a[k]+lm[k-2]+rm[k+2]);
+		}
+		cout &lt;&lt; res &lt;&lt; &#34;\n&#34;;
+	}
+	return 0;
+}
+</code></pre></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://chail-blog.pages.dev/>chail`s Blog</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script></body></html>
