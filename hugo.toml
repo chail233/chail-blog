@@ -1,4 +1,6 @@
-baseURL = 'https://chail-blog.pages.dev/'
+baseURL = "https://chail-blog.pages.dev/"
+relativeURLs = true
+canonifyURLs = false
 locale = 'en-us'
 title = 'chail`s Blog'
 theme = "PaperMod"
