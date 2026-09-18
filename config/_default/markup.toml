@@ -1,26 +1,27 @@
-# -- Markup --
-# Required settings for Blowfish theme
+[highlight]
+  codeFences = true
+  guessSyntax = true
+  lineNos = true
+  lineNumbersInTable = true
+  noClasses = false
 
 [goldmark]
-  [goldmark.parser]
-    wrapStandAloneImageWithinParagraph = false
-
-    [goldmark.parser.attribute]
-      block = true
-
+  [goldmark.extensions]
+    definitionList = true
+    footnote = true
+    linkify = true
+    strikethrough = true
+    table = true
+    taskList = true
+    typographer = true
   [goldmark.renderer]
     unsafe = true
-
-  [goldmark.extensions]
-    [goldmark.extensions.passthrough]
-      enable = true
-      [goldmark.extensions.passthrough.delimiters]
-        block = [['\[', '\]'], ['$$', '$$']]
-        inline = [['\(', '\)']]
-
-[highlight]
-  noClasses = false
+  [goldmark.extensions.passthrough]
+    enable = true
+  [goldmark.extensions.passthrough.delimiters]
+    block = [['\[', '\]'], ['$$', '$$']]
+    inline = [['\(', '\)']]
 
 [tableOfContents]
   startLevel = 2
-  endLevel = 4
+  endLevel = 6

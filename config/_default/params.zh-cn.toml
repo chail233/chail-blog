@@ -1,0 +1,5 @@
+description = "chail 的个人博客"
+
+[home]
+  [home.profile]
+    subtitle = "记录生活、算法与思考"

@@ -1,0 +1,366 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><title>通信线路（[USACO08JAN] Telephone Lines S）（二分，01最短路） - chail's Blog</title><meta name=Description content="chail 的个人博客"><meta property="og:url" content="https://chail-blog.pages.dev/%E9%80%9A%E4%BF%A1%E7%BA%BF%E8%B7%AF/"><meta property="og:site_name" content="chail's Blog"><meta property="og:title" content="通信线路（[USACO08JAN] Telephone Lines S）（二分，01最短路）"><meta property="og:description" content="通信线路（[USACO08JAN] Telephone Lines S）（二分，01最短路）今天练习最短路题目时遇到了一道比较有意思的题：通信线路（[USACO08JAN] Telephone Lines S的简化版）。我们来看看吧："><meta property="og:locale" content="zh_CN"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-02-05T13:03:34+08:00"><meta property="article:modified_time" content="2026-02-05T13:03:34+08:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="通信线路（[USACO08JAN] Telephone Lines S）（二分，01最短路）"><meta name=twitter:description content="通信线路（[USACO08JAN] Telephone Lines S）（二分，01最短路）今天练习最短路题目时遇到了一道比较有意思的题：通信线路（[USACO08JAN] Telephone Lines S的简化版）。我们来看看吧："><meta name=application-name content="chail's Blog"><meta name=apple-mobile-web-app-title content="chail's Blog"><meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://chail-blog.pages.dev/%E9%80%9A%E4%BF%A1%E7%BA%BF%E8%B7%AF/><link rel=prev href=https://chail-blog.pages.dev/%E8%93%9D%E6%A1%A5%E6%9D%AF-2013-%E5%9B%BD-a-%E7%BA%A6%E6%95%B0%E5%80%8D%E6%95%B0%E9%80%89%E5%8D%A1%E7%89%87/><link rel=next href=https://chail-blog.pages.dev/%E5%86%8D%E7%B4%AF%E4%B9%9F%E4%B8%8D%E8%83%BD%E5%80%92%E4%B8%8B--%E7%99%BB%E5%8D%8E%E5%B1%B1%E6%B8%B8%E8%AE%B0/><link rel=stylesheet href=/css/main.min.css><link rel=stylesheet href=/css/style.min.css><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"通信线路（[USACO08JAN] Telephone Lines S）（二分，01最短路）","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https://chail-blog.pages.dev/%E9%80%9A%E4%BF%A1%E7%BA%BF%E8%B7%AF/"},"genre":"posts","wordcount":1686,"url":"https://chail-blog.pages.dev/%E9%80%9A%E4%BF%A1%E7%BA%BF%E8%B7%AF/","datePublished":"2026-02-05T13:03:34+08:00","dateModified":"2026-02-05T13:03:34+08:00","publisher":{"@type":"Organization","name":"chail"},"author":{"@type":"Person","name":"chail","url":"/"},"description":""}</script></head><body data-instant-intensity=viewport class="tw:flex tw:min-h-screen tw:flex-col"><script>function setTheme(e){document.body.setAttribute("theme",e),document.documentElement.className=e,document.documentElement.style.setProperty("color-scheme",e==="light"?"light":"dark"),e==="light"?document.documentElement.classList.remove("dark"):document.documentElement.classList.add("dark"),window.theme=e,window.isDark=window.theme!=="light"}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(e){const t=document.getElementsByTagName("meta");for(let n=0;n<t.length;n++)if(t[n].getAttribute("name")===e)return t[n];return""}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"?setTheme(e):setTheme(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}else"auto"==="light"||"auto"==="dark"?(setTheme("auto"),saveTheme("auto")):(saveTheme("auto"),setTheme(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));let metaColors={light:"#f8f8f8",dark:"#161b22"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")],window.switchThemeEventSet=new Set</script><div id=back-to-top></div><div id=mask></div><header class="desktop tw:print:hidden!" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="chail's Blog">chail's Blog</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>所有文章 </a><a class=menu-item href=/categories/>分类 </a><a class=menu-item href=/tags/>标签 </a><span class="menu-item delimiter"></span><div class="menu-item theme-select tw:inline-block"><svg class="icon" viewBox="0 0 512 512"><path d="M8 256c0 136.966 111.033 248 248 248s248-111.034 248-248S392.966 8 256 8 8 119.033 8 256zm248 184V72c101.705.0 184 82.311 184 184 0 101.705-82.311 184-184 184z"/></svg>
+<select class=color-theme-select id=theme-select-desktop aria-label=切换主题><option value=light>浅色</option><option value=dark>深色</option><option value=auto>跟随系统</option></select></div></div></div></div></header><header class="mobile tw:print:hidden!" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="chail's Blog">chail's Blog</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>所有文章</a><a class=menu-item href=/categories/ title>分类</a><a class=menu-item href=/tags/ title>标签</a><div class="menu-item theme-select tw:w-full"><svg class="icon" viewBox="0 0 512 512"><path d="M8 256c0 136.966 111.033 248 248 248s248-111.034 248-248S392.966 8 256 8 8 119.033 8 256zm248 184V72c101.705.0 184 82.311 184 184 0 101.705-82.311 184-184 184z"/></svg>
+<select class=color-theme-select id=theme-select-mobile aria-label=切换主题><option value=light>浅色</option><option value=dark>深色</option><option value=auto>跟随系统</option></select></div></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class="tw:mx-4 tw:flex-1"><div class="toc tw:print:hidden!" id=toc-auto><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-auto><nav id=TableOfContents><ul><li><a href=#题目描述>题目描述</a></li><li><a href=#输入格式>输入格式</a></li><li><a href=#输出格式>输出格式</a></li><li><a href=#数据范围>数据范围</a></li><li><a href=#输入样例>输入样例</a></li><li><a href=#输出样例>输出样例</a></li><li><a href=#题意>题意</a></li><li><a href=#思考>思考</a><ul><li><a href=#分层图做法>分层图做法</a></li><li><a href=#别样的dijkstra>别样的Dijkstra？</a></li><li><a href=#二分>二分</a></li></ul></li><li><a href=#代码>代码</a><ul><li><a href=#二分部分>二分部分</a></li><li><a href=#check函数>check函数</a></li></ul></li></ul></nav></div></div><dialog id=toc-dialog class="tw:max-w-full tw:w-full tw:max-h-full tw:h-full tw:ml-16"><div class="toc tw:mx-4 tw:max-w-full"><h2 class="tw:mx-0 tw:my-6 tw:uppercase tw:text-2xl">目录</h2><div class=toc-content><nav id=TableOfContents><ul><li><a href=#题目描述>题目描述</a></li><li><a href=#输入格式>输入格式</a></li><li><a href=#输出格式>输出格式</a></li><li><a href=#数据范围>数据范围</a></li><li><a href=#输入样例>输入样例</a></li><li><a href=#输出样例>输出样例</a></li><li><a href=#题意>题意</a></li><li><a href=#思考>思考</a><ul><li><a href=#分层图做法>分层图做法</a></li><li><a href=#别样的dijkstra>别样的Dijkstra？</a></li><li><a href=#二分>二分</a></li></ul></li><li><a href=#代码>代码</a><ul><li><a href=#二分部分>二分部分</a></li><li><a href=#check函数>check函数</a></li></ul></li></ul></nav></div></div></dialog><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single tw:print:w-full! tw:print:max-w-none! tw:print:m-0! tw:print:p-0!"><h1 class=single-title data-pagefind-meta=date:2026-02-05 data-pagefind-body>通信线路（[USACO08JAN] Telephone Lines S）（二分，01最短路）</h1><div class=post-meta><div class=post-meta-line><span class=post-author><svg class="icon" viewBox="0 0 496 512"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6.0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7.0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4.0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9s28-2.7 40.9-6.9c2.3-.7 4.7-1.1 7.1-1.1 42.9.0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z"/></svg><a href=/ title=Author rel=author class=author>chail</a>
+</span>&nbsp;<span class=post-category>收录于 </span>&nbsp;<span class=post-category>类别 <a href=/categories/%E7%AE%97%E6%B3%95%E8%B6%B3%E8%BF%B9/><svg class="icon" viewBox="0 0 512 512"><path d="M464 128H272l-54.63-54.63c-6-6-14.14-9.37-22.63-9.37H48C21.49 64 0 85.49.0 112v288c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V176c0-26.51-21.49-48-48-48zm0 272H48V112h140.12l54.63 54.63c6 6 14.14 9.37 22.63 9.37H464v224z"/></svg>算法足迹</a></span></div><div class=post-meta-line><svg class="icon" viewBox="0 0 448 512"><path d="M148 288h-40c-6.6.0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm108-12v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 96v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm192 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96-260v352c0 26.5-21.5 48-48 48H48c-26.5.0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h48c26.5.0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3.0 6-2.7 6-6z"/></svg>&nbsp;<time datetime=2026-02-05>2026-02-05</time>&nbsp;<svg class="icon" viewBox="0 0 576 512"><path d="M402.3 344.9l32-32c5-5 13.7-1.5 13.7 5.7V464c0 26.5-21.5 48-48 48H48c-26.5.0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h273.5c7.1.0 10.7 8.6 5.7 13.7l-32 32c-1.5 1.5-3.5 2.3-5.7 2.3H48v352h352V350.5c0-2.1.8-4.1 2.3-5.6zm156.6-201.8L296.3 405.7l-90.4 10c-26.2 2.9-48.5-19.2-45.6-45.6l10-90.4L432.9 17.1c22.9-22.9 59.9-22.9 82.7.0l43.2 43.2c22.9 22.9 22.9 60 .1 82.8zM460.1 174 402 115.9 216.2 301.8l-7.3 65.3 65.3-7.3L460.1 174zm64.8-79.7-43.2-43.2c-4.1-4.1-10.8-4.1-14.8.0L436 82l58.1 58.1 30.9-30.9c4-4.2 4-10.8-.1-14.9z"/></svg>&nbsp;<time datetime=2026-02-05>2026-02-05</time>&nbsp;<svg class="icon" viewBox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3.0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9.0l60.1 60.1c18.8 18.7 18.8 49.1.0 67.9zM284.2 99.8 21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3.0-17l-111-111c-4.8-4.7-12.4-4.7-17.1.0zM124.1 339.9c-5.5-5.5-5.5-14.3.0-19.8l154-154c5.5-5.5 14.3-5.5 19.8.0s5.5 14.3.0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8.0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;约 1686 字&nbsp;
+<svg class="icon" viewBox="0 0 512 512"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5.0-2e2-89.5-2e2-2e2S145.5 56 256 56s2e2 89.5 2e2 2e2-89.5 2e2-2e2 2e2zm61.8-104.4-84.9-61.7c-3.1-2.3-4.9-5.9-4.9-9.7V116c0-6.6 5.4-12 12-12h32c6.6.0 12 5.4 12 12v141.7l66.8 48.6c5.4 3.9 6.5 11.4 2.6 16.8L334.6 349c-3.9 5.3-11.4 6.5-16.8 2.6z"/></svg>&nbsp;预计阅读 8 分钟&nbsp;</div></div><div class="details toc tw:print:block!" id=toc-static data-kept><div class="details-summary toc-title"><span>目录</span>
+<span class=details-icon><svg class="icon" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9.0l-22.6-22.6c-9.4-9.4-9.4-24.6.0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6.0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9.0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#题目描述>题目描述</a></li><li><a href=#输入格式>输入格式</a></li><li><a href=#输出格式>输出格式</a></li><li><a href=#数据范围>数据范围</a></li><li><a href=#输入样例>输入样例</a></li><li><a href=#输出样例>输出样例</a></li><li><a href=#题意>题意</a></li><li><a href=#思考>思考</a><ul><li><a href=#分层图做法>分层图做法</a></li><li><a href=#别样的dijkstra>别样的Dijkstra？</a></li><li><a href=#二分>二分</a></li></ul></li><li><a href=#代码>代码</a><ul><li><a href=#二分部分>二分部分</a></li><li><a href=#check函数>check函数</a></li></ul></li></ul></nav></div></div><div class=content id=content data-pagefind-body><h1 id=通信线路usaco08jan-telephone-lines-s二分01最短路 class=headerLink><a href=#%e9%80%9a%e4%bf%a1%e7%ba%bf%e8%b7%afusaco08jan-telephone-lines-s%e4%ba%8c%e5%88%8601%e6%9c%80%e7%9f%ad%e8%b7%af class=header-mark></a>通信线路（[USACO08JAN] Telephone Lines S）（二分，01最短路）</h1><p>今天练习最短路题目时遇到了一道比较有意思的题：通信线路（[USACO08JAN] Telephone Lines S的简化版）。我们来看看吧：</p><hr><h2 id=题目描述 class=headerLink><a href=#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0 class=header-mark></a>题目描述</h2><p>在郊区有 $N$ 座通信基站，$P$ 条 双向 电缆，第 $i$ 条电缆连接基站 $Ai$ 和 $Bi$。</p><p>特别地，$1$ 号基站是通信公司的总站，$N$ 号基站位于一座农场中。</p><p>现在，农场主希望对通信线路进行升级，其中升级第 $i$ 条电缆需要花费 $Li$。</p><p>电话公司正在举行优惠活动。</p><p>农产主可以指定一条从 $1$ 号基站到 $N$ 号基站的路径，并指定路径上不超过 $K$ 条电缆，由电话公司免费提供升级服务。</p><p>农场主只需要支付在该路径上剩余的电缆中，升级价格最贵的那条电缆的花费即可。
+求至少用多少钱可以完成升级。</p><h2 id=输入格式 class=headerLink><a href=#%e8%be%93%e5%85%a5%e6%a0%bc%e5%bc%8f class=header-mark></a>输入格式</h2><p>第 $1$ 行：三个整数 $N，P，K$。</p><p>第$2..P+1$ 行：第 $i+1$ 行包含三个整数$Ai,Bi,Li$。</p><h2 id=输出格式 class=headerLink><a href=#%e8%be%93%e5%87%ba%e6%a0%bc%e5%bc%8f class=header-mark></a>输出格式</h2><p>包含一个整数表示最少花费。</p><p>若 $1$ 号基站与 $N$ 号基站之间不存在路径，则输出 $−1$。</p><h2 id=数据范围 class=headerLink><a href=#%e6%95%b0%e6%8d%ae%e8%8c%83%e5%9b%b4 class=header-mark></a>数据范围</h2><p>$0≤K&lt;N≤1000,
+1≤P≤10000,
+1≤Li≤1000000$</p><h2 id=输入样例 class=headerLink><a href=#%e8%be%93%e5%85%a5%e6%a0%b7%e4%be%8b class=header-mark></a>输入样例</h2><div class="code-block highlight is-open show-line-numbers tw:group tw:my-2"><div class="tw:flex
+tw:flex-row
+tw:flex-1
+tw:justify-between
+tw:w-full tw:bg-bgColor-secondary"><button class="code-block-button
+tw:mx-2
+tw:flex
+tw:flex-row
+tw:flex-1" aria-hidden=true>
+<span class="tw:group-[.is-open]:rotate-90 tw:transition-[transform] tw:duration-500 tw:ease-in-out tw:print:hidden! tw:w-min tw:h-min tw:my-1 tw:mx-1"><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></span>
+<span class="tw:select-none tw:my-1! tw:block">text</span></button><div class=tw:flex><button class="line-number-button
+tw:mx-2
+tw:hidden
+tw:group-[.is-open]:block
+tw:group-[.show-line-numbers]:text-fgColor-link
+tw:print:hidden!" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw:select-none
+tw:mx-2
+tw:hidden
+tw:group-[.is-open]:block
+tw:group-[.is-wrap]:text-fgColor-link
+tw:print:hidden!" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw:select-none
+tw:mx-2
+tw:hidden
+tw:group-[.is-open]:block
+tw:hover:text-fgColor-link
+tw:print:hidden!" title="Copy code">
+<span class="copy-icon tw:block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw:hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw:select-none
+tw:mx-2
+tw:block
+tw:group-[.is-open]:hidden
+tw:print:hidden!" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw:block tw:m-0 tw:p-0"><code id=codeblock-id-1 class="chroma
+tw:block!
+tw:p-0
+tw:m-0
+tw:transition-[max-height]
+tw:duration-500
+tw:ease-in-out
+tw:group-[.is-closed]:max-h-0!
+tw:group-[.is-wrap]:text-wrap
+tw:overflow-y-hidden
+tw:overflow-x-auto
+tw:scrollbar-thin"><span class=line><span class=cl>5 7 1
+</span></span><span class=line><span class=cl>1 2 5
+</span></span><span class=line><span class=cl>3 1 4
+</span></span><span class=line><span class=cl>2 4 8
+</span></span><span class=line><span class=cl>3 2 3
+</span></span><span class=line><span class=cl>5 2 9
+</span></span><span class=line><span class=cl>3 4 7
+</span></span><span class=line><span class=cl>4 5 6</span></span></code></pre></div><h2 id=输出样例 class=headerLink><a href=#%e8%be%93%e5%87%ba%e6%a0%b7%e4%be%8b class=header-mark></a>输出样例</h2><div class="code-block highlight is-open show-line-numbers tw:group tw:my-2"><div class="tw:flex
+tw:flex-row
+tw:flex-1
+tw:justify-between
+tw:w-full tw:bg-bgColor-secondary"><button class="code-block-button
+tw:mx-2
+tw:flex
+tw:flex-row
+tw:flex-1" aria-hidden=true>
+<span class="tw:group-[.is-open]:rotate-90 tw:transition-[transform] tw:duration-500 tw:ease-in-out tw:print:hidden! tw:w-min tw:h-min tw:my-1 tw:mx-1"><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></span>
+<span class="tw:select-none tw:my-1! tw:block">text</span></button><div class=tw:flex><button class="line-number-button
+tw:mx-2
+tw:hidden
+tw:group-[.is-open]:block
+tw:group-[.show-line-numbers]:text-fgColor-link
+tw:print:hidden!" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw:select-none
+tw:mx-2
+tw:hidden
+tw:group-[.is-open]:block
+tw:group-[.is-wrap]:text-fgColor-link
+tw:print:hidden!" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw:select-none
+tw:mx-2
+tw:hidden
+tw:group-[.is-open]:block
+tw:hover:text-fgColor-link
+tw:print:hidden!" title="Copy code">
+<span class="copy-icon tw:block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw:hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw:select-none
+tw:mx-2
+tw:block
+tw:group-[.is-open]:hidden
+tw:print:hidden!" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw:block tw:m-0 tw:p-0"><code id=codeblock-id-2 class="chroma
+tw:block!
+tw:p-0
+tw:m-0
+tw:transition-[max-height]
+tw:duration-500
+tw:ease-in-out
+tw:group-[.is-closed]:max-h-0!
+tw:group-[.is-wrap]:text-wrap
+tw:overflow-y-hidden
+tw:overflow-x-auto
+tw:scrollbar-thin"><span class=line><span class=cl>4</span></span></code></pre></div><h2 id=题意 class=headerLink><a href=#%e9%a2%98%e6%84%8f class=header-mark></a>题意</h2><p><strong>给了一张边权无向图，要寻找从$1$到$N$的最短路，最短路上可以不计$K$条边的权重，只计剩下边的最大权重，找出这个最大权重的最小值</strong>。</p><h2 id=思考 class=headerLink><a href=#%e6%80%9d%e8%80%83 class=header-mark></a>思考</h2><p>刚读完这道题后，我怀疑了一下，这道题真的是最短路问题吗？因为这种可以不计某些边的权重的最短路问题我只在分层图见过。对于这道题同样可以考虑一下分层图的做法。</p><h3 id=分层图做法 class=headerLink><a href=#%e5%88%86%e5%b1%82%e5%9b%be%e5%81%9a%e6%b3%95 class=header-mark></a>分层图做法</h3><p>思考：既然可以免去$K$条边，那就建$K+1$层图，再去跑最短路算法，最后每层$N$点的最小值就是答案了。不过我很快就打消了这个念头，因为这里的$K$最大能有$1000$，这么多层图，<strong>时间空间复杂度都很大</strong>，大概率超时。</p><p>但是，后来我看题解时发现确实能用分层图做，建完图之后跑一遍SFPA就可以了。这种做法时间复杂度$O(n<em>p</em>k)$，数据严一点就会超时，所以并不是最优解。</p><h3 id=别样的dijkstra class=headerLink><a href=#%e5%88%ab%e6%a0%b7%e7%9a%84dijkstra class=header-mark></a>别样的Dijkstra？</h3><p>最终答案可以抽象为某条路上第$K+1$大的权重，我们能不能从这里入手呢？考虑对Dijkstra进行变形，每次计算的路程是截止当前节点第$K+1$大的权重，这样最后应该能找到答案。不过有个问题：每次该怎么计算第$K+1$大的权重是多少。我们似乎只能用一个数据结构把路给记下来，甚至每次还要查找第$K+1$大的权重。这样的话，好复杂，而且貌似还容易超时。</p><p>怎么办呢，没有办法了吗Orz。</p><h3 id=二分 class=headerLink><a href=#%e4%ba%8c%e5%88%86 class=header-mark></a>二分</h3><p>这道题有一个特点就是可以免费K条边，为了找最小值我们当然希望让最大的几条边免费。那么摒弃传统的最短路思想，<strong>我们只需要找一个阈值权重，这个阈值使得路上大于它的边的数量不大于K，并且这个阈值要尽可能的小</strong>。转化到这里，其实已经是一个很经典的二分问题了，<strong>二分待定阈值，每次检测该值是否符合要求，符合则继续缩小</strong>&mldr;是的，这简直可以套一个二分的模板！</p><p>接下来就是怎么检查了，<strong>以待检查值为阈值，大于它的为$1$，否则为$0$，转换成一个01最短路问题，我们就可以找出以$x$为阈值，大于$x$的边最少的一条路了</strong>。那个$x$就是我们要的答案！</p><h2 id=代码 class=headerLink><a href=#%e4%bb%a3%e7%a0%81 class=header-mark></a>代码</h2><h3 id=二分部分 class=headerLink><a href=#%e4%ba%8c%e5%88%86%e9%83%a8%e5%88%86 class=header-mark></a>二分部分</h3><p>这里就是很普通的二分写法了，用位运算除$2$。</p><div class="code-block highlight is-open show-line-numbers tw:group tw:my-2"><div class="tw:flex
+tw:flex-row
+tw:flex-1
+tw:justify-between
+tw:w-full tw:bg-bgColor-secondary"><button class="code-block-button
+tw:mx-2
+tw:flex
+tw:flex-row
+tw:flex-1" aria-hidden=true>
+<span class="tw:group-[.is-open]:rotate-90 tw:transition-[transform] tw:duration-500 tw:ease-in-out tw:print:hidden! tw:w-min tw:h-min tw:my-1 tw:mx-1"><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></span>
+<span class="tw:select-none tw:my-1! tw:block">cpp</span></button><div class=tw:flex><button class="line-number-button
+tw:mx-2
+tw:hidden
+tw:group-[.is-open]:block
+tw:group-[.show-line-numbers]:text-fgColor-link
+tw:print:hidden!" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw:select-none
+tw:mx-2
+tw:hidden
+tw:group-[.is-open]:block
+tw:group-[.is-wrap]:text-fgColor-link
+tw:print:hidden!" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw:select-none
+tw:mx-2
+tw:hidden
+tw:group-[.is-open]:block
+tw:hover:text-fgColor-link
+tw:print:hidden!" title="Copy code">
+<span class="copy-icon tw:block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw:hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw:select-none
+tw:mx-2
+tw:block
+tw:group-[.is-open]:hidden
+tw:print:hidden!" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw:block tw:m-0 tw:p-0"><code id=codeblock-id-3 class="chroma
+tw:block!
+tw:p-0
+tw:m-0
+tw:transition-[max-height]
+tw:duration-500
+tw:ease-in-out
+tw:group-[.is-closed]:max-h-0!
+tw:group-[.is-wrap]:text-wrap
+tw:overflow-y-hidden
+tw:overflow-x-auto
+tw:scrollbar-thin"><span class=line><span class=cl><span class=k>while</span><span class=p>(</span><span class=n>l</span><span class=o>&lt;=</span><span class=n>r</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>		<span class=kt>int</span> <span class=n>mid</span> <span class=o>=</span> <span class=p>(</span><span class=n>r</span><span class=o>+</span><span class=n>l</span><span class=p>)</span><span class=o>&gt;&gt;</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span><span class=p>(</span><span class=n>check</span><span class=p>(</span><span class=n>mid</span><span class=p>)){</span>
+</span></span><span class=line><span class=cl>			<span class=n>r</span> <span class=o>=</span> <span class=n>mid</span><span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>res</span> <span class=o>=</span> <span class=n>mid</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=k>else</span> <span class=n>l</span> <span class=o>=</span> <span class=n>mid</span><span class=o>+</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span></span></span></code></pre></div><h3 id=check函数 class=headerLink><a href=#check%e5%87%bd%e6%95%b0 class=header-mark></a>check函数</h3><p>这里定义了整数对<code>PII</code>，即<code>pair&lt;int,int></code>。这样就不用再为优先队列重载运算符了，不过要注意的是，<strong><code>first</code>是总权重，<code>second</code>是节点编号值</strong>，<strong>千万不要搞反了</strong>，这会影响优先队列的正常运作。</p><div class="code-block highlight is-closed show-line-numbers tw:group tw:my-2"><div class="tw:flex
+tw:flex-row
+tw:flex-1
+tw:justify-between
+tw:w-full tw:bg-bgColor-secondary"><button class="code-block-button
+tw:mx-2
+tw:flex
+tw:flex-row
+tw:flex-1" aria-hidden=true>
+<span class="tw:group-[.is-open]:rotate-90 tw:transition-[transform] tw:duration-500 tw:ease-in-out tw:print:hidden! tw:w-min tw:h-min tw:my-1 tw:mx-1"><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></span>
+<span class="tw:select-none tw:my-1! tw:block">cpp</span></button><div class=tw:flex><button class="line-number-button
+tw:mx-2
+tw:hidden
+tw:group-[.is-open]:block
+tw:group-[.show-line-numbers]:text-fgColor-link
+tw:print:hidden!" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw:select-none
+tw:mx-2
+tw:hidden
+tw:group-[.is-open]:block
+tw:group-[.is-wrap]:text-fgColor-link
+tw:print:hidden!" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw:select-none
+tw:mx-2
+tw:hidden
+tw:group-[.is-open]:block
+tw:hover:text-fgColor-link
+tw:print:hidden!" title="Copy code">
+<span class="copy-icon tw:block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw:hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw:select-none
+tw:mx-2
+tw:block
+tw:group-[.is-open]:hidden
+tw:print:hidden!" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw:block tw:m-0 tw:p-0"><code id=codeblock-id-4 class="chroma
+tw:block!
+tw:p-0
+tw:m-0
+tw:transition-[max-height]
+tw:duration-500
+tw:ease-in-out
+tw:group-[.is-closed]:max-h-0!
+tw:group-[.is-wrap]:text-wrap
+tw:overflow-y-hidden
+tw:overflow-x-auto
+tw:scrollbar-thin"><span class=line><span class=cl><span class=n>priority_queue</span><span class=o>&lt;</span><span class=n>PII</span><span class=p>,</span> <span class=n>vector</span><span class=o>&lt;</span><span class=n>PII</span><span class=o>&gt;</span><span class=p>,</span> <span class=n>greater</span><span class=o>&lt;</span><span class=n>PII</span><span class=o>&gt;&gt;</span> <span class=n>hp</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>bool</span> <span class=nf>check</span><span class=p>(</span><span class=kt>int</span> <span class=n>x</span><span class=p>){</span>
+</span></span><span class=line><span class=cl><span class=c1>//	cout &lt;&lt; &#34;checking &#34; &lt;&lt; x &lt;&lt; &#34;\n&#34;;
+</span></span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>dis</span><span class=p>[</span><span class=mi>1005</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>	<span class=n>fill</span><span class=p>(</span><span class=n>dis</span><span class=p>,</span> <span class=n>dis</span><span class=o>+</span><span class=mi>1</span><span class=o>+</span><span class=n>n</span><span class=p>,</span> <span class=mf>1e9</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=kt>bool</span> <span class=n>u</span><span class=p>[</span><span class=mi>1005</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span><span class=nb>false</span><span class=p>};</span>
+</span></span><span class=line><span class=cl>	<span class=n>hp</span><span class=p>.</span><span class=n>push</span><span class=p>({</span><span class=mi>0</span><span class=p>,</span><span class=mi>1</span><span class=p>});</span>
+</span></span><span class=line><span class=cl>	<span class=k>while</span><span class=p>(</span><span class=o>!</span><span class=n>hp</span><span class=p>.</span><span class=n>empty</span><span class=p>()){</span>
+</span></span><span class=line><span class=cl>		<span class=n>PII</span> <span class=n>cp</span> <span class=o>=</span> <span class=n>hp</span><span class=p>.</span><span class=n>top</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>		<span class=n>hp</span><span class=p>.</span><span class=n>pop</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span><span class=p>(</span><span class=n>u</span><span class=p>[</span><span class=n>cp</span><span class=p>.</span><span class=n>second</span><span class=p>])</span> <span class=k>continue</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=n>u</span><span class=p>[</span><span class=n>cp</span><span class=p>.</span><span class=n>second</span><span class=p>]</span> <span class=o>=</span> <span class=nb>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=n>dis</span><span class=p>[</span><span class=n>cp</span><span class=p>.</span><span class=n>second</span><span class=p>]</span> <span class=o>=</span> <span class=n>cp</span><span class=p>.</span><span class=n>first</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=n>rs</span><span class=p>[</span><span class=n>cp</span><span class=p>.</span><span class=n>second</span><span class=p>].</span><span class=n>empty</span><span class=p>()){</span>
+</span></span><span class=line><span class=cl>			<span class=k>for</span><span class=p>(</span><span class=n>r</span> <span class=nl>cr</span> <span class=p>:</span> <span class=n>rs</span><span class=p>[</span><span class=n>cp</span><span class=p>.</span><span class=n>second</span><span class=p>]){</span>
+</span></span><span class=line><span class=cl>				<span class=k>if</span><span class=p>(</span><span class=n>u</span><span class=p>[</span><span class=n>cr</span><span class=p>.</span><span class=n>t</span><span class=p>])</span> <span class=k>continue</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>				<span class=k>if</span><span class=p>(</span><span class=n>cr</span><span class=p>.</span><span class=n>l</span><span class=o>&gt;</span><span class=n>x</span><span class=p>)</span> <span class=n>hp</span><span class=p>.</span><span class=n>push</span><span class=p>({</span><span class=n>cp</span><span class=p>.</span><span class=n>first</span><span class=o>+</span><span class=mi>1</span><span class=p>,</span> <span class=n>cr</span><span class=p>.</span><span class=n>t</span><span class=p>});</span>
+</span></span><span class=line><span class=cl>				<span class=k>else</span> <span class=n>hp</span><span class=p>.</span><span class=n>push</span><span class=p>({</span><span class=n>cp</span><span class=p>.</span><span class=n>first</span><span class=p>,</span> <span class=n>cr</span><span class=p>.</span><span class=n>t</span><span class=p>});</span>
+</span></span><span class=line><span class=cl>			<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span><span class=p>(</span><span class=n>dis</span><span class=p>[</span><span class=n>n</span><span class=p>]</span><span class=o>&lt;=</span><span class=n>k</span><span class=p>)</span> <span class=k>return</span> <span class=nb>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>else</span> <span class=k>return</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></div><p>最后给出完整代码：</p><div class="code-block highlight is-closed show-line-numbers tw:group tw:my-2"><div class="tw:flex
+tw:flex-row
+tw:flex-1
+tw:justify-between
+tw:w-full tw:bg-bgColor-secondary"><button class="code-block-button
+tw:mx-2
+tw:flex
+tw:flex-row
+tw:flex-1" aria-hidden=true>
+<span class="tw:group-[.is-open]:rotate-90 tw:transition-[transform] tw:duration-500 tw:ease-in-out tw:print:hidden! tw:w-min tw:h-min tw:my-1 tw:mx-1"><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></span>
+<span class="tw:select-none tw:my-1! tw:block">cpp</span></button><div class=tw:flex><button class="line-number-button
+tw:mx-2
+tw:hidden
+tw:group-[.is-open]:block
+tw:group-[.show-line-numbers]:text-fgColor-link
+tw:print:hidden!" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw:select-none
+tw:mx-2
+tw:hidden
+tw:group-[.is-open]:block
+tw:group-[.is-wrap]:text-fgColor-link
+tw:print:hidden!" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw:select-none
+tw:mx-2
+tw:hidden
+tw:group-[.is-open]:block
+tw:hover:text-fgColor-link
+tw:print:hidden!" title="Copy code">
+<span class="copy-icon tw:block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw:hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw:select-none
+tw:mx-2
+tw:block
+tw:group-[.is-open]:hidden
+tw:print:hidden!" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw:block tw:m-0 tw:p-0"><code id=codeblock-id-5 class="chroma
+tw:block!
+tw:p-0
+tw:m-0
+tw:transition-[max-height]
+tw:duration-500
+tw:ease-in-out
+tw:group-[.is-closed]:max-h-0!
+tw:group-[.is-wrap]:text-wrap
+tw:overflow-y-hidden
+tw:overflow-x-auto
+tw:scrollbar-thin"><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;iostream&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;queue&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;algorithm&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;cstring&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;vector&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;utility&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#define int long long
+</span></span></span><span class=line><span class=cl><span class=k>using</span> <span class=k>namespace</span> <span class=n>std</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>typedef</span> <span class=n>pair</span><span class=o>&lt;</span><span class=kt>int</span><span class=p>,</span><span class=kt>int</span><span class=o>&gt;</span> <span class=n>PII</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>struct</span> <span class=nc>r</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>t</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>l</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl><span class=n>vector</span><span class=o>&lt;</span><span class=n>r</span><span class=o>&gt;</span> <span class=n>rs</span><span class=p>[</span><span class=mi>1005</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=n>n</span><span class=p>,</span> <span class=n>p</span><span class=p>,</span> <span class=n>k</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>priority_queue</span><span class=o>&lt;</span><span class=n>PII</span><span class=p>,</span> <span class=n>vector</span><span class=o>&lt;</span><span class=n>PII</span><span class=o>&gt;</span><span class=p>,</span> <span class=n>greater</span><span class=o>&lt;</span><span class=n>PII</span><span class=o>&gt;&gt;</span> <span class=n>hp</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>bool</span> <span class=nf>check</span><span class=p>(</span><span class=kt>int</span> <span class=n>x</span><span class=p>){</span>
+</span></span><span class=line><span class=cl><span class=c1>//	cout &lt;&lt; &#34;checking &#34; &lt;&lt; x &lt;&lt; &#34;\n&#34;;
+</span></span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>dis</span><span class=p>[</span><span class=mi>1005</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>	<span class=n>fill</span><span class=p>(</span><span class=n>dis</span><span class=p>,</span> <span class=n>dis</span><span class=o>+</span><span class=mi>1</span><span class=o>+</span><span class=n>n</span><span class=p>,</span> <span class=mf>1e9</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=kt>bool</span> <span class=n>u</span><span class=p>[</span><span class=mi>1005</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span><span class=nb>false</span><span class=p>};</span>
+</span></span><span class=line><span class=cl>	<span class=n>hp</span><span class=p>.</span><span class=n>push</span><span class=p>({</span><span class=mi>0</span><span class=p>,</span><span class=mi>1</span><span class=p>});</span>
+</span></span><span class=line><span class=cl>	<span class=k>while</span><span class=p>(</span><span class=o>!</span><span class=n>hp</span><span class=p>.</span><span class=n>empty</span><span class=p>()){</span>
+</span></span><span class=line><span class=cl>		<span class=n>PII</span> <span class=n>cp</span> <span class=o>=</span> <span class=n>hp</span><span class=p>.</span><span class=n>top</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>		<span class=n>hp</span><span class=p>.</span><span class=n>pop</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span><span class=p>(</span><span class=n>u</span><span class=p>[</span><span class=n>cp</span><span class=p>.</span><span class=n>second</span><span class=p>])</span> <span class=k>continue</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=n>u</span><span class=p>[</span><span class=n>cp</span><span class=p>.</span><span class=n>second</span><span class=p>]</span> <span class=o>=</span> <span class=nb>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=n>dis</span><span class=p>[</span><span class=n>cp</span><span class=p>.</span><span class=n>second</span><span class=p>]</span> <span class=o>=</span> <span class=n>cp</span><span class=p>.</span><span class=n>first</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=n>rs</span><span class=p>[</span><span class=n>cp</span><span class=p>.</span><span class=n>second</span><span class=p>].</span><span class=n>empty</span><span class=p>()){</span>
+</span></span><span class=line><span class=cl>			<span class=k>for</span><span class=p>(</span><span class=n>r</span> <span class=nl>cr</span> <span class=p>:</span> <span class=n>rs</span><span class=p>[</span><span class=n>cp</span><span class=p>.</span><span class=n>second</span><span class=p>]){</span>
+</span></span><span class=line><span class=cl>				<span class=k>if</span><span class=p>(</span><span class=n>u</span><span class=p>[</span><span class=n>cr</span><span class=p>.</span><span class=n>t</span><span class=p>])</span> <span class=k>continue</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>				<span class=k>if</span><span class=p>(</span><span class=n>cr</span><span class=p>.</span><span class=n>l</span><span class=o>&gt;</span><span class=n>x</span><span class=p>)</span> <span class=n>hp</span><span class=p>.</span><span class=n>push</span><span class=p>({</span><span class=n>cp</span><span class=p>.</span><span class=n>first</span><span class=o>+</span><span class=mi>1</span><span class=p>,</span> <span class=n>cr</span><span class=p>.</span><span class=n>t</span><span class=p>});</span>
+</span></span><span class=line><span class=cl>				<span class=k>else</span> <span class=n>hp</span><span class=p>.</span><span class=n>push</span><span class=p>({</span><span class=n>cp</span><span class=p>.</span><span class=n>first</span><span class=p>,</span> <span class=n>cr</span><span class=p>.</span><span class=n>t</span><span class=p>});</span>
+</span></span><span class=line><span class=cl>			<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span><span class=p>(</span><span class=n>dis</span><span class=p>[</span><span class=n>n</span><span class=p>]</span><span class=o>&lt;=</span><span class=n>k</span><span class=p>)</span> <span class=k>return</span> <span class=nb>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>else</span> <span class=k>return</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kt>signed</span> <span class=nf>main</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl>	<span class=n>cin</span> <span class=o>&gt;&gt;</span> <span class=n>n</span> <span class=o>&gt;&gt;</span> <span class=n>p</span> <span class=o>&gt;&gt;</span> <span class=n>k</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>for</span><span class=p>(</span><span class=kt>int</span> <span class=n>i</span><span class=o>=</span><span class=mi>1</span><span class=p>;</span><span class=n>i</span><span class=o>&lt;=</span><span class=n>p</span><span class=p>;</span><span class=o>++</span><span class=n>i</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>		<span class=kt>int</span> <span class=n>a</span><span class=p>,</span> <span class=n>b</span><span class=p>,</span> <span class=n>l</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=n>cin</span> <span class=o>&gt;&gt;</span> <span class=n>a</span> <span class=o>&gt;&gt;</span> <span class=n>b</span> <span class=o>&gt;&gt;</span> <span class=n>l</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=n>rs</span><span class=p>[</span><span class=n>a</span><span class=p>].</span><span class=n>push_back</span><span class=p>({</span><span class=n>b</span><span class=p>,</span><span class=n>l</span><span class=p>});</span>
+</span></span><span class=line><span class=cl>		<span class=n>rs</span><span class=p>[</span><span class=n>b</span><span class=p>].</span><span class=n>push_back</span><span class=p>({</span><span class=n>a</span><span class=p>,</span><span class=n>l</span><span class=p>});</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>l</span><span class=o>=</span><span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r</span> <span class=o>=</span> <span class=mf>1e6</span><span class=o>+</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>res</span> <span class=o>=</span> <span class=mf>1e6</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>while</span><span class=p>(</span><span class=n>l</span><span class=o>&lt;=</span><span class=n>r</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>		<span class=kt>int</span> <span class=n>mid</span> <span class=o>=</span> <span class=p>(</span><span class=n>r</span><span class=o>+</span><span class=n>l</span><span class=p>)</span><span class=o>&gt;&gt;</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span><span class=p>(</span><span class=n>check</span><span class=p>(</span><span class=n>mid</span><span class=p>)){</span>
+</span></span><span class=line><span class=cl>			<span class=n>r</span> <span class=o>=</span> <span class=n>mid</span><span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>			<span class=n>res</span> <span class=o>=</span> <span class=n>mid</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=k>else</span> <span class=n>l</span> <span class=o>=</span> <span class=n>mid</span><span class=o>+</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span><span class=p>(</span><span class=n>res</span><span class=o>==</span><span class=mf>1e6</span><span class=p>)</span> <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>else</span> <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>res</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></div></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2026-02-05</span></div><div class=post-info-license></div></div><div class="post-info-line tw:print:hidden!"><div class=post-info-md></div><div class=post-info-share></div></div></div><div class=post-info-more><div class=post-tags></div><div class=tw:print:hidden!><span><button class="tw:text-fgColor-link-muted tw:hover:text-fgColor-link-muted-hover" onclick=window.history.back()>返回</button></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></div></div><div class="post-nav tw:print:hidden"><a href=/%E8%93%9D%E6%A1%A5%E6%9D%AF-2013-%E5%9B%BD-a-%E7%BA%A6%E6%95%B0%E5%80%8D%E6%95%B0%E9%80%89%E5%8D%A1%E7%89%87/ class=prev rel=prev title="[蓝桥杯 2013 国 A] 约数倍数选卡片（数论，dfs，图）"><svg class="icon" viewBox="0 0 256 512"><path d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9.0l22.6 22.6c9.4 9.4 9.4 24.6.0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6.0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9.0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"/></svg>[蓝桥杯 2013 国 A] 约数倍数选卡片（数论，dfs，图）</a>
+<a href=/%E5%86%8D%E7%B4%AF%E4%B9%9F%E4%B8%8D%E8%83%BD%E5%80%92%E4%B8%8B--%E7%99%BB%E5%8D%8E%E5%B1%B1%E6%B8%B8%E8%AE%B0/ class=next rel=next title=再累也不能倒下--登华山游记>再累也不能倒下--登华山游记<svg class="icon" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9.0l-22.6-22.6c-9.4-9.4-9.4-24.6.0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6.0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9.0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></a></div></div></article></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreferrer" title="Hugo 0.166.0">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href=https://github.com/HEIGE-PCloud/DoIt target=_blank rel="noopener noreferrer" title="DoIt 1.0.2"><svg class="icon" viewBox="0 0 576 512"><path d="M402.3 344.9l32-32c5-5 13.7-1.5 13.7 5.7V464c0 26.5-21.5 48-48 48H48c-26.5.0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h273.5c7.1.0 10.7 8.6 5.7 13.7l-32 32c-1.5 1.5-3.5 2.3-5.7 2.3H48v352h352V350.5c0-2.1.8-4.1 2.3-5.6zm156.6-201.8L296.3 405.7l-90.4 10c-26.2 2.9-48.5-19.2-45.6-45.6l10-90.4L432.9 17.1c22.9-22.9 59.9-22.9 82.7.0l43.2 43.2c22.9 22.9 22.9 60 .1 82.8zM460.1 174 402 115.9 216.2 301.8l-7.3 65.3 65.3-7.3L460.1 174zm64.8-79.7-43.2-43.2c-4.1-4.1-10.8-4.1-14.8.0L436 82l58.1 58.1 30.9-30.9c4-4.2 4-10.8-.1-14.9z"/></svg> DoIt</a></div><div class=footer-line><svg class="icon" viewBox="0 0 512 512"><path d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 448c-110.532.0-2e2-89.451-2e2-2e2.0-110.531 89.451-2e2 2e2-2e2 110.532.0 2e2 89.451 2e2 2e2.0 110.532-89.451 2e2-2e2 2e2zm107.351-101.064c-9.614 9.712-45.53 41.396-104.065 41.396-82.43.0-140.484-61.425-140.484-141.567.0-79.152 60.275-139.401 139.762-139.401 55.531.0 88.738 26.62 97.593 34.779a11.965 11.965.0 011.936 15.322l-18.155 28.113c-3.841 5.95-11.966 7.282-17.499 2.921-8.595-6.776-31.814-22.538-61.708-22.538-48.303.0-77.916 35.33-77.916 80.082.0 41.589 26.888 83.692 78.277 83.692 32.657.0 56.843-19.039 65.726-27.225 5.27-4.857 13.596-4.039 17.82 1.738l19.865 27.17a11.947 11.947.0 01-1.152 15.518z"/></svg>2025 - 2026<span class=author>&nbsp;<a href=/ target=_blank rel="noopener noreferrer">chail</a></span></div><div class=footer-line></div><div class=footer-line></div></div></footer><div class="tw:print:hidden! tw:flex tw:flex-col tw:fixed tw:right-4 tw:bottom-4 tw:gap-2"><a href=#back-to-top id=back-to-top-button class="tw:transition-opacity tw:opacity-0 tw:block tw:bg-bgColor-secondary tw:rounded-full" style=padding:.6rem;line-height:1.3rem;font-size:1rem title=回到顶部><svg class="icon" viewBox="0 0 448 512"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6.0-33.9L207 39c9.4-9.4 24.6-9.4 33.9.0l194.3 194.3c9.4 9.4 9.4 24.6.0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3.0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"/></svg>
+</a><button id=toc-drawer-button class="tw:block tw:bg-bgColor-secondary tw:rounded-full tw:md:hidden" style=padding:.6rem;line-height:1.3rem;font-size:1rem>
+<svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button></div><script type=module>
+        (async () => {
+            const supportSpeculationRules = HTMLScriptElement.supports && HTMLScriptElement.supports("speculationrules");
+            if (!supportSpeculationRules) {
+              await import("\/lib\/instant.page\/instantpage.min.js");
+            }
+        })();
+    </script><script>window.config={comment:{},table:{sort:!0}}</script><script src=/lib/tablesort/tablesort.min.js></script><script src=/js/theme.min.js defer></script><script type=speculationrules>
+  {
+    "prerender": [
+      {
+        "where": { "href_matches": "/*" },
+        "eagerness": "moderate"
+      }
+    ]
+  }
+</script></body></html>

@@ -1,82 +1,118 @@
-# -- Theme Options --
-# Blowfish theme
+# site title
+title = "chail's Blog"
+# DoIt theme version
+version = "0.4.X"
+# site default theme ("light", "dark", "black", "auto")
+defaultTheme = "auto"
+# which hash function used for SRI, when empty, no SRI is used ("sha256", "sha384", "sha512", "md5")
+fingerprint = ""
+# date format
+dateFormat = "2006-01-02"
+# enable PWA
+enablePWA = false
 
-colorScheme = "blowfish"
-defaultAppearance = "dark"
-autoSwitchAppearance = true
-
-enableSearch = true
-enableCodeCopy = true
-enableStructuredBreadcrumbs = true
-
-replyByEmail = false
-
-mainSections = ["posts"]
-
-disableImageOptimization = false
-disableTextInHeader = false
-
-highlightCurrentMenuArea = true
-smartTOC = true
-smartTOCHideUnfocusedChildren = false
+[author]
+  name = "chail"
 
 [header]
-  layout = "floating"
-  mobileMenuStyle = "dropdown"
+  themeChangeMode = "select"
+  [header.title]
+    name = "chail's Blog"
+    typeit = false
 
 [footer]
-  showMenu = true
-  showCopyright = true
-  showAppearanceSwitcher = true
-  showScrollToTop = true
+  enable = true
+  hugo = true
+  copyright = true
+  author = true
+  since = 2025
 
-[homepage]
-  layout = "page"
-  showRecent = true
-  showRecentItems = 12
-  showMoreLink = false
-  cardView = true
-  cardViewScreenWidth = false
+# Section (all posts) page config
+[section]
+  paginate = 20
+  dateFormat = "01-02"
+  rss = 10
 
-[article]
-  showDate = true
-  showDateOnlyInArticle = false
-  showDateUpdated = false
-  showAuthor = true
-  showHero = false
-  showBreadcrumbs = true
-  showDraftLabel = true
-  showHeadingAnchors = true
-  showPagination = true
-  invertPagination = false
-  showReadingTime = true
-  showReadingProgress = true
-  showTableOfContents = true
-  showRelatedContent = true
-  relatedContentLimit = 5
-  showTaxonomies = true
-  showWordCount = false
-
+# List (category or tag) page config
 [list]
-  showBreadcrumbs = false
-  showSummary = false
-  showTableOfContents = false
-  showCards = true
-  groupByYear = false
-  cardView = true
-  cardViewScreenWidth = false
-  constrainItemsWidth = false
+  paginate = 20
+  dateFormat = "01-02"
+  rss = 10
 
-[taxonomy]
-  showTermCount = true
-  showBreadcrumbs = false
-  cardView = false
+# Page config
+[page]
+  hiddenFromHomePage = false
+  hiddenFromSearch = false
+  twemoji = false
+  lightgallery = false
+  ruby = true
+  fraction = true
+  linkToMarkdown = false
+  rssFullText = false
+  seriesNavigation = true
+  enableLastMod = true
+  enableWordCount = true
+  enableReadingTime = true
 
-[term]
-  showBreadcrumbs = false
-  groupByYear = false
-  cardView = true
-  cardViewScreenWidth = false
+  [page.instantpage]
+    enable = true
 
-fingerprintAlgorithm = ""
-assets = { disableFingerprinting = true }
+  [page.toc]
+    enable = true
+    keepStatic = false
+    auto = true
+
+  [page.code]
+    maxShownLines = 10
+    lineNos = true
+    wrap = false
+    header = true
+
+  [page.table]
+    sort = true
+
+  [page.math]
+    enable = false
+    copyTex = true
+    mhchem = true
+    mathjax = false
+
+  [page.share]
+    enable = false
+
+  [page.comment]
+    enable = false
+
+  [page.related]
+    enable = true
+    count = 5
+
+# Home page config
+[home]
+  rss = 10
+  [home.profile]
+    enable = true
+    title = "chail's Blog"
+    subtitle = "记录生活、算法与思考"
+    typeit = false
+    social = false
+  [home.posts]
+    enable = true
+    paginate = 7
+
+# Site SEO config
+[seo]
+  image = ""
+  thumbnailUrl = ""
+
+[analytics]
+  enable = false
+
+[cookieconsent]
+  enable = false
+
+[cdn]
+  data = ""
+
+[compatibility]
+  polyfill = false
