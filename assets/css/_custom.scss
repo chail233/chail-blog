@@ -1,0 +1,242 @@
+// ==============================
+// Custom style
+// 自定义样式
+// ==============================
+
+// ========== 整体布局优化 ==========
+
+// 文章卡片悬停效果
+.summary {
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem !important;
+  margin: 1rem 0;
+  transition: all 0.3s ease;
+  border-bottom: none !important;
+  background: var(--global-background-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .single-title {
+    font-size: 1.35rem !important;
+    a {
+      color: var(--global-font-color) !important;
+      &:hover {
+        color: var(--global-link-hover-color) !important;
+      }
+    }
+  }
+
+  .post-footer {
+    margin-top: 0.6rem !important;
+    font-size: 0.8rem !important;
+    color: var(--global-font-secondary-color);
+  }
+}
+
+// ========== 主页个人资料区 ==========
+.home-profile {
+  padding-bottom: 1.5rem !important;
+
+  .home-title {
+    font-size: 1.8rem !important;
+    margin-top: 0.5rem !important;
+  }
+
+  .home-subtitle {
+    font-size: 1.1rem !important;
+    color: var(--global-font-secondary-color);
+    font-weight: 300 !important;
+    letter-spacing: 0.05em;
+  }
+}
+
+// ========== 代码块美化 ==========
+.highlight {
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1.2rem 0;
+
+  pre {
+    padding: 1rem 1.2rem !important;
+  }
+
+  .code-header {
+    padding: 0.4rem 1rem !important;
+    font-size: 0.8rem;
+    background: var(--code-background-color);
+    border-bottom: 1px solid var(--global-border-color);
+  }
+}
+
+// ========== 文章页眉优化 ==========
+.single {
+  .content {
+    h1 { font-size: 1.8rem; }
+    h2 { 
+      font-size: 1.5rem; 
+      margin-top: 2rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px solid var(--global-border-color);
+    }
+    h3 { font-size: 1.25rem; margin-top: 1.5rem; }
+
+    p {
+      line-height: 1.8;
+      margin: 1rem 0;
+    }
+
+    img {
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    blockquote {
+      border-radius: 4px;
+      padding: 0.5rem 1rem !important;
+      margin: 1rem 0;
+    }
+
+    table {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    code:not([class]) {
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+      background: var(--code-background-color);
+    }
+  }
+
+  // 文章页脚
+  .post-footer {
+    margin-top: 2rem !important;
+    padding-top: 1rem;
+    border-top: 1px solid var(--global-border-color);
+
+    .post-tags {
+      a {
+        display: inline-block;
+        padding: 0.15rem 0.6rem;
+        margin: 0.2rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        background: var(--code-background-color);
+        color: var(--global-font-secondary-color);
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: var(--global-link-hover-color);
+          color: #fff !important;
+        }
+      }
+    }
+  }
+}
+
+// ========== 目录美化 ==========
+#TableOfContents {
+  ul {
+    li {
+      margin: 0.25rem 0;
+      a {
+        border-radius: 4px;
+        padding: 0.15rem 0.5rem;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+
+        &:hover {
+          background: var(--code-background-color);
+        }
+
+        &.active {
+          background: var(--global-link-hover-color);
+          color: #fff !important;
+        }
+      }
+    }
+  }
+}
+
+// ========== 头部导航栏 ==========
+header {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+// ========== 页脚 ==========
+footer {
+  .footer-container {
+    font-size: 0.8rem !important;
+    color: var(--global-font-secondary-color);
+  }
+}
+
+// ========== 标签和分类页面 ==========
+.taxonomy {
+  .single-title {
+    font-size: 1.1rem !important;
+  }
+}
+
+// ========== 分页器 ==========
+.pagination {
+  margin: 2rem 0;
+
+  .page-item {
+    a, span {
+      border-radius: 6px !important;
+      padding: 0.3rem 0.8rem !important;
+      transition: all 0.2s ease;
+    }
+
+    &.active span {
+      background: var(--global-link-hover-color) !important;
+      color: #fff !important;
+    }
+
+    a:hover {
+      background: var(--code-background-color) !important;
+    }
+  }
+}
+
+// ========== 滚动条优化 ==========
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--global-border-color);
+  border-radius: 4px;
+
+  &:hover {
+    background: var(--global-font-secondary-color);
+  }
+}
+
+// ========== 响应式微调 ==========
+@media (max-width: 768px) {
+  .summary {
+    padding: 1rem !important;
+    margin: 0.5rem 0;
+    border-radius: 8px;
+  }
+
+  .single .content {
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.3rem; }
+    h3 { font-size: 1.1rem; }
+  }
+}
