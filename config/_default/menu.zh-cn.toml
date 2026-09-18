@@ -1,6 +1,8 @@
+# ========== 主导航菜单 ==========
+
 [[main]]
   identifier = "posts"
-  name = "所有文章"
+  name = "博客"
   url = "/posts/"
   weight = 1
 

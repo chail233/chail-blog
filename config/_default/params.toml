@@ -1,25 +1,27 @@
-# site title
+# 站点标题
 title = "chail's Blog"
-# DoIt theme version
+# DoIt 主题版本
 version = "0.4.X"
-# site default theme ("light", "dark", "black", "auto")
+# 站点默认主题 ("light", "dark", "black", "auto")
 defaultTheme = "auto"
-# which hash function used for SRI, when empty, no SRI is used ("sha256", "sha384", "sha512", "md5")
+# SRI 哈希算法，为空则不使用 SRI
 fingerprint = ""
-# date format
+# 日期格式
 dateFormat = "2006-01-02"
-# enable PWA
+# 启用 PWA
 enablePWA = false
 
 [author]
   name = "chail"
 
+# ========== 头部导航栏 ==========
 [header]
   themeChangeMode = "select"
   [header.title]
     name = "chail's Blog"
     typeit = false
 
+# ========== 页脚 ==========
 [footer]
   enable = true
   hugo = true
@@ -27,24 +29,46 @@ enablePWA = false
   author = true
   since = 2025
 
-# Section (all posts) page config
+# ========== 文章列表页 ==========
 [section]
-  paginate = 20
+  paginate = 12
   dateFormat = "01-02"
   rss = 10
+  [section.recentlyUpdated]
+    enable = false
 
-# List (category or tag) page config
+# ========== 分类/标签页 ==========
 [list]
-  paginate = 20
+  paginate = 12
   dateFormat = "01-02"
   rss = 10
 
-# Page config
+# ========== 搜索配置 ==========
+[search]
+  enable = true
+  type = "fuse"
+  contentLength = 4000
+  maxResultLength = 10
+  snippetLength = 50
+  highlightTag = "em"
+  absoluteURL = false
+  [search.fuse]
+    isCaseSensitive = false
+    minMatchCharLength = 2
+    findAllMatches = false
+    location = 0
+    threshold = 0.3
+    distance = 100
+    ignoreLocation = true
+    useExtendedSearch = false
+    ignoreFieldNorm = false
+
+# ========== 文章页面配置 ==========
 [page]
   hiddenFromHomePage = false
   hiddenFromSearch = false
   twemoji = false
-  lightgallery = false
+  lightgallery = true
   ruby = true
   fraction = true
   linkToMarkdown = false
@@ -63,7 +87,7 @@ enablePWA = false
     auto = true
 
   [page.code]
-    maxShownLines = 10
+    maxShownLines = 12
     lineNos = true
     wrap = false
     header = true
@@ -87,20 +111,26 @@ enablePWA = false
     enable = true
     count = 5
 
-# Home page config
+# ========== 主页配置 ==========
 [home]
   rss = 10
   [home.profile]
     enable = true
     title = "chail's Blog"
     subtitle = "记录生活、算法与思考"
-    typeit = false
-    social = false
+    typeit = true
+    social = true
   [home.posts]
     enable = true
     paginate = 7
 
-# Site SEO config
+# ========== 社交链接 ==========
+[social]
+  GitHub = "chail"
+  Email = "chail@example.com"
+  RSS = true
+
+# ========== SEO ==========
 [seo]
   image = ""
   thumbnailUrl = ""
